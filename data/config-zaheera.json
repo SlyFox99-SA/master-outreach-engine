@@ -1,1 +1,77 @@
-﻿{"id":"zaheera","layout":"gallery","brand":{"name":"Zaheera","tagline":"Signature Fragrances - Cape Town","hero":{"title":"Smell unforgettable.","subtitle":"Hand-blended attars and eau de parfum, delivered across South Africa."}},"theme":{"primary":"64 33 12","accent":"201 149 62","ink":"28 20 12","surface":"253 248 240"},"whatsapp":"+27821234567","bank":{"accountName":"Zaheera Fragrances","bankName":"FNB","accountNumber":"6270 1234 567","branchCode":"250655","accountType":"Cheque"},"categories":["Fragrances","Gift Sets"],"products":[{"id":"oud-noir","name":"Oud Noir","category":"Fragrances","blurb":"Smoky rose, oud, amber","price":450,"stock":8,"image":"https://placehold.co/900x900/2b1810/c9953e?text=Oud+Noir"},{"id":"musk-white","name":"White Musk","category":"Fragrances","blurb":"Cotton, vanilla, white musk","price":320,"stock":12,"image":"https://placehold.co/900x900/f5f0e8/8b6d3f?text=White+Musk"},{"id":"rose-taif","name":"Rose Taif","category":"Fragrances","blurb":"Bulgarian rose, saffron","price":620,"stock":0,"image":"https://placehold.co/900x900/8b2942/f5d5d5?text=Rose+Taif"},{"id":"amber-nights","name":"Amber Nights","category":"Fragrances","blurb":"Amber, tonka, sandalwood","price":395,"stock":5,"image":"https://placehold.co/900x900/3d2817/e0b980?text=Amber+Nights"},{"id":"discovery-set","name":"Discovery Set","category":"Gift Sets","blurb":"5 x 5ml sampler collection","price":280,"stock":15,"image":"https://placehold.co/900x900/c9953e/2b1810?text=Discovery+Set"}]}
+﻿{
+    "id":  "zaheera",
+    "layout":  "gallery",
+    "brand":  {
+                  "name":  "Zaheera",
+                  "tagline":  "Signature Fragrances - Cape Town",
+                  "hero":  {
+                               "title":  "Smell unforgettable.",
+                               "subtitle":  "Hand-blended attars and eau de parfum, delivered across South Africa."
+                           }
+              },
+    "theme":  {
+                  "primary":  "64 33 12",
+                  "accent":  "201 149 62",
+                  "ink":  "28 20 12",
+                  "surface":  "253 248 240"
+              },
+    "whatsapp":  "+27821234567",
+    "bank":  {
+                 "accountName":  "Zaheera Fragrances",
+                 "bankName":  "FNB",
+                 "accountNumber":  "6270 1234 567",
+                 "branchCode":  "250655",
+                 "accountType":  "Cheque"
+             },
+    "categories":  [
+                       "Fragrances",
+                       "Gift Sets"
+                   ],
+    "products":  [
+                     {
+                         "id":  "oud-noir",
+                         "name":  "Oud Noir",
+                         "category":  "Fragrances",
+                         "blurb":  "Smoky rose, oud, amber",
+                         "price":  450,
+                         "stock":  8,
+                         "image":  "https://placehold.co/900x900/2b1810/c9953e?text=Oud+Noir"
+                     },
+                     {
+                         "id":  "musk-white",
+                         "name":  "White Musk",
+                         "category":  "Fragrances",
+                         "blurb":  "Cotton, vanilla, white musk",
+                         "price":  320,
+                         "stock":  12,
+                         "image":  "https://placehold.co/900x900/f5f0e8/8b6d3f?text=White+Musk"
+                     },
+                     {
+                         "id":  "rose-taif",
+                         "name":  "Rose Taif",
+                         "category":  "Fragrances",
+                         "blurb":  "Bulgarian rose, saffron",
+                         "price":  620,
+                         "stock":  0,
+                         "image":  "https://placehold.co/900x900/8b2942/f5d5d5?text=Rose+Taif"
+                     },
+                     {
+                         "id":  "amber-nights",
+                         "name":  "Amber Nights",
+                         "category":  "Fragrances",
+                         "blurb":  "Amber, tonka, sandalwood",
+                         "price":  395,
+                         "stock":  5,
+                         "image":  "https://placehold.co/900x900/3d2817/e0b980?text=Amber+Nights"
+                     },
+                     {
+                         "id":  "discovery-set",
+                         "name":  "Discovery Set",
+                         "category":  "Gift Sets",
+                         "blurb":  "5 x 5ml sampler collection",
+                         "price":  280,
+                         "stock":  15,
+                         "image":  "https://placehold.co/900x900/c9953e/2b1810?text=Discovery+Set"
+                     }
+                 ]
+}
