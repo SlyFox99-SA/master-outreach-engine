@@ -6,9 +6,9 @@
 <meta name="theme-color" content="#0f172a" />
 <title>Master Outreach Engine</title>
 <link rel="stylesheet" href="/style.css" />
-<script type="module" src="/main.js" defer></script>
+<script type="importmap">{"imports":{"alpinejs":"https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/module.esm.js"}}</script><script type="module" src="/main.js" defer></script>
 </head>
-<body class="min-h-screen bg-neutral-950 text-neutral-100 antialiased font-body" x-data="{ frameMode: new URLSearchParams(location.search).get('frame') || 'phone' }" x-init="$store.config.init()">
+<body class="min-h-screen bg-neutral-950 text-neutral-100 antialiased font-body" x-data="{ frameMode: new URLSearchParams(location.search).get('frame') || 'phone' }">
 <div aria-hidden="true" class="pointer-events-none fixed inset-0 hidden md:block bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.08),transparent_60%)]"></div>
 <main class="relative mx-auto w-full md:py-10" :class="frameMode === 'story' ? 'md:max-w-[540px]' : 'md:max-w-[390px]'">
 <div id="device-frame" class="relative flex flex-col overflow-hidden min-h-[100dvh] md:min-h-0 bg-brand-surface text-brand-ink md:ring-[10px] md:ring-neutral-900 md:shadow-frame transition-all" :class="frameMode === 'story' ? 'md:h-auto md:aspect-[9/16] md:rounded-[2rem]' : 'md:h-[844px] md:rounded-[2.75rem]'">
@@ -29,11 +29,11 @@
 <h3 class="font-display text-sm font-semibold leading-tight line-clamp-2" x-text="product.name"></h3>
 <p class="mt-0.5 text-[11px] opacity-60 line-clamp-1" x-text="product.blurb ?? ''"></p>
 <p class="mt-2 text-sm font-semibold text-brand-primary" x-text="$store.config.formatZAR(product.price)"></p>
-<a :href="$store.config.waLink(product)" target="_blank" rel="noopener" class="mt-2 inline-flex items-center justify-center rounded-lg bg-brand-accent px-3 py-1.5 text-[11px] font-medium text-white hover:opacity-90 active:scale-[0.98] transition">Order</a>
+<a :href="$store.config.payLink(product)" target="_blank" class="mt-1 inline-flex items-center justify-center rounded-lg bg-emerald-600 px-3 py-1.5 text-[11px] font-medium text-white hover:opacity-90 active:scale-[0.98] transition">Pay Now</a><a :href="$store.config.waLink(product)" target="_blank" rel="noopener" class="mt-1 inline-flex items-center justify-center rounded-lg bg-brand-accent px-3 py-1.5 text-[11px] font-medium text-white hover:opacity-90 active:scale-[0.98] transition">Order</a>
 </div></article></li></template></ul>
 <p x-show="!$store.config.products?.length" class="py-12 text-center text-sm opacity-50">Loading catalogue...</p>
 </section></div>
-<footer class="sticky bottom-0 z-20 px-5 pt-3 pb-[calc(env(safe-area-inset-bottom)+1rem)] bg-gradient-to-t from-brand-surface via-brand-surface to-transparent"><a :href="$store.config.waLink()" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-2xl bg-brand-primary px-4 py-3.5 text-sm font-semibold text-brand-surface shadow-lg shadow-black/10 hover:opacity-95 active:scale-[0.99] transition">Chat on WhatsApp</a></footer>
+<footer class="sticky bottom-0 z-20 px-5 pt-3 pb-[calc(env(safe-area-inset-bottom)+1rem)] bg-gradient-to-t from-brand-surface via-brand-surface to-transparent"><a :href="$store.config.payLink($store.config.products[0])" target="_blank" class="flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 hover:opacity-95 active:scale-[0.99] transition mb-2">Pay Now - Secure Checkout</a><a :href="$store.config.waLink()" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-2xl bg-brand-primary px-4 py-3.5 text-sm font-semibold text-brand-surface shadow-lg shadow-black/10 hover:opacity-95 active:scale-[0.99] transition">Chat on WhatsApp</a></footer>
 </div>
 <button x-show="frameMode === 'story'" @click="window.downloadStory()" class="hidden md:flex fixed bottom-6 right-6 z-50 items-center gap-2 rounded-full bg-brand-accent px-5 py-3 text-sm font-semibold text-white shadow-2xl hover:opacity-90 active:scale-95 transition">Download 1080x1920</button>
 </main></body></html>

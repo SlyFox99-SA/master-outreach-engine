@@ -1,40 +1,50 @@
 ﻿import Alpine from 'alpinejs';
 import activeConfig from './data/active-config.json';
+
 const brandConfigs = import.meta.env.DEV ? import.meta.glob('./data/config-*.json', { eager: true, import: 'default' }) : {};
-function pickConfig() {
-  const p = new URLSearchParams(location.search);
-  const k = p.get('brand') || localStorage.getItem('brand');
+
+function pick() {
+  const k = new URLSearchParams(location.search).get('brand') || localStorage.getItem('brand');
   if (import.meta.env.DEV && k) {
-    const h = Object.entries(brandConfigs).find(([path]) => path.endsWith(`config-${k}.json`));
-    if (h) return h[1];
+    for (const p in brandConfigs) if (p.endsWith('config-' + k + '.json')) return brandConfigs[p];
   }
   return activeConfig;
 }
 
-document.addEventListener('alpine:init', () => {
-  Alpine.store('config', {
-    id: '', brand: {}, theme: {}, whatsapp: '', products: [],
-    init() {
-      Object.assign(this, pickConfig());
-      this.applyTheme();
-      document.title = `${this.brand?.name ?? 'Outreach'} · Master Engine`;
-    },
-    applyTheme() {
-      const r = document.documentElement;
-      for (const k of ['primary','accent','ink','surface']) {
-        if (this.theme?.[k]) r.style.setProperty(`--brand-${k}`, this.theme[k]);
-      }
-    },
-    waLink(p = null) {
-      const d = String(this.whatsapp || '').replace(/\D/g, '');
-      const m = p?.waMessage ?? `Hi ${this.brand?.name ?? ''}! I want to know more about your ${p?.name ?? 'products'}.`;
-      return `https://wa.me/${d}?text=${encodeURIComponent(m)}`;
-    },
-    formatZAR(v) {
-      return new Intl.NumberFormat('en-ZA', { style: 'currency', currency: 'ZAR', maximumFractionDigits: 0 }).format(v ?? 0);
-    }
-  });
-});
+const cfg = pick();
+
+const store = {
+  ...cfg,
+  waLink: function(p) {
+    const d = String(this.whatsapp || '').replace(/\D/g, '');
+    const m = p && p.waMessage ? p.waMessage : 'Hi ' + (this.brand?.name || '') + '! I want to know more.';
+    return 'https://wa.me/' + d + '?text=' + encodeURIComponent(m);
+  },
+  formatZAR: function(v) {
+    return new Intl.NumberFormat('en-ZA', { style: 'currency', currency: 'ZAR', maximumFractionDigits: 0 }).format(v || 0);
+  },
+  payLink: function(product) {
+    if (!this.payment || !this.payment.merchantId) return '#';
+    const base = this.payment.sandbox ? 'https://sandbox.payfast.co.za/eng/process' : 'https://www.payfast.co.za/eng/process';
+    const params = new URLSearchParams({
+      merchant_id: this.payment.merchantId,
+      merchant_key: this.payment.merchantKey,
+      amount: Number(product.price).toFixed(2),
+      item_name: product.name,
+      return_url: this.payment.returnUrl || location.href,
+      cancel_url: this.payment.cancelUrl || location.href
+    });
+    return base + '?' + params.toString();
+  }
+};
+
+Alpine.store('config', store);
+
+const r = document.documentElement;
+for (const k of ['primary','accent','ink','surface']) {
+  if (cfg.theme?.[k]) r.style.setProperty('--brand-' + k, cfg.theme[k]);
+}
+document.title = (cfg.brand?.name || 'Outreach') + ' - Master Engine';
 
 window.downloadStory = async () => {
   const { toPng } = await import('html-to-image');
@@ -43,7 +53,7 @@ window.downloadStory = async () => {
   const d = await toPng(n, { width: 1080, height: 1920, pixelRatio: 1, cacheBust: true });
   const a = document.createElement('a');
   a.href = d;
-  a.download = `story-${Alpine.store('config').id}-${Date.now()}.png`;
+  a.download = 'story-' + cfg.id + '.png';
   a.click();
 };
 
