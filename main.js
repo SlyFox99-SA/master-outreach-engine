@@ -57,4 +57,5 @@ window.downloadStory = async () => {
   a.click();
 };
 
+window.Alpine = Alpine;
 Alpine.start();
