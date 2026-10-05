@@ -1,0 +1,21 @@
+﻿{
+    "id":  "lumo",
+    "brand":  {
+                  "name":  "Lumo Skincare",
+                  "tagline":  "",
+                  "hero":  {
+                               "title":  "Replace me",
+                               "subtitle":  "Replace me"
+                           }
+              },
+    "theme":  {
+                  "primary":  "15 23 42",
+                  "accent":  "59 130 246",
+                  "ink":  "15 23 42",
+                  "surface":  "248 250 252"
+              },
+    "whatsapp":  "+27821112222",
+    "products":  [
+
+                 ]
+}
