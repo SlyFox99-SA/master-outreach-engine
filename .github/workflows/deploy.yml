@@ -4,33 +4,55 @@ on:
     branches: [main]
   workflow_dispatch:
 jobs:
-  deploy:
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
       - uses: actions/setup-node@v4
         with: { node-version: '20', cache: 'npm' }
       - run: npm install
-      - name: Regenerate configs.js from JSON
+      - name: Detect changed brands
+        id: detect
         shell: pwsh
         run: |
-          $lines = @('window.__CONFIGS = {'); $first = $true; Get-ChildItem data\config-*.json | Where-Object { $_.Name -notlike '_*' } | ForEach-Object { if (-not $first) { $lines[$lines.Count - 1] = $lines[$lines.Count - 1] + ',' }; $name = $_.BaseName -replace '^config-',''; $content = (Get-Content $_.FullName -Raw).Trim(); $lines += ('  "' + $name + '": ' + $content); $first = $false }; $activeContent = (Get-Content data\active-config.json -Raw).Trim(); $lines[$lines.Count - 1] = $lines[$lines.Count - 1] + ','; $lines += ('  "active": ' + $activeContent); $lines += '};'; Set-Content configs.js -Value ($lines -join "`n") -NoNewline -Encoding utf8
-      - name: Build all brands
+          $buildAll = $false
+          if ('${{ github.event_name }}' -eq 'workflow_dispatch') { $buildAll = $true }
+          else {
+            $changed = git diff --name-only HEAD~1 HEAD
+            $infra = @('main.js','index.html','style.css','configs.js','tailwind.config.js','postcss.config.js','package.json','package-lock.json','vite.config.js')
+            $infraHit = $changed | Where-Object { $infra -contains $_ -or $_ -like 'admin/*' -or $_ -like 'scripts/*' }
+            if ($infraHit) { $buildAll = $true }
+          }
+          if ($buildAll) { echo "list=zaheera,monetech,lumo,techhub" >> $env:GITHUB_OUTPUT; Write-Host "BUILD ALL" -ForegroundColor Yellow; exit 0 }
+          $brands = @()
+          git diff --name-only HEAD~1 HEAD | ForEach-Object { if ($_ -match '^data/config-([a-z]+)\.json$') { $brands += $Matches[1] } }
+          $brands = $brands | Select-Object -Unique
+          if ($brands.Count -eq 0) { echo "list=" >> $env:GITHUB_OUTPUT; Write-Host "NOTHING TO BUILD" -ForegroundColor Gray }
+          else { echo "list=$($brands -join ',')" >> $env:GITHUB_OUTPUT; Write-Host "BUILD: $($brands -join ',')" -ForegroundColor Cyan }
+      - name: Build changed brands
+        if: steps.detect.outputs.list != ''
         shell: pwsh
-        run: ./scripts/Build-AllBrands.ps1
+        run: |
+          $brands = '${{ steps.detect.outputs.list }}'.Split(',')
+          foreach ($b in $brands) { Write-Host "Building $b..." -ForegroundColor Cyan; & ./scripts/Build-Brand.ps1 -Brand $b }
       - name: Deploy zaheera
+        if: contains(steps.detect.outputs.list, 'zaheera')
         uses: nwtgck/actions-netlify@v3
         with: { publish-dir: './dist-zaheera', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
         env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_ZAHEERA }}' }
       - name: Deploy monetech
+        if: contains(steps.detect.outputs.list, 'monetech')
         uses: nwtgck/actions-netlify@v3
         with: { publish-dir: './dist-monetech', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
         env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_MONETECH }}' }
       - name: Deploy lumo
+        if: contains(steps.detect.outputs.list, 'lumo')
         uses: nwtgck/actions-netlify@v3
         with: { publish-dir: './dist-lumo', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
         env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_LUMO }}' }
       - name: Deploy techhub
+        if: contains(steps.detect.outputs.list, 'techhub')
         uses: nwtgck/actions-netlify@v3
         with: { publish-dir: './dist-techhub', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
         env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_TECHHUB }}' }
