@@ -1,0 +1,52 @@
+{
+  "id": "monetech",
+  "brand": {
+    "name": "MoneTech",
+    "tagline": "Pre-loved iPhones - Sandton",
+    "hero": {
+      "title": "iPhone, sorted.",
+      "subtitle": "Certified pre-owned stock - battery health 90%+, 30-day warranty."
+    }
+  },
+  "theme": {
+    "primary": "15 23 42",
+    "accent":  "59 130 246",
+    "ink":     "15 23 42",
+    "surface": "248 250 252"
+  },
+  "whatsapp": "+27839876543",
+  "products": [
+    {
+      "id": "ip13-128",
+      "name": "iPhone 13 - 128GB",
+      "blurb": "Midnight - 94% battery",
+      "price": 8999,
+      "image": "https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=600&q=70",
+      "waMessage": "Hi MoneTech! Is the iPhone 13 128GB (Midnight, 94%) still available at R8999?"
+    },
+    {
+      "id": "ip14-pro-256",
+      "name": "iPhone 14 Pro - 256GB",
+      "blurb": "Deep Purple - 91% battery",
+      "price": 15499,
+      "image": "https://images.unsplash.com/photo-1664474619075-644dd191935f?w=600&q=70",
+      "waMessage": "Hi MoneTech! Is the iPhone 14 Pro 256GB (Deep Purple, 91%) still available at R15499?"
+    },
+    {
+      "id": "ip12-64",
+      "name": "iPhone 12 - 64GB",
+      "blurb": "Blue - 88% battery",
+      "price": 6299,
+      "image": "https://images.unsplash.com/photo-1607936854279-55e8a4c64888?w=600&q=70",
+      "waMessage": "Hi MoneTech! Is the iPhone 12 64GB (Blue, 88%) still available at R6299?"
+    },
+    {
+      "id": "ip15-256",
+      "name": "iPhone 15 - 256GB",
+      "blurb": "Black - 100% battery",
+      "price": 17999,
+      "image": "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=600&q=70",
+      "waMessage": "Hi MoneTech! Is the iPhone 15 256GB (Black, 100%) still available at R17999?"
+    }
+  ]
+}
