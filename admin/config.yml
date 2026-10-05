@@ -1,0 +1,207 @@
+﻿backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "brands"
+    label: "Stores"
+    files:
+      - name: "zaheera"
+        label: "Zaheera (Fragrances)"
+        file: "data/config-zaheera.json"
+        fields:
+          - { label: "Layout", name: "layout", widget: "select", options: ["gallery", "grid", "list", "showcase"], default: "grid" }
+          - label: "Brand"
+            name: "brand"
+            widget: "object"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Tagline", name: "tagline", widget: "string" }
+              - label: "Hero"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Subtitle", name: "subtitle", widget: "text" }
+          - { label: "WhatsApp Number", name: "whatsapp", widget: "string", hint: "Format: +27821234567" }
+          - label: "Bank Details"
+            name: "bank"
+            widget: "object"
+            fields:
+              - { label: "Account Name", name: "accountName", widget: "string" }
+              - { label: "Bank Name", name: "bankName", widget: "string" }
+              - { label: "Account Number", name: "accountNumber", widget: "string" }
+              - { label: "Branch Code", name: "branchCode", widget: "string" }
+              - { label: "Account Type", name: "accountType", widget: "string", required: false }
+          - label: "Categories"
+            name: "categories"
+            widget: "list"
+            field: { label: "Category", name: "category", widget: "string" }
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            summary: "{{fields.name}} - R{{fields.price}}"
+            fields:
+              - { label: "ID", name: "id", widget: "string", hint: "Unique, no spaces" }
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Category", name: "category", widget: "string" }
+              - { label: "Description", name: "blurb", widget: "string" }
+              - { label: "Price (R)", name: "price", widget: "number", valueType: "int" }
+              - { label: "Image URL", name: "image", widget: "string" }
+              - { label: "Stock (use only if no variants)", name: "stock", widget: "number", valueType: "int", required: false }
+              - label: "Variants (colors, sizes)"
+                name: "variants"
+                widget: "list"
+                required: false
+                summary: "{{fields.name}} - {{fields.stock}} left"
+                fields:
+                  - { label: "ID", name: "id", widget: "string" }
+                  - { label: "Name", name: "name", widget: "string" }
+                  - { label: "Stock", name: "stock", widget: "number", valueType: "int" }
+      - name: "monetech"
+        label: "MoneTech (iPhones)"
+        file: "data/config-monetech.json"
+        fields:
+          - { label: "Layout", name: "layout", widget: "select", options: ["gallery", "grid", "list", "showcase"], default: "showcase" }
+          - label: "Brand"
+            name: "brand"
+            widget: "object"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Tagline", name: "tagline", widget: "string" }
+              - label: "Hero"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Subtitle", name: "subtitle", widget: "text" }
+          - { label: "WhatsApp Number", name: "whatsapp", widget: "string" }
+          - label: "Bank Details"
+            name: "bank"
+            widget: "object"
+            fields:
+              - { label: "Account Name", name: "accountName", widget: "string" }
+              - { label: "Bank Name", name: "bankName", widget: "string" }
+              - { label: "Account Number", name: "accountNumber", widget: "string" }
+              - { label: "Branch Code", name: "branchCode", widget: "string" }
+              - { label: "Account Type", name: "accountType", widget: "string", required: false }
+          - label: "Categories"
+            name: "categories"
+            widget: "list"
+            field: { label: "Category", name: "category", widget: "string" }
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            summary: "{{fields.name}} - R{{fields.price}}"
+            fields:
+              - { label: "ID", name: "id", widget: "string" }
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Category", name: "category", widget: "string" }
+              - { label: "Description", name: "blurb", widget: "string" }
+              - { label: "Price (R)", name: "price", widget: "number", valueType: "int" }
+              - { label: "Image URL", name: "image", widget: "string" }
+              - { label: "Stock", name: "stock", widget: "number", valueType: "int", required: false }
+              - label: "Variants"
+                name: "variants"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "ID", name: "id", widget: "string" }
+                  - { label: "Name", name: "name", widget: "string" }
+                  - { label: "Stock", name: "stock", widget: "number", valueType: "int" }
+      - name: "lumo"
+        label: "Lumo (Skincare)"
+        file: "data/config-lumo.json"
+        fields:
+          - { label: "Layout", name: "layout", widget: "select", options: ["gallery", "grid", "list", "showcase"], default: "grid" }
+          - label: "Brand"
+            name: "brand"
+            widget: "object"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Tagline", name: "tagline", widget: "string" }
+              - label: "Hero"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Subtitle", name: "subtitle", widget: "text" }
+          - { label: "WhatsApp Number", name: "whatsapp", widget: "string" }
+          - label: "Bank Details"
+            name: "bank"
+            widget: "object"
+            fields:
+              - { label: "Account Name", name: "accountName", widget: "string" }
+              - { label: "Bank Name", name: "bankName", widget: "string" }
+              - { label: "Account Number", name: "accountNumber", widget: "string" }
+              - { label: "Branch Code", name: "branchCode", widget: "string" }
+          - label: "Categories"
+            name: "categories"
+            widget: "list"
+            field: { label: "Category", name: "category", widget: "string" }
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            summary: "{{fields.name}} - R{{fields.price}}"
+            fields:
+              - { label: "ID", name: "id", widget: "string" }
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Category", name: "category", widget: "string" }
+              - { label: "Description", name: "blurb", widget: "string" }
+              - { label: "Price (R)", name: "price", widget: "number", valueType: "int" }
+              - { label: "Image URL", name: "image", widget: "string" }
+              - { label: "Stock", name: "stock", widget: "number", valueType: "int", required: false }
+      - name: "techhub"
+        label: "TechHub (Devices)"
+        file: "data/config-techhub.json"
+        fields:
+          - { label: "Layout", name: "layout", widget: "select", options: ["gallery", "grid", "list", "showcase"], default: "list" }
+          - label: "Brand"
+            name: "brand"
+            widget: "object"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Tagline", name: "tagline", widget: "string" }
+              - label: "Hero"
+                name: "hero"
+                widget: "object"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Subtitle", name: "subtitle", widget: "text" }
+          - { label: "WhatsApp Number", name: "whatsapp", widget: "string" }
+          - label: "Bank Details"
+            name: "bank"
+            widget: "object"
+            fields:
+              - { label: "Account Name", name: "accountName", widget: "string" }
+              - { label: "Bank Name", name: "bankName", widget: "string" }
+              - { label: "Account Number", name: "accountNumber", widget: "string" }
+              - { label: "Branch Code", name: "branchCode", widget: "string" }
+              - { label: "Account Type", name: "accountType", widget: "string", required: false }
+          - label: "Categories"
+            name: "categories"
+            widget: "list"
+            field: { label: "Category", name: "category", widget: "string" }
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            summary: "{{fields.name}} - R{{fields.price}}"
+            fields:
+              - { label: "ID", name: "id", widget: "string" }
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Category", name: "category", widget: "string" }
+              - { label: "Description", name: "blurb", widget: "string" }
+              - { label: "Price (R)", name: "price", widget: "number", valueType: "int" }
+              - { label: "Image URL", name: "image", widget: "string" }
+              - { label: "Stock", name: "stock", widget: "number", valueType: "int", required: false }
+              - label: "Variants"
+                name: "variants"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "ID", name: "id", widget: "string" }
+                  - { label: "Name", name: "name", widget: "string" }
+                  - { label: "Stock", name: "stock", widget: "number", valueType: "int" }

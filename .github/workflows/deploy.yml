@@ -1,0 +1,36 @@
+﻿name: Deploy All Brands
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm install
+      - name: Regenerate configs.js from JSON
+        shell: pwsh
+        run: |
+          $lines = @('window.__CONFIGS = {'); $first = $true; Get-ChildItem data\config-*.json | Where-Object { $_.Name -notlike '_*' } | ForEach-Object { if (-not $first) { $lines[$lines.Count - 1] = $lines[$lines.Count - 1] + ',' }; $name = $_.BaseName -replace '^config-',''; $content = (Get-Content $_.FullName -Raw).Trim(); $lines += ('  "' + $name + '": ' + $content); $first = $false }; $activeContent = (Get-Content data\active-config.json -Raw).Trim(); $lines[$lines.Count - 1] = $lines[$lines.Count - 1] + ','; $lines += ('  "active": ' + $activeContent); $lines += '};'; Set-Content configs.js -Value ($lines -join "`n") -NoNewline -Encoding utf8
+      - name: Build all brands
+        shell: pwsh
+        run: ./scripts/Build-AllBrands.ps1
+      - name: Deploy zaheera
+        uses: nwtgck/actions-netlify@v3
+        with: { publish-dir: './dist-zaheera', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
+        env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_ZAHEERA }}' }
+      - name: Deploy monetech
+        uses: nwtgck/actions-netlify@v3
+        with: { publish-dir: './dist-monetech', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
+        env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_MONETECH }}' }
+      - name: Deploy lumo
+        uses: nwtgck/actions-netlify@v3
+        with: { publish-dir: './dist-lumo', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
+        env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_LUMO }}' }
+      - name: Deploy techhub
+        uses: nwtgck/actions-netlify@v3
+        with: { publish-dir: './dist-techhub', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
+        env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_TECHHUB }}' }
