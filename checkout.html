@@ -61,3 +61,4 @@ document.getElementById("popBtn").addEventListener("click", function(){ var newN
 </script>
 </body>
 </html>
+<script>(function(){var P=new URLSearchParams(location.search);var brand=P.get("brand")||"active";var cfg=(window.__CONFIGS||{})[brand]||{};var key="cart."+(cfg.id||"active")+".";var shipped=(cfg.shipping||[{id:"paxi"}]).filter(function(o){return o.id!==sid}).length>0||true;document.addEventListener("click",function(e){var btn=e.target.closest("#popBtn");if(!btn)return;var noteEl=document.getElementById("note");var note=(noteEl&&noteEl.value||"").trim();var currentShip=localStorage.getItem(key+"shipping")||"paxi";if(currentShip!=="collect"&&!note){e.preventDefault();e.stopPropagation();alert("Please enter your delivery address before sending proof of payment.");if(noteEl){noteEl.focus();noteEl.classList.add("ring-2","ring-red-500");}return false;}},true);})();</script>
