@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seller Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<style>
+  body { -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  input, textarea, button, select { font-size: 16px !important; }
+  [x-cloak] { display: none !important; }
+  @media (min-width: 768px) { input, textarea, button, select { font-size: 14px !important; } }
+</style>
+</head>
+<body class="bg-gray-50" x-data="sellerApp()" x-init="init()" x-cloak>
+
+<div x-show="loading" class="fixed inset-0 flex items-center justify-center bg-white z-50">
+  <div class="w-10 h-10 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin"></div>
+</div>
+
+<div x-show="!loading" class="min-h-screen">
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+    <div class="max-w-md md:max-w-6xl mx-auto px-5 py-4 md:py-5 flex items-center justify-between">
+      <div>
+        <h1 class="text-xl md:text-2xl font-semibold text-gray-900" x-text="store.brand?.name || 'My Store'"></h1>
+        <p class="text-xs md:text-sm text-gray-500 mt-0.5">Seller Dashboard</p>
+      </div>
+      <button @click="openSettings()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 text-sm font-medium text-gray-900 hover:bg-gray-50">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        <span class="hidden md:inline">Settings</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-md md:max-w-6xl mx-auto px-5 py-6 md:py-8">
+
+<section class="mb-6 md:mb-8">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+<div class="p-4 rounded-2xl bg-white border border-gray-100">
+<p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Products</p>
+<p class="mt-1 text-2xl md:text-3xl font-semibold text-gray-900" x-text="store.products.length"></p>
+</div>
+<div class="p-4 rounded-2xl bg-white border border-gray-100">
+<p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Stock value</p>
+<p class="mt-1 text-2xl md:text-3xl font-semibold text-gray-900" x-text="'R' + inventoryValue().toLocaleString()"></p><p x-show="unlimitedCount() > 0" class="text-[10px] text-gray-400 mt-0.5"><span x-text="unlimitedCount()"></span> product(s) unlimited</p>
+</div>
+<div class="p-4 rounded-2xl bg-white border border-gray-100">
+<p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Low stock</p>
+<p class="mt-1 text-2xl md:text-3xl font-semibold" :class="lowStockCount() > 0 ? 'text-orange-600' : 'text-gray-900'" x-text="lowStockCount()"></p>
+</div>
+<div class="p-4 rounded-2xl bg-white border border-gray-100">
+<p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Sold out</p>
+<p class="mt-1 text-2xl md:text-3xl font-semibold" :class="outOfStockCount() > 0 ? 'text-red-600' : 'text-gray-900'" x-text="outOfStockCount()"></p>
+</div>
+</div>
+<template x-if="attentionItems().length > 0">
+<div class="mt-4 p-4 md:p-5 rounded-2xl bg-orange-50 border border-orange-200">
+<div class="flex items-center gap-2 mb-3">
+<svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M4.5 19h15a2 2 0 0 0 1.7-3L13.7 4a2 2 0 0 0-3.4 0L2.8 16a2 2 0 0 0 1.7 3Z"/></svg>
+<h3 class="text-sm md:text-base font-semibold text-orange-900">Needs your attention</h3>
+</div>
+<div class="space-y-2">
+<template x-for="item in attentionItems()" :key="item.id">
+<div class="flex items-center justify-between text-sm">
+<div class="text-orange-900" x-text="item.name"></div>
+<div class="text-orange-700 font-medium" x-text="item.stock === 0 ? 'Out of stock' : ('Only ' + item.stock + ' left')"></div>
+</div>
+</template>
+</div>
+</div>
+</template>
+</section>
+    <div class="flex items-center justify-between mb-4 md:mb-6">
+      <div class="mb-4 md:mb-6 space-y-3">
+<div class="flex gap-2">
+<div class="flex-1 relative">
+<input type="search" x-model="search" placeholder="Search products..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-gray-900 focus:outline-none text-sm">
+<svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+</div>
+<select x-model="sortBy" class="px-3 rounded-xl border border-gray-200 bg-white focus:border-gray-900 focus:outline-none text-sm">
+<option value="name">Name</option>
+<option value="price-asc">Price Low-High</option>
+<option value="price-desc">Price High-Low</option>
+<option value="stock-asc">Stock Low-High</option>
+<option value="stock-desc">Stock High-Low</option>
+</select>
+</div>
+<div class="flex flex-wrap gap-2">
+<button @click="filterBy = 'all'" :class="filterBy === 'all' ? 'bg-gray-900 text-white' : 'bg-white border border-gray-200 text-gray-700'" class="px-3 py-1.5 rounded-full text-xs font-medium transition">All <span x-text="'(' + store.products.length + ')'"></span></button>
+<button @click="filterBy = 'low'" :class="filterBy === 'low' ? 'bg-orange-600 text-white' : 'bg-white border border-gray-200 text-gray-700'" class="px-3 py-1.5 rounded-full text-xs font-medium transition">Low stock <span x-text="'(' + lowStockCount() + ')'"></span></button>
+<button @click="filterBy = 'out'" :class="filterBy === 'out' ? 'bg-red-600 text-white' : 'bg-white border border-gray-200 text-gray-700'" class="px-3 py-1.5 rounded-full text-xs font-medium transition">Sold out <span x-text="'(' + outOfStockCount() + ')'"></span></button>
+</div>
+</div><h2 class="text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wide">Products <span class="text-gray-400" x-text="'(' + store.products.length + ')'"></span></h2>
+      <button @click="openNew()" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium hover:bg-gray-800">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        Add Product
+      </button>
+    </div>
+
+    <div class="md:bg-white md:rounded-2xl md:border md:border-gray-200 md:overflow-hidden">
+      <div class="hidden md:grid grid-cols-[80px_1fr_140px_140px_100px] gap-4 px-5 py-3 bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+        <div>Photo</div><div>Product</div><div>Price</div><div>Stock</div><div class="text-right">Actions</div>
+      </div>
+      <div class="space-y-3 md:space-y-0 md:divide-y md:divide-gray-100">
+        <template x-for="product in filteredProducts()" :key="product.id">
+          <div class="md:grid md:grid-cols-[80px_1fr_140px_140px_100px] md:gap-4 md:px-5 md:py-4 md:hover:bg-gray-50 md:items-center">
+            <div class="md:hidden flex gap-3 p-3 rounded-2xl bg-white border border-gray-100 items-center">
+              <div class="w-16 h-16 rounded-xl bg-gray-100 flex-shrink-0 overflow-hidden"><img :src="product.image" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
+              <div class="flex-1 min-w-0">
+                <h3 class="font-medium text-gray-900 text-sm truncate" x-text="product.name"></h3>
+                <p class="text-xs text-gray-500 mt-0.5">
+                  <span x-text="'R' + product.price"></span>
+                  <span class="mx-1">----</span>
+                  <span x-text="product.stock == null ? 'Unlimited' : ('Stock ' + product.stock)"></span>
+                  <span x-show="product.variants && product.variants.length" x-text="' ---- ' + product.variants.length + ' options'" class="ml-1 text-emerald-600 font-medium"></span>
+                </p>
+              </div>
+              <button @click="openEdit(store.products.indexOf(product))" class="px-4 py-2 rounded-xl bg-white border border-gray-200 text-sm font-medium text-gray-900 active:bg-gray-100">Edit</button>
+            </div>
+            <div class="hidden md:contents">
+              <div class="w-16 h-16 rounded-xl bg-gray-100 overflow-hidden"><img :src="product.image" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
+              <div class="min-w-0 self-center">
+                <div class="font-medium text-gray-900 truncate" x-text="product.name"></div>
+                <div class="text-xs text-gray-500 truncate mt-0.5" x-text="product.blurb || ''"></div>
+              </div>
+              <div class="text-sm font-medium text-gray-900 self-center" x-text="'R' + product.price"></div>
+              <div class="text-sm text-gray-600 self-center" x-text="product.stock == null ? 'Unlimited' : product.stock"></div>
+              <div class="text-right self-center"><button @click="openEdit(store.products.indexOf(product))" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100">Edit</button></div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <button @click="openNew()" class="w-full md:hidden mt-4 py-4 rounded-2xl border-2 border-dashed border-gray-300 text-gray-500 font-medium text-sm">+ Add New Product</button>
+  </main>
+</div>
+
+<div x-show="editOpen" class="fixed inset-0 z-50" style="display:none">
+  <div class="hidden md:block absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeEdit()"></div>
+  <div class="absolute inset-0 bg-white flex flex-col md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-3xl md:shadow-2xl md:max-w-5xl md:w-[90%] md:max-h-[92vh] md:overflow-hidden">
+    <header class="flex items-center justify-between px-4 py-3 md:px-6 md:py-5 border-b border-gray-100 flex-shrink-0">
+      <button @click="closeEdit()" class="p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+      <h2 class="text-base md:text-lg font-semibold text-gray-900" x-text="editIndex === null ? 'New Product' : 'Edit Product'"></h2>
+      <button @click="deleteProduct()" x-show="editIndex !== null" class="p-2 -mr-2 text-red-600 hover:bg-red-50 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+    </header>
+
+    <div class="flex-1 overflow-y-auto">
+      <div class="md:grid md:grid-cols-[320px_1fr] md:gap-8 md:p-8 md:items-start">
+        <div class="px-5 py-5 md:p-0">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Product photo</label>
+          <div class="relative rounded-2xl overflow-hidden bg-gray-100 aspect-square">
+            <img :src="editing.image" class="w-full h-full object-cover" x-show="editing.image" onerror="this.style.display='none'">
+            <div x-show="!editing.image" class="absolute inset-0 flex items-center justify-center text-gray-400">
+              <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            </div>
+            <button @click="uploadPhoto()" class="absolute bottom-3 right-3 px-4 py-2 rounded-xl bg-white shadow-lg text-sm font-medium text-gray-900">Change photo</button>
+          </div>
+        </div>
+
+        <div class="px-5 py-5 md:p-0 space-y-5">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Product name</label>
+            <input type="text" x-model="editing.name" placeholder="e.g. iPhone 13" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none">
+<div class="mt-5"><label class="block text-sm font-medium text-gray-700 mb-2">Category</label><div class="relative" x-data="{ ac_o: false, ac_q: '' }"><input type="text" x-model="editing.category" @input="ac_q = $event.target.value; ac_o = true" @focus="ac_o = true; ac_q = editing.category || ''" @blur="setTimeout(() => ac_o = false, 200)" placeholder="Tap to see categories" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"><div x-show="ac_o" x-cloak class="absolute left-0 right-0 top-full mt-1 z-50 bg-white border border-gray-200 rounded-2xl shadow-2xl max-h-64 overflow-y-auto"><template x-for="s in suggestionsFor('categoriesList', ac_q)" :key="s"><button type="button" @mousedown.prevent="editing.category = s; ac_o = false" class="w-full text-left px-4 py-3 text-sm hover:bg-gray-100 active:bg-gray-200 font-medium" x-text="s"></button></template></div></div><p class="text-xs text-gray-500 mt-1">Groups similar products. Used for storefront filtering.</p></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Base price (R)</label>
+              <input type="number" x-model.number="editing.price" placeholder="8999" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none">
+              <p class="text-xs text-gray-500 mt-1">Smallest option's price</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Stock (if no options)</label>
+              <input type="number" x-model.number="editing.stock" placeholder="Empty = unlimited" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Short description</label>
+            <textarea x-model="editing.blurb" rows="2" placeholder="e.g. 94% battery health, unlocked" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none resize-none"></textarea>
+          </div>
+
+          <div class="border-t border-gray-100 pt-5">
+            <div class="flex items-center justify-between mb-3">
+              <label class="text-sm font-semibold text-gray-900">Specs (bullet points)</label>
+              <button @click="addSpec()" class="text-xs font-medium text-gray-700 hover:text-gray-900">+ Add spec</button>
+            </div>
+            <div class="space-y-2">
+              <template x-for="(spec, i) in editing.specs" :key="i">
+                <div class="flex gap-2">
+                  <div class="relative flex-1" x-data="{ ac_o: false, ac_q: '' }"><input type="text" x-model="editing.specs[i]" @input="ac_q = $event.target.value; ac_o = true" @focus="ac_o = true; ac_q = editing.specs[i] || ''" @blur="setTimeout(() => ac_o = false, 200)" placeholder="Tap for suggestions" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-gray-900 focus:outline-none"><div x-show="ac_o" x-cloak class="absolute left-0 right-0 top-full mt-1 z-50 bg-white border border-gray-200 rounded-2xl shadow-2xl max-h-64 overflow-y-auto"><template x-for="s in suggestionsFor('specsList', ac_q)" :key="s"><button type="button" @mousedown.prevent="editing.specs[i] = s; ac_o = false" class="w-full text-left px-4 py-3 text-sm hover:bg-gray-100 active:bg-gray-200 font-medium" x-text="s"></button></template></div></div>
+                  <button @click="editing.specs.splice(i, 1)" class="w-11 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50">&#215;</button>
+                </div>
+              </template>
+              <p x-show="!editing.specs || !editing.specs.length" class="text-sm text-gray-400 italic">No specs added yet</p>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-100 pt-5">
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-sm font-semibold text-gray-900">Options (Size, Storage, Colour)</label>
+              <button @click="addOption()" x-show="editing.options.length < 2" class="text-xs font-medium text-gray-700 hover:text-gray-900">+ Add option type</button>
+            </div>
+            <p class="text-xs text-gray-500 mb-3">Add up to 2 types. e.g. <strong>Storage</strong> (128GB, 256GB) and <strong>Colour</strong> (Midnight, Blue). Each combination gets its own stock.</p>
+
+            <div class="space-y-3 md:space-y-0 md:grid md:grid-cols-2 md:gap-4"><template x-for="(opt, oi) in editing.options" :key="oi">
+              <div class="p-3 rounded-xl border border-gray-200 bg-gray-50 space-y-3 mb-3">
+                <div class="flex gap-2">
+                  <input type="text" x-model="opt.name" @input="recompute()" list="common-option-names" placeholder="Option name (e.g. Storage)" class="flex-1 px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-sm font-medium focus:border-gray-900 focus:outline-none">
+                  <button @click="removeOption(oi)" class="w-11 rounded-xl border border-gray-200 bg-white text-gray-500 hover:bg-gray-100">&#215;</button>
+                </div>
+                <div class="pl-3 space-y-2">
+                  <template x-for="(val, vi) in opt.values" :key="vi">
+                    <div class="flex gap-2 items-center">
+                      <div class="relative flex-1" x-data="{ ac_o: false, ac_q: '' }"><input type="text" x-model="opt.values[vi]" @input="recompute(); ac_q = $event.target.value; ac_o = true; if (isColorOption(opt)) { opt.colors[vi] = hexForColor($event.target.value) }" @focus="ac_o = true; ac_q = opt.values[vi] || ''" @blur="setTimeout(() => ac_o = false, 200)" placeholder="Tap for suggestions" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:border-gray-900 focus:outline-none"><div x-show="ac_o" x-cloak class="absolute left-0 right-0 top-full mt-1 z-50 bg-white border border-gray-200 rounded-2xl shadow-2xl max-h-64 overflow-y-auto"><template x-for="s in suggestionsFor(listForOption(opt.name), ac_q)" :key="s"><button type="button" @mousedown.prevent="opt.values[vi] = s; recompute(); if (isColorOption(opt)) { opt.colors[vi] = hexForColor(s) }; ac_o = false" class="w-full text-left px-4 py-3 text-sm hover:bg-gray-100 active:bg-gray-200 font-medium" x-text="s"></button></template></div></div>
+                      <input type="color" x-model="opt.colors[vi]" x-show="isColorOption(opt)" class="w-11 h-11 rounded-xl border border-gray-200 bg-white cursor-pointer">
+                      <button @click="removeValue(oi, vi)" class="w-11 h-11 rounded-xl border border-gray-200 bg-white text-gray-500 hover:bg-gray-100">&#215;</button>
+                    </div>
+                  </template>
+                  <button @click="addValue(oi)" class="text-xs font-medium text-gray-600 hover:text-gray-900">+ Add value</button>
+                </div>
+              </div>
+</div>
+            </template>mplate>
+
+            <template x-if="editing.options.length === 0">
+              <p class="text-sm text-gray-400 italic">No options -------- product sold as a single item</p>
+            </template>
+          </div>
+
+          <div class="border-t border-gray-100 pt-5" x-show="combinations().length > 0">
+            <label class="block text-sm font-semibold text-gray-900 mb-1">Stock & price for each combination</label>
+            <p class="text-xs text-gray-500 mb-3">Fill stock. Add extra charge if the option costs more than base price.</p>
+            <div class="space-y-2">
+              <template x-for="combo in combinations()" :key="combo.key">
+                <div class="grid grid-cols-[1fr_90px_90px] md:grid-cols-[1fr_110px_110px] gap-2 items-center p-2.5 rounded-xl bg-white border border-gray-200">
+                  <div class="text-sm font-medium truncate" x-text="combo.label"></div>
+                  <input type="number" x-model.number="combo.data.stock" placeholder="Stock" class="px-2.5 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-900 focus:outline-none">
+                  <input type="number" x-model.number="combo.data.priceDelta" placeholder="+R" class="px-2.5 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-900 focus:outline-none">
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white border-t border-gray-100 px-5 py-4 md:px-8 md:py-5 pb-6 md:pb-5 flex-shrink-0 md:flex md:justify-end">
+      <button @click="saveProduct()" :disabled="!editing.name || !editing.price" class="w-full md:w-auto md:px-8 py-4 md:py-3 rounded-2xl bg-gray-900 text-white font-semibold disabled:bg-gray-300">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<div x-show="settingsOpen" class="fixed inset-0 z-50" style="display:none">
+  <div class="hidden md:block absolute inset-0 bg-black/40 backdrop-blur-sm" @click="settingsOpen = false"></div>
+  <div class="absolute inset-0 bg-white flex flex-col md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-3xl md:shadow-2xl md:max-w-3xl md:w-[90%] md:max-h-[90vh] md:overflow-hidden">
+    <header class="flex items-center justify-between px-4 py-3 md:px-6 md:py-5 border-b border-gray-100 flex-shrink-0">
+      <button @click="settingsOpen = false" class="p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+      <h2 class="text-base md:text-lg font-semibold text-gray-900">Store Settings</h2>
+      <div class="w-6"></div>
+    </header>
+    <div class="flex-1 overflow-y-auto px-5 py-5 md:px-8 md:py-6 md:grid md:grid-cols-2 md:gap-8">
+      <div class="space-y-5">
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Store info</p>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Store name</label><input type="text" x-model="settings.brand.name" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Slogan</label><input type="text" x-model="settings.brand.tagline" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">WhatsApp order number</label><input type="text" x-model="settings.whatsapp" placeholder="+27821234567" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
+      </div>
+      <div class="space-y-5 mt-8 md:mt-0">
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Bank details (for EFT)</p>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Account holder</label><input type="text" x-model="settings.bank.accountName" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Bank</label><input type="text" x-model="settings.bank.bankName" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Account number</label><input type="text" x-model="settings.bank.accountNumber" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-2">Branch code</label><input type="text" x-model="settings.bank.branchCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
+      </div>
+    </div>
+    <div class="bg-white border-t border-gray-100 px-5 py-4 md:px-8 md:py-5 pb-6 md:pb-5 flex-shrink-0 md:flex md:justify-end">
+      <button @click="saveSettings()" class="w-full md:w-auto md:px-8 py-4 md:py-3 rounded-2xl bg-gray-900 text-white font-semibold">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<div x-show="saved" x-transition class="fixed top-4 right-4 md:top-6 md:right-6 z-[70] px-5 py-2.5 rounded-full bg-emerald-600 text-white text-sm font-medium shadow-lg" style="display:none">Saved -------</div>
+
+<script>
+var CLOUDINARY_CLOUD = 'e4kmlh67';
+var CLOUDINARY_PRESET = 'outreach_unsigned';
+
+function sellerApp() {
+  return {
+    loading: true, search: '', sortBy: 'name', filterBy: 'all',
+    store: { brand: { name: '', tagline: '' }, bank: {}, products: [] },
+    settings: {},
+    editing: {},
+    editIndex: null, editOpen: false, settingsOpen: false, saved: false,
+        storageList: ['16GB','32GB','64GB','128GB','256GB','512GB','1TB'],
+    volumeList: ['15ml','30ml','50ml','75ml','100ml','150ml','200ml','250ml','500ml','1L'],
+    weightList: ['10g','20g','50g','100g','200g','250g','500g','1kg'],
+    sizeList: ['XS','Small','Medium','Large','XL','XXL','One Size','Single','2-Pack','3-Pack','5-Pack','Bundle'],
+    colorHexMap: {'black':'#000000','white':'#ffffff','silver':'#c0c0c0','gold':'#d4af37','rose gold':'#e8b4b8','blue':'#2563eb','navy':'#1e3a8a','red':'#dc2626','green':'#22c55e','purple':'#8b5cf6','violet':'#7c3aed','pink':'#ec4899','nude':'#e8d5c4','beige':'#d6c9b8','grey':'#6b7280','gray':'#6b7280','brown':'#92400e','midnight':'#1e293b','deep purple':'#6d28d9','sierra blue':'#7a95b8','titanium':'#878681','orange':'#f97316','yellow':'#facc15','teal':'#14b8a6','mint':'#a7f3d0','coral':'#fb7185','maroon':'#7f1d1d','olive':'#65a30d','cream':'#fef3c7','charcoal':'#374151'},
+    hexForColor: function(name) {
+      if (!name) return '#cccccc';
+      var key = String(name).toLowerCase().trim();
+      if (this.colorHexMap[key]) return this.colorHexMap[key];
+      for (var k in this.colorHexMap) {
+        if (key.indexOf(k) !== -1 || k.indexOf(key) !== -1) return this.colorHexMap[k];
+      }
+      return '#cccccc';
+    },
+    colorsList: ['Black','White','Silver','Gold','Rose Gold','Blue','Navy','Red','Green','Purple','Pink','Nude','Beige','Grey','Brown','Midnight','Deep Purple','Sierra Blue','Titanium'],
+    categoriesList: ['iPhones','Phones','Samsung','Tablets','Laptops','MacBooks','Accessories','Headphones','Chargers','Cases','Cables','Power Banks','Fragrances','Perfumes','Attars','Body Mists','Gift Sets','Skincare','Serums','Moisturisers','Sun Care','Cleansers','Smart Home','Smart Lights','Smart Plugs','Smart Bulbs','Security Cameras','Smart Speakers','Home Appliances','Audio','Wearables','Smart Watches'],
+    specsList: ['30-day warranty','Free delivery','Brand new','Certified pre-owned','Battery 90%+','Unlocked','Original box','1-year warranty','Cruelty-free','Vegan','Dermatologist tested','Long lasting 8+ hrs','Hand-blended','Alcohol-free','Unisex','For him','For her','Works with Alexa','Works with Google Home','Works with Apple HomeKit','Wi-Fi enabled','Bluetooth 5.0','Smartphone app control','Voice activated','USB-C','Fast charging','Wireless','Water resistant','Energy efficient','100% original','Imported','Local stock','Same-day dispatch'],
+    ramList: ['2GB RAM','3GB RAM','4GB RAM','6GB RAM','8GB RAM','12GB RAM','16GB RAM','32GB RAM'],
+    optionNamesList: ['Storage','Size','Volume','Capacity','Weight','RAM','Color','Colour','Scent','Flavour','Pack Size'],
+    suggestionsFor: function(listName, q) {
+      var list = this[listName] || [];
+      if (!q || !q.trim()) return list.slice(0, 8);
+      var lq = q.toLowerCase().trim();
+      return list.filter(function(s){ return s.toLowerCase().indexOf(lq) !== -1; }).slice(0, 8);
+    },
+    listForOption: function(name) {
+      var n = (name || "").toLowerCase();
+      if (n.indexOf("col") !== -1) return "colorsList";
+      if (n.indexOf("volume") !== -1) return "storageList";
+      if (n.indexOf("size") !== -1) return "storageList";
+      if (n.indexOf("ram") !== -1) return "ramList";
+      if (n.indexOf("storage") !== -1) return "storageList";
+      if (n.indexOf("volume") !== -1) return "volumeList";
+      if (n.indexOf("ml") !== -1) return "volumeList";
+      if (n.indexOf("weight") !== -1) return "weightList";
+      if (n.indexOf("gram") !== -1) return "weightList";
+      if (n.indexOf("pack") !== -1) return "sizeList";
+      if (n.indexOf("capacity") !== -1) return "storageList";
+      if (n.indexOf("scent") !== -1) return "colorsList";
+      if (n.indexOf("flavour") !== -1) return "colorsList";
+      if (n.indexOf("pack") !== -1) return "storageList";
+      return "storageList";
+    },    brandId: new URLSearchParams(location.search).get('brand') || 'techhub',
+    isLocal: location.hostname === 'localhost' || location.hostname === '127.0.0.1',
+
+    async init() {
+      try {
+        var res = await fetch('/data/config-' + this.brandId + '.json?_=' + Date.now(), { cache: 'no-store' });
+        this.store = await res.json();
+        this.loading = false;
+      } catch (e) { console.error(e); this.loading = false; }
+    },
+
+    openEdit(index) {
+      this.editIndex = index;
+      var p = JSON.parse(JSON.stringify(this.store.products[index]));
+      if (!p.specs) p.specs = [];
+      if (!p.options) p.options = [];
+      if (!p.variants) p.variants = [];
+      this.editing = p;
+      this.editOpen = true;
+      this.recompute();
+    },
+
+    openNew() {
+      this.editIndex = null;
+      this.editing = { id: 'item-' + Date.now(), name: '', price: 0, stock: null, blurb: '', image: '', category: '', specs: [], options: [], variants: [] };
+      this.editOpen = true;
+    },
+
+    closeEdit() { this.editOpen = false; this.editing = {}; this.editIndex = null; },
+
+    addSpec() { if (!this.editing.specs) this.editing.specs = []; this.editing.specs.push(''); },
+
+    isColorOption(opt) { var n = (opt.name || '').toLowerCase(); return n.includes('color') || n.includes('colour'); },
+
+    addOption() {
+      if (!this.editing.options) this.editing.options = [];
+      this.editing.options.push({ name: '', values: [''], colors: ['#888888'] });
+    },
+
+    removeOption(oi) { this.editing.options.splice(oi, 1); this.recompute(); },
+
+    addValue(oi) {
+      this.editing.options[oi].values.push('');
+      this.editing.options[oi].colors.push('#888888');
+      this.recompute();
+    },
+
+    removeValue(oi, vi) {
+      this.editing.options[oi].values.splice(vi, 1);
+      this.editing.options[oi].colors.splice(vi, 1);
+      this.recompute();
+    },
+
+    recompute() {
+      var opts = (this.editing.options || []).filter(function(o){ return o.name && o.values.filter(function(v){ return v && v.trim(); }).length > 0; });
+      var acc = [[]];
+      opts.forEach(function(opt){
+        var next = [];
+        var vals = opt.values.filter(function(v){ return v && v.trim(); });
+        acc.forEach(function(c){ vals.forEach(function(v){ next.push(c.concat([v])); }); });
+        acc = next;
+      });
+      var data = {};
+      var existing = this.editing.comboData || {};
+      acc.forEach(function(combo){
+        var key = combo.join('||');
+        data[key] = existing[key] || { stock: 0, priceDelta: 0 };
+      });
+      this.editing.comboData = data;
+    },
+
+    combinations() {
+      var opts = (this.editing.options || []).filter(function(o){ return o.name && o.values.filter(function(v){ return v && v.trim(); }).length > 0; });
+      if (opts.length === 0) return [];
+      var acc = [[]];
+      opts.forEach(function(opt){
+        var next = [];
+        var vals = opt.values.filter(function(v){ return v && v.trim(); });
+        acc.forEach(function(c){ vals.forEach(function(v){ next.push(c.concat([v])); }); });
+        acc = next;
+      });
+      var self = this;
+      return acc.map(function(combo){
+        var key = combo.join('||');
+        var data = (self.editing.comboData && self.editing.comboData[key]) || { stock: 0, priceDelta: 0 };
+        return { key: key, label: combo.join(' ---- '), values: combo, data: data };
+      });
+    },
+
+    async saveProduct() {
+      if (!this.editing.name || !this.editing.price) return;
+      var clean = JSON.parse(JSON.stringify(this.editing));
+      clean.specs = (clean.specs || []).filter(function(s){ return s && s.trim(); });
+      if (clean.specs.length === 0) delete clean.specs;
+
+      var opts = (clean.options || []).filter(function(o){ return o.name && o.values.filter(function(v){ return v && v.trim(); }).length > 0; });
+      if (opts.length > 0) {
+        var combos = this.combinations();
+        clean.variants = combos.map(function(c){
+          var v = {
+            id: c.values.join('-').toLowerCase().replace(/[^a-z0-9-]/g, ''),
+            name: c.label,
+            stock: c.data.stock || 0,
+            priceDelta: c.data.priceDelta || 0
+          };
+          // Attach color hex from any color option
+          for (var i = 0; i < opts.length; i++) {
+            var n = (opts[i].name || '').toLowerCase();
+            if (n.includes('color') || n.includes('colour')) {
+              var idx = opts[i].values.indexOf(c.values[i]);
+              if (idx >= 0) v.color = opts[i].colors[idx] || '#888888';
+            }
+          }
+          // Store combination for structured lookup
+          v.combo = {};
+          for (var j = 0; j < opts.length; j++) v.combo[opts[j].name] = c.values[j];
+          return v;
+        });
+        clean.options = opts;
+      } else {
+        delete clean.options;
+        delete clean.variants;
+      }
+      delete clean.comboData;
+
+      if (this.editIndex === null) this.store.products.push(clean);
+      else this.store.products[this.editIndex] = clean;
+      await this.commit('Product saved');
+      this.closeEdit();
+    },
+
+    deleteProduct() {
+      if (!confirm('Delete this product?')) return;
+      this.store.products.splice(this.editIndex, 1);
+      this.commit('Product deleted');
+      this.closeEdit();
+    },
+
+        filteredProducts() {
+      var q = (this.search || '').toLowerCase().trim();
+      var self = this;
+      var list = (this.store.products || []).filter(function(p) {
+        if (self.filterBy === 'low' && !(p.stock > 0 && p.stock <= 3)) return false;
+        if (self.filterBy === 'out' && p.stock !== 0) return false;
+        if (q) {
+          var hay = ((p.name || '') + ' ' + (p.blurb || '') + ' ' + (p.category || '')).toLowerCase();
+          if (hay.indexOf(q) === -1) return false;
+        }
+        return true;
+      });
+      var s = this.sortBy;
+      list.sort(function(a, b) {
+        if (s === 'price-asc') return a.price - b.price;
+        if (s === 'price-desc') return b.price - a.price;
+        if (s === 'stock-asc') return (a.stock || 0) - (b.stock || 0);
+        if (s === 'stock-desc') return (b.stock || 0) - (a.stock || 0);
+        return (a.name || '').localeCompare(b.name || '');
+      });
+      return list;
+    },
+    openSettings() { this.settings = JSON.parse(JSON.stringify(this.store)); this.settingsOpen = true; },
+    inventoryValue() { return this.store.products.reduce((sum, p) => { if (p.stock === null || p.stock === undefined) return sum; return sum + (p.price * p.stock); }, 0); },
+    unlimitedCount() { return this.store.products.filter(p => p.stock === null || p.stock === undefined).length; },
+    lowStockCount() { return this.store.products.filter(p => p.stock !== null && p.stock !== undefined && p.stock > 0 && p.stock <= 3).length; },
+    outOfStockCount() { return this.store.products.filter(p => p.stock === 0).length; },
+    attentionItems() { return this.store.products.filter(p => p.stock === 0 || (p.stock !== null && p.stock !== undefined && p.stock > 0 && p.stock <= 3)); },
+
+    async saveSettings() {
+      this.store.brand = this.settings.brand;
+      this.store.bank = this.settings.bank;
+      this.store.whatsapp = this.settings.whatsapp;
+      await this.commit('Store settings saved');
+      this.settingsOpen = false;
+    },
+
+    async commit(message) {
+      this.saved = true;
+      setTimeout(() => { this.saved = false; }, 2500);
+      // localStorage save removed - writes to disk instead 
+      try {
+        var res = await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ brand: this.brandId, data: this.store, message: message }) });
+        if (!res.ok) throw new Error('Save failed');
+      } catch (e) { console.error(e); alert('Could not save.'); }
+    },
+
+    uploadPhoto() {
+      var self = this;
+      var input = document.createElement('input');
+      input.type = 'file'; input.accept = 'image/*';
+      input.onchange = async function() {
+        var file = input.files[0]; if (!file) return;
+        var form = new FormData();
+        form.append('file', file);
+        form.append('upload_preset', CLOUDINARY_PRESET);
+        form.append('folder', 'products');
+        try {
+          var res = await fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD + '/image/upload', { method: 'POST', body: form });
+          var data = await res.json();
+          if (data.secure_url) self.editing.image = data.secure_url + '?q_auto,f_auto,w_1000';
+          else alert('Upload failed.');
+        } catch (e) { alert('Upload failed'); }
+      };
+      input.click();
+    }
+  };
+}
+</script>
+<datalist id="common-storage">
+<option value="16GB"><option value="32GB"><option value="64GB"><option value="128GB"><option value="256GB"><option value="512GB"><option value="1TB">
+<option value="30ml"><option value="50ml"><option value="75ml"><option value="100ml"><option value="150ml"><option value="200ml"><option value="250ml">
+<option value="10g"><option value="20g"><option value="50g"><option value="100g"><option value="250g"><option value="500g">
+<option value="Small"><option value="Medium"><option value="Large"><option value="XL"><option value="One Size">
+<option value="Single"><option value="2-Pack"><option value="3-Pack"><option value="Bundle">
+</datalist>
+<datalist id="common-colors">
+<option value="Black"><option value="White"><option value="Silver"><option value="Gold"><option value="Rose Gold">
+<option value="Blue"><option value="Navy"><option value="Red"><option value="Green"><option value="Purple">
+<option value="Pink"><option value="Nude"><option value="Beige"><option value="Grey"><option value="Brown">
+<option value="Midnight"><option value="Deep Purple"><option value="Sierra Blue"><option value="Titanium">
+</datalist>
+<datalist id="common-categories">
+<option value="iPhones"><option value="Phones"><option value="Samsung"><option value="Tablets"><option value="Laptops"><option value="MacBooks">
+<option value="Accessories"><option value="Headphones"><option value="Chargers"><option value="Cases"><option value="Cables"><option value="Power Banks">
+<option value="Fragrances"><option value="Perfumes"><option value="Attars"><option value="Body Mists"><option value="Gift Sets">
+<option value="Skincare"><option value="Serums"><option value="Moisturisers"><option value="Sun Care"><option value="Cleansers">
+<option value="Smart Home"><option value="Smart Lights"><option value="Smart Plugs"><option value="Smart Bulbs"><option value="Security Cameras"><option value="Smart Speakers">
+<option value="Home Appliances"><option value="Audio"><option value="Wearables"><option value="Smart Watches">
+</datalist>
+<datalist id="common-specs">
+<option value="30-day warranty"><option value="Free delivery"><option value="Brand new"><option value="Certified pre-owned">
+<option value="Battery 90%+"><option value="Unlocked"><option value="Original box"><option value="1-year warranty">
+<option value="Cruelty-free"><option value="Vegan"><option value="Dermatologist tested"><option value="Long lasting 8+ hrs">
+<option value="Hand-blended"><option value="Alcohol-free"><option value="Unisex"><option value="For him"><option value="For her">
+<option value="Works with Alexa"><option value="Works with Google Home"><option value="Works with Apple HomeKit">
+<option value="Wi-Fi enabled"><option value="Bluetooth 5.0"><option value="Smartphone app control"><option value="Voice activated">
+<option value="USB-C"><option value="Fast charging"><option value="Wireless"><option value="Water resistant"><option value="Energy efficient">
+<option value="100% original"><option value="Imported"><option value="Local stock"><option value="Same-day dispatch">
+</datalist>
+<datalist id="common-option-names">
+<option value="Storage"><option value="Size"><option value="Volume"><option value="Capacity"><option value="Weight">
+<option value="Color"><option value="Colour"><option value="Scent"><option value="Flavour"><option value="Pack Size">
+</datalist>
+</body>
+</html>

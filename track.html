@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Track your order</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+  [x-cloak] { display: none !important; }
+</style>
+</head>
+<body class="min-h-screen bg-gray-50 py-6 px-4 md:py-12 md:px-8">
+
+<div class="max-w-lg md:max-w-5xl mx-auto">
+  <header class="text-center mb-6 md:mb-10">
+    <p class="text-xs md:text-sm uppercase tracking-[0.25em] text-gray-500">Track your order</p>
+    <h1 id="brandName" class="mt-2 text-2xl md:text-4xl font-semibold text-gray-900">Loading...</h1>
+  </header>
+
+  <div id="loading" class="bg-white rounded-3xl p-10 md:p-16 text-center shadow-sm">
+    <div class="w-8 h-8 md:w-10 md:h-10 mx-auto border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin"></div>
+    <p class="mt-4 text-sm md:text-base text-gray-500">Looking up your order...</p>
+  </div>
+
+  <div id="askRef" class="hidden bg-white rounded-3xl p-8 md:p-12 shadow-sm max-w-lg mx-auto">
+    <h2 class="text-lg md:text-2xl font-semibold text-gray-900 text-center">Enter your tracking reference</h2>
+    <p class="mt-2 text-sm md:text-base text-gray-500 text-center">You got this when you placed your order. Example: TE-251006-C5R8K4Q1</p>
+    <div class="mt-6 flex flex-col md:flex-row gap-3">
+      <input id="refInput" type="text" placeholder="TE-XXXXXXXX-XXXXXXXX" class="flex-1 px-4 py-3 rounded-2xl border border-gray-200 focus:border-gray-900 focus:outline-none font-mono text-sm md:text-base uppercase" />
+      <button id="lookupBtn" class="px-6 py-3 rounded-2xl bg-gray-900 text-white font-semibold hover:bg-gray-800">Look up</button>
+    </div>
+  </div>
+
+  <div id="notFound" class="hidden bg-white rounded-3xl p-8 md:p-16 text-center shadow-sm max-w-lg mx-auto">
+    <h2 class="mt-4 text-lg md:text-2xl font-semibold text-gray-900">Order not found</h2>
+    <p class="mt-2 text-sm md:text-base text-gray-500">We could not find an order with that reference number.</p>
+    <button id="tryAgainBtn" class="mt-6 px-6 py-3 rounded-2xl border border-gray-200 text-gray-900 font-semibold hover:bg-gray-50">Try another reference</button>
+  </div>
+
+  <div id="orderFound" class="hidden">
+    <div class="grid grid-cols-1 md:grid-cols-2 md:gap-6 lg:gap-8">
+      <div class="space-y-4 md:space-y-6">
+        <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm">
+          <p class="text-xs uppercase tracking-[0.25em] text-gray-500">Reference</p>
+          <p id="ref" class="mt-1 font-mono text-base md:text-lg font-semibold text-gray-900"></p>
+          <p id="hello" class="mt-3 text-sm md:text-base text-gray-600"></p>
+        </div>
+        <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm">
+          <p class="text-xs uppercase tracking-[0.25em] text-gray-500 mb-4 md:mb-6">Status</p>
+          <div id="timeline" class="space-y-5 md:space-y-6"></div>
+        </div>
+      </div>
+      <div class="space-y-4 md:space-y-6 mt-4 md:mt-0">
+        <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm">
+          <p class="text-xs uppercase tracking-[0.25em] text-gray-500 mb-4">Items</p>
+          <div id="items" class="space-y-4"></div>
+          <div class="mt-5 pt-5 border-t border-gray-100 space-y-2 text-sm md:text-base">
+            <div class="flex justify-between"><span class="text-gray-500">Subtotal</span><span id="subtotal"></span></div>
+            <div class="flex justify-between"><span class="text-gray-500">Shipping</span><span id="shipping"></span></div>
+            <div class="flex justify-between font-semibold text-base md:text-lg pt-3 border-t border-gray-100"><span>Total</span><span id="total"></span></div>
+          </div>
+        </div>
+        <div id="trackingCard" class="bg-blue-50 border border-blue-200 rounded-3xl p-6 md:p-8 hidden">
+          <p class="text-xs uppercase tracking-[0.25em] text-blue-700 mb-3">Tracking</p>
+          <p id="carrier" class="text-sm md:text-base text-blue-900"></p>
+          <p id="trackingNumber" class="mt-1 font-mono text-base md:text-lg font-semibold text-blue-900"></p>
+        </div>
+        <a id="whatsappBtn" target="_blank" class="block w-full text-center rounded-2xl bg-emerald-600 text-white font-semibold py-4 hover:bg-emerald-700 text-sm md:text-base">Questions? WhatsApp the store</a>
+        <p class="text-center text-xs text-gray-400">Private link. Do not share publicly.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var params = new URLSearchParams(location.search);
+  var ref = (params.get('ref') || '').trim();
+  var brand = (params.get('brand') || localStorage.getItem('brand') || 'techhub').replace(/[^a-z0-9-]/gi, '');
+
+  function show(id) {
+    ['loading','notFound','orderFound'].forEach(function(x) {
+      var el = document.getElementById(x);
+      if (el) el.classList.add('hidden');
+    });
+    var target = document.getElementById(id);
+    if (target) target.classList.remove('hidden');
+  }
+
+  function money(n) { return 'R' + Number(n || 0).toLocaleString('en-ZA'); }
+
+  function renderTimeline(order) {
+    var html = '';
+    var steps = order.timeline || [];
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      var isLast = i === steps.length - 1;
+      var isCancelled = order.status === 'cancelled' && isLast;
+      var isCurrent = isLast && order.status !== 'delivered' && order.status !== 'cancelled';
+      var dotClass = isCancelled ? 'bg-red-500' : (isCurrent ? 'bg-gray-900 animate-pulse' : 'bg-emerald-500');
+      var date = new Date(step.at).toLocaleDateString('en-ZA', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      html += '<div class="flex gap-4">';
+      html += '<div class="flex flex-col items-center flex-shrink-0"><div class="w-3 h-3 rounded-full ' + dotClass + '"></div>';
+      html += (isLast ? '' : '<div class="w-0.5 flex-1 bg-gray-200 my-1"></div>') + '</div>';
+      html += '<div class="pb-1 md:pb-2"><p class="text-sm md:text-base font-medium text-gray-900">' + step.event + '</p>';
+      html += '<p class="text-xs md:text-sm text-gray-500 mt-0.5">' + date + '</p>';
+      if (step.note) html += '<p class="text-xs md:text-sm text-gray-500 mt-1">' + step.note + '</p>';
+      html += '</div></div>';
+    }
+    document.getElementById('timeline').innerHTML = html;
+  }
+
+  function renderItems(order) {
+    var html = '';
+    var items = order.items || [];
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      html += '<div class="flex gap-4 items-center">';
+      if (it.image) {
+        html += '<div class="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0"><img src="' + it.image + '" class="w-full h-full object-cover" /></div>';
+      }
+      html += '<div class="flex-1 min-w-0"><p class="text-sm md:text-base font-medium text-gray-900 truncate">' + it.name + '</p>';
+      if (it.variant) html += '<p class="text-xs md:text-sm text-gray-500">' + it.variant + '</p>';
+      html += '<p class="text-xs md:text-sm text-gray-500 mt-0.5">Qty ' + it.qty + '</p></div>';
+      html += '<p class="text-sm md:text-base font-semibold text-gray-900 whitespace-nowrap">' + money(it.price * it.qty) + '</p>';
+      html += '</div>';
+    }
+    document.getElementById('items').innerHTML = html;
+  }
+
+  function render(order, config) {
+    document.getElementById('brandName').textContent = (config && config.brand && config.brand.name) || 'Your order';
+    document.getElementById('ref').textContent = order.ref;
+    document.getElementById('hello').textContent = 'Hi ' + (order.buyer && order.buyer.firstName ? order.buyer.firstName : 'there') + ', here is your order status.';
+
+    renderTimeline(order);
+    renderItems(order);
+
+    document.getElementById('subtotal').textContent = money(order.subtotal);
+    document.getElementById('shipping').textContent = money(order.shipping && order.shipping.price);
+    document.getElementById('total').textContent = money(order.total);
+
+    if (order.trackingNumber || order.carrier) {
+      document.getElementById('trackingCard').classList.remove('hidden');
+      document.getElementById('carrier').textContent = order.carrier || 'Courier';
+      document.getElementById('trackingNumber').textContent = order.trackingNumber || 'In transit';
+    }
+
+    var wa = (config && config.whatsapp) ? config.whatsapp : '';
+    var digits = String(wa).replace(/\D/g, '');
+    var msg = 'Hi, I want to ask about my order ' + order.ref;
+    document.getElementById('whatsappBtn').href = 'https://wa.me/' + digits + '?text=' + encodeURIComponent(msg);
+
+    show('orderFound');
+  }
+
+  function load() {
+    if (!ref) {
+      var ask = document.getElementById('askRef');
+      ['loading','notFound','orderFound'].forEach(function(x) {
+        var el = document.getElementById(x);
+        if (el) el.classList.add('hidden');
+      });
+      ask.classList.remove('hidden'); document.getElementById('brandName').textContent = ''; document.querySelector('header p').textContent = 'Enter your reference';
+      var inp = document.getElementById('refInput');
+      var btn = document.getElementById('lookupBtn');
+      inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') btn.click(); });
+      btn.addEventListener('click', function() {
+        var v = (inp.value || '').trim().toUpperCase();
+        if (!v) return;
+        location.href = '/track.html?ref=' + encodeURIComponent(v) + '&brand=' + brand;
+      });
+      document.getElementById('tryAgainBtn').addEventListener('click', function() {
+        location.href = '/track.html?brand=' + brand;
+      });
+      return;
+    }
+    var url1 = '/data/config-' + brand + '.json?_=' + Date.now();
+    var url2 = '/data/orders-' + brand + '.json?_=' + Date.now();
+    Promise.all([
+      fetch(url1, { cache: 'no-store' }).then(function(r) { return r.json(); }),
+      fetch(url2, { cache: 'no-store' }).then(function(r) { return r.json(); })
+    ]).then(function(results) {
+      var cfg = results[0];
+      var orders = results[1];
+      var order = orders[ref];
+      if (!order) { show('notFound'); return; }
+      render(order, cfg);
+    }).catch(function(e) {
+      console.error(e);
+      show('notFound');
+    });
+  }
+
+  var tBtn = document.getElementById('tryAgainBtn');
+  if (tBtn) tBtn.addEventListener('click', function() { location.href = '/track.html?brand=' + brand; });
+  load();
+})();
+</script>
+</body>
+</html>

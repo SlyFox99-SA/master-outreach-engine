@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en-ZA">
 <head>
 <meta charset="UTF-8" />
@@ -10,6 +10,50 @@
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 <script>setInterval(function(){ if(window.Alpine && window.Alpine.store("config")) window.Alpine.store("config").saleEndsIn(); }, 1000);</script></head>
 <template x-if="$store.config.saleActive()"><div class="bg-brand-accent text-white text-center py-2 px-4 text-sm font-semibold"><span x-text="$store.config.sale.label"></span> &#8226; <span x-text="$store.config.sale.discountPct + '% off'"></span> &#8226; ends in <span x-text="$store.config.saleEndsIn()"></span></div></template><body x-data class="min-h-screen bg-brand-surface text-brand-ink font-body">
+<div x-data="demoMode()" x-init="init()" x-show="isDemo" x-cloak>
+<div x-show="bannerDismissed === false" class="bg-amber-400 text-gray-900 text-center py-2 px-4 text-sm font-semibold flex items-center justify-center gap-3">
+<span>👋 You're viewing a demo store</span>
+<a href="/pitch/" class="underline">Get your own from R8,500 →</a>
+<button @click="bannerDismissed = true; persist()" class="ml-2 text-gray-700 hover:text-gray-900">×</button>
+</div>
+<div x-show="popupOpen" x-transition class="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center p-4" style="display:none" @click.self="closePopup()">
+<div class="bg-white rounded-3xl max-w-md w-full p-7 shadow-2xl">
+<div class="text-4xl mb-3">🎉</div>
+<h2 class="text-2xl font-bold mb-3">Welcome to the demo!</h2>
+<p class="text-gray-600 mb-5">This is a real, working store. Add things to your cart, go through checkout, explore the seller dashboard.</p>
+<div class="space-y-2 text-sm text-gray-700 mb-6">
+<div class="flex gap-2"><span>✅</span><span>Add products to cart, try checkout</span></div>
+<div class="flex gap-2"><span>✅</span><span>Try the seller dashboard at <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">/seller/</code></span></div>
+<div class="flex gap-2"><span>✅</span><span>No sign-up, no credit card, no data stored</span></div>
+</div>
+<div class="flex flex-col sm:flex-row gap-2">
+<a href="/pitch/" class="flex-1 text-center px-5 py-3 rounded-2xl bg-gray-900 text-white font-semibold">See pricing →</a>
+<button @click="closePopup()" class="flex-1 px-5 py-3 rounded-2xl border border-gray-200 font-medium">Keep exploring</button>
+</div>
+</div>
+</div>
+<a href="/pitch/" x-show="bannerDismissed === true" class="fixed bottom-4 right-4 z-40 px-4 py-2.5 rounded-full bg-gray-900 text-white text-sm font-semibold shadow-2xl hover:opacity-90">Get this site · R8,500 →</a>
+</div>
+<script>
+function demoMode() {
+  return {
+    isDemo: false,
+    popupOpen: false,
+    bannerDismissed: false,
+    init() {
+      const params = new URLSearchParams(location.search);
+      this.isDemo = params.get('demo') === '1';
+      if (!this.isDemo) return;
+      const seen = sessionStorage.getItem('demo_seen');
+      if (!seen) { setTimeout(() => { this.popupOpen = true; }, 1200); sessionStorage.setItem('demo_seen', '1'); }
+      const dismissed = sessionStorage.getItem('demo_banner_dismissed');
+      if (dismissed) this.bannerDismissed = true;
+    },
+    closePopup() { this.popupOpen = false; },
+    persist() { sessionStorage.setItem('demo_banner_dismissed', '1'); }
+  };
+}
+</script>
 <header class="sticky top-0 z-30 bg-brand-surface border-b border-black/5">
 <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-4">
 <div class="min-w-0 flex-1"><p class="text-[10px] uppercase tracking-[0.22em] opacity-60 truncate" x-text="$store.config.brand?.tagline"></p><h1 class="font-display text-lg md:text-2xl font-semibold leading-tight truncate" x-text="$store.config.brand?.name"></h1></div>
@@ -55,7 +99,67 @@
 </div></template>
 </div>
 </aside>
-<footer class="border-t border-black/5 py-8 mt-16"><div class="max-w-7xl mx-auto px-6 text-xs opacity-60 text-center"><p><span x-text="$store.config.brand?.name"></span> &middot; <span x-text="$store.config.brand?.tagline"></span></p></div></footer>
-<div x-show="$store.config.detailOpen" @click.self="$store.config.closeDetail()" class="fixed inset-0 z-[70] bg-black/60 flex items-center justify-center p-4" style="display:none"><div class="bg-white rounded-2xl w-full max-w-4xl max-h-[92vh] overflow-hidden flex flex-col md:flex-row shadow-2xl"><div class="md:w-1/2 aspect-square md:aspect-auto bg-black/5 flex-shrink-0 relative"><img :src="$store.config.detailProduct ? $store.config.detailProduct.image : ''" class="w-full h-full object-cover" /><span x-show="$store.config.detailProduct && !$store.config.detailInStock()" class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-black text-white text-xs font-bold uppercase tracking-wider">Sold out</span><span x-show="$store.config.detailProduct && $store.config.detailInStock() && $store.config.detailMaxQty() <= 3" class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-orange-500 text-white text-xs font-bold uppercase tracking-wider" x-text="'Only ' + $store.config.detailMaxQty() + ' left'"></span><button @click="$store.config.closeDetail()" class="absolute top-4 right-4 h-9 w-9 rounded-full bg-white/95 grid place-items-center"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div><div class="md:w-1/2 overflow-y-auto flex flex-col"><div class="p-6 pb-0"><p class="text-[11px] uppercase tracking-[0.25em] opacity-50" x-text="$store.config.detailProduct?.category"></p><h2 class="mt-2 font-display text-2xl md:text-3xl font-semibold leading-tight" x-text="$store.config.detailProduct?.name"></h2><p class="mt-2 text-sm opacity-70 leading-relaxed" x-text="$store.config.detailProduct?.blurb"></p><div class="flex items-center gap-3 mt-4 flex-wrap"><span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-none stroke-current" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>30-day warranty</span><span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">Free JHB delivery</span></div></div><div class="p-6 pt-4 flex-1"><template x-if="$store.config.detailProduct?.specs && $store.config.detailProduct.specs.length"><div><p class="text-[11px] uppercase tracking-[0.25em] opacity-50 mb-3">Specifications</p><ul class="space-y-2 mb-6"><template x-for="s in $store.config.detailProduct.specs" :key="s"><li class="text-sm flex gap-2.5 items-start"><span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-brand-accent flex-shrink-0"></span><span x-text="s"></span></li></template></ul></div></template><template x-if="$store.config.detailProduct?.variants && $store.config.detailProduct.variants.length"><div class="mb-6"><div class="flex items-center justify-between mb-3"><p class="text-[11px] uppercase tracking-[0.25em] opacity-50">Choose option</p><p class="text-[11px] opacity-50" x-text="$store.config.detailMaxQty() + ' available'"></p></div><div class="flex flex-wrap gap-2"><template x-for="v in $store.config.detailProduct.variants" :key="v.id"><button @click="$store.config.setDetailVariant(v.id)" :disabled="!v.stock" :class="$store.config.detailVariantId === v.id ? 'bg-brand-primary text-white ring-2 ring-brand-primary ring-offset-2' : 'bg-black/5 hover:bg-black/10'" class="px-4 py-2.5 rounded-xl text-sm font-semibold transition disabled:opacity-30 disabled:line-through"><span x-text="v.name"></span><span x-show="v.stock <= 2 && v.stock > 0" x-text="' (' + v.stock + ')'" class="text-[10px] opacity-70"></span></button></template></div></div></template><div class="mb-4"><p class="text-[11px] uppercase tracking-[0.25em] opacity-50 mb-3">Quantity</p><div class="inline-flex items-center gap-1 rounded-xl bg-black/5 p-1"><button @click="$store.config.setDetailQty($store.config.detailQty - 1)" class="w-10 h-10 rounded-lg hover:bg-white text-lg font-bold" :disabled="$store.config.detailQty <= 1">&#8722;</button><span class="w-12 text-center font-semibold" x-text="$store.config.detailQty"></span><button @click="$store.config.setDetailQty($store.config.detailQty + 1)" :disabled="$store.config.detailQty >= $store.config.detailMaxQty()" class="w-10 h-10 rounded-lg hover:bg-white text-lg font-bold">+</button></div></div></div><div class="sticky bottom-0 bg-white border-t border-black/5 p-6"><div class="flex items-baseline justify-between mb-4"><span class="text-sm opacity-60">Total</span><span class="font-display text-3xl font-semibold text-brand-primary" x-text="$store.config.formatZAR($store.config.detailTotal())"></span></div><div class="flex flex-col sm:flex-row gap-2"><button @click="$store.config.detailAddToCart()" :disabled="!$store.config.detailInStock()" class="flex-1 rounded-2xl bg-brand-primary text-white px-6 py-4 font-semibold hover:opacity-90 disabled:opacity-40 transition"><span x-text="$store.config.detailInStock() ? 'Add to Cart' : 'Sold Out'"></span></button><button @click="$store.config.detailBuyNow()" :disabled="!$store.config.detailInStock()" class="flex-1 rounded-2xl border border-black/15 px-6 py-4 font-semibold hover:bg-black/5 disabled:opacity-40 transition">Buy Now</button></div><p class="text-[11px] opacity-50 text-center mt-3">Secure checkout &#8226; WhatsApp support</p></div></div></div></div></div></div>
+<footer class="border-t border-black/5 py-8 mt-16"><div class="max-w-7xl mx-auto px-6 text-xs opacity-60 text-center"><p><span x-text="$store.config.brand?.name"></span> &middot; <span x-text="$store.config.brand?.tagline"></span></p>
+<p class="mt-3"><a :href="'/track.html?brand=' + $store.config.id" class="text-xs underline hover:opacity-100">Track your order</a></p></div></footer>
+<div x-show="$store.config.detailOpen" @click.self="$store.config.closeDetail()" class="fixed inset-0 z-[70] bg-black/60 flex items-center justify-center p-4" style="display:none">
+<div class="bg-white rounded-2xl w-full max-w-4xl max-h-[92vh] overflow-hidden flex flex-col md:flex-row shadow-2xl">
+<div class="md:w-1/2 aspect-square md:aspect-auto bg-black/5 flex-shrink-0 relative">
+<img :src="$store.config.detailProduct ? $store.config.detailProduct.image : ''" class="w-full h-full object-cover" />
+<span x-show="$store.config.detailProduct && !$store.config.detailInStock()" class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-black text-white text-xs font-bold uppercase tracking-wider">Sold out</span>
+<button @click="$store.config.closeDetail()" class="absolute top-4 right-4 h-9 w-9 rounded-full bg-white/95 grid place-items-center"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+</div>
+<div class="md:w-1/2 overflow-y-auto flex flex-col">
+<div class="p-6 pb-0">
+<p class="text-[11px] uppercase tracking-[0.25em] opacity-50" x-text="$store.config.detailProduct?.category"></p>
+<h2 class="mt-2 font-display text-2xl md:text-3xl font-semibold leading-tight" x-text="$store.config.detailProduct?.name"></h2>
+<p class="mt-2 text-sm opacity-70 leading-relaxed" x-text="$store.config.detailProduct?.blurb"></p>
+</div>
+<div class="p-6 pt-4 flex-1">
+<template x-if="$store.config.detailProduct?.specs && $store.config.detailProduct.specs.length">
+<div class="mb-6">
+<p class="text-[11px] uppercase tracking-[0.25em] opacity-50 mb-3">Specifications</p>
+<ul class="space-y-2">
+<template x-for="s in $store.config.detailProduct.specs" :key="s">
+<li class="text-sm flex gap-2.5 items-start"><span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-brand-accent flex-shrink-0"></span><span x-text="s"></span></li>
+</template>
+</ul>
+</div>
+</template>
+<template x-if="$store.config.detailProduct?.options && $store.config.detailProduct.options.length">
+<div class="space-y-4 mb-6">
+<template x-for="opt in $store.config.detailProduct.options" :key="opt.name">
+<div>
+<p class="text-[11px] uppercase tracking-[0.25em] opacity-50 mb-2"><span x-text="opt.name"></span>: <span class="font-semibold text-gray-900" x-text="$store.config.detailOptions[opt.name] || ''"></span></p>
+<div class="flex flex-wrap gap-2">
+<template x-for="val in opt.values" :key="val">
+<button @click="$store.config.selectOptionValue(opt.name, val)" :class="$store.config.detailOptions[opt.name] === val ? 'bg-brand-primary text-white ring-2 ring-brand-primary ring-offset-2' : 'bg-black/5 hover:bg-black/10'" class="px-4 py-2.5 rounded-xl text-sm font-semibold transition"><span x-text="val"></span></button>
+</template>
+</div>
+</div>
+</template>
+</div>
+</template>
+<div class="mb-4">
+<p class="text-[11px] uppercase tracking-[0.25em] opacity-50 mb-3">Quantity</p>
+<div class="inline-flex items-center gap-1 rounded-xl bg-black/5 p-1">
+<button @click="$store.config.setDetailQty($store.config.detailQty - 1)" class="w-10 h-10 rounded-lg hover:bg-white text-lg font-bold" :disabled="$store.config.detailQty <= 1">---</button>
+<span class="w-12 text-center font-semibold" x-text="$store.config.detailQty"></span>
+<button @click="$store.config.setDetailQty($store.config.detailQty + 1)" :disabled="$store.config.detailQty >= $store.config.detailMaxQty()" class="w-10 h-10 rounded-lg hover:bg-white text-lg font-bold">+</button>
+</div>
+</div>
+</div>
+<div class="sticky bottom-0 bg-white border-t border-black/5 p-6">
+<div class="flex items-baseline justify-between mb-4">
+<span class="text-sm opacity-60">Total</span>
+<span class="font-display text-3xl font-semibold text-brand-primary" x-text="$store.config.formatZAR($store.config.detailTotal())"></span>
+</div>
+<div class="flex flex-col sm:flex-row gap-2">
+<button @click="$store.config.detailAddToCart()" :disabled="!$store.config.detailInStock()" class="flex-1 rounded-2xl bg-brand-primary text-white px-6 py-4 font-semibold disabled:opacity-40 transition"><span x-text="$store.config.detailInStock() ? 'Add to Cart' : 'Sold Out'"></span></button>
+<button @click="$store.config.detailBuyNow()" :disabled="!$store.config.detailInStock()" class="flex-1 rounded-2xl border border-black/15 px-6 py-4 font-semibold disabled:opacity-40 transition">Buy Now</button>
+</div>
+</div>
+</div>
+</div>
+</div>
 </body>
 </html>

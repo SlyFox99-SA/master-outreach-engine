@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Salon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      plum: { 50:'#fdf4ff',100:'#fae8ff',200:'#f5d0fe',300:'#f0abfc',400:'#e879f9',500:'#d946ef',600:'#c026d3',700:'#a21caf',800:'#86198f',900:'#701a75',950:'#4a044e' },
+      cream: '#faf7f2',
+      gold: '#c9a961'
+    },
+    fontFamily: {
+      display: ['"Cormorant Garamond"', 'serif'],
+      sans: ['Inter', 'system-ui', 'sans-serif']
+    }
+  }}
+}
+</script>
+<style>
+  body { -webkit-tap-highlight-color: transparent; font-family: Inter, system-ui, sans-serif; }
+  [x-cloak] { display: none !important; }
+  .elegant-shadow { box-shadow: 0 10px 40px -12px rgba(74, 4, 78, 0.15); }
+</style>
+</head>
+<body class="bg-cream text-plum-950" x-data="salonApp()" x-init="init()" x-cloak>
+<div class="bg-amber-400 text-ink border-b border-amber-500/30 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-3 text-xs md:text-sm">
+    <p class="font-medium truncate">
+      <span class="hidden sm:inline">👀</span>
+      Demo site —
+      <a href="/pitch/" class="underline underline-offset-2 hover:no-underline font-semibold">get your own from R5,000 →</a>
+    </p>
+    <button onclick="this.closest('div').parentElement.style.display='none'" class="text-ink/60 hover:text-ink text-lg leading-none px-1">×</button>
+  </div>
+</div>
+
+
+<div x-show="loading" class="fixed inset-0 flex items-center justify-center bg-cream z-50">
+  <div class="w-10 h-10 border-4 border-plum-200 border-t-plum-800 rounded-full animate-spin"></div>
+</div>
+
+<div x-show="!loading">
+  <nav class="sticky top-0 z-40 backdrop-blur-md bg-cream/85 border-b border-plum-100">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="font-display text-2xl md:text-3xl font-semibold text-plum-900" x-text="cfg.brand?.name"></h1>
+        <p class="text-[10px] uppercase tracking-[0.3em] text-plum-600 mt-0.5" x-text="cfg.brand?.tagline"></p>
+      </div>
+      <a :href="waLink('Hi! I want to book an appointment.')" target="_blank" class="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-full bg-plum-900 text-cream text-sm font-medium hover:bg-plum-800 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 0 0 3.2 17.1L2 22l5-1.3A11 11 0 1 0 20.5 3.5Z"/></svg>
+        Book now
+      </a>
+    </div>
+  </nav>
+
+  <section class="relative">
+    <div class="max-w-6xl mx-auto px-5 pt-10 pb-8 md:px-6 md:pt-24 md:pb-16">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+        <div>
+          <p class="text-xs uppercase tracking-[0.4em] text-plum-600 mb-6">Est. Cape Town</p>
+          <h2 class="font-display text-4xl sm:text-5xl md:text-7xl font-medium leading-[1.05] text-plum-950" x-text="cfg.hero?.title"></h2>
+          <p class="mt-6 text-base md:text-lg text-plum-700 leading-relaxed max-w-md" x-text="cfg.hero?.subtitle"></p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a :href="waLink('Hi! I want to book an appointment.')" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-plum-900 text-cream font-medium hover:bg-plum-800 transition">
+              Book your appointment
+            </a>
+            <a href="#services" class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-plum-300 text-plum-900 font-medium hover:bg-plum-50 transition">
+              View services
+            </a>
+          </div>
+          <div class="mt-10 flex items-center gap-6 text-sm text-plum-700">
+            <div class="flex items-center gap-2">
+              <div class="flex text-gold">★★★★★</div>
+              <span class="text-xs">200+ reviews</span>
+            </div>
+            <div class="hidden md:block h-4 w-px bg-plum-200"></div>
+            <div class="hidden md:block text-xs">Mon-Sat · Walk-ins welcome</div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="aspect-[4/5] sm:aspect-square md:aspect-[4/5] rounded-[2rem] sm:rounded-[3rem] overflow-hidden elegant-shadow max-w-md mx-auto">
+            <img :src="cfg.hero?.image" class="w-full h-full object-cover" alt="">
+          </div>
+          <div class="absolute -bottom-6 -left-6 bg-cream rounded-3xl p-5 elegant-shadow hidden md:block">
+            <p class="text-[10px] uppercase tracking-widest text-plum-600">Today's availability</p>
+            <p class="font-display text-2xl text-plum-900 mt-1">3 slots left</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 md:py-24" id="services">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-10 md:mb-14">
+        <p class="text-xs uppercase tracking-[0.4em] text-plum-600 mb-4">Our menu</p>
+        <h3 class="font-display text-4xl md:text-6xl font-medium text-plum-950">Treatments</h3>
+      </div>
+      <div class="grid md:grid-cols-2 gap-x-16 gap-y-2">
+        <template x-for="(svc, i) in cfg.services" :key="svc.id">
+          <div class="flex items-baseline gap-4 py-5 border-b border-plum-100 group">
+            <div class="flex-1">
+              <div class="flex items-baseline gap-2">
+                <h4 class="font-display text-xl md:text-2xl text-plum-900" x-text="svc.name"></h4>
+                <span class="text-xs text-plum-500 ml-auto" x-text="svc.duration"></span>
+              </div>
+              <p class="text-sm text-plum-600 mt-1" x-text="svc.description"></p>
+            </div>
+            <div class="text-right">
+              <p class="font-display text-2xl text-plum-900">R<span x-text="svc.price"></span></p>
+            </div>
+            <a :href="waLink('Hi! I want to book ' + svc.name + ' (R' + svc.price + ')')" target="_blank" class="ml-3 w-10 h-10 rounded-full bg-plum-50 group-hover:bg-plum-900 group-hover:text-cream text-plum-900 grid place-items-center transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 md:py-24 bg-plum-950 text-cream">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-10 md:mb-14">
+        <p class="text-xs uppercase tracking-[0.4em] text-plum-300 mb-4">Our artists</p>
+        <h3 class="font-display text-4xl md:text-6xl font-medium">Meet the team</h3>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+        <template x-for="person in cfg.staff" :key="person.id">
+          <div class="text-center">
+            <div class="aspect-square rounded-full overflow-hidden mb-4 mx-auto max-w-[180px]">
+              <img :src="person.image" class="w-full h-full object-cover" :alt="person.name">
+            </div>
+            <h4 class="font-display text-xl text-cream" x-text="person.name"></h4>
+            <p class="text-xs uppercase tracking-widest text-plum-300 mt-1" x-text="person.role"></p>
+            <p class="text-xs text-plum-200 mt-2" x-text="person.specialties"></p>
+          </div>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 md:py-24" id="gallery">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-10 md:mb-14">
+        <p class="text-xs uppercase tracking-[0.4em] text-plum-600 mb-4">Real clients</p>
+        <h3 class="font-display text-4xl md:text-6xl font-medium text-plum-950">Before & after</h3>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <template x-for="(img, i) in cfg.gallery" :key="i">
+          <div class="aspect-square rounded-3xl overflow-hidden bg-plum-100">
+            <img :src="img" class="w-full h-full object-cover hover:scale-105 transition duration-700" alt="">
+          </div>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 md:py-24 bg-plum-50">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="text-gold text-3xl mb-6">★★★★★</div>
+      <blockquote class="font-display text-2xl md:text-4xl text-plum-900 leading-snug italic">
+        <span x-text="cfg.testimonial?.quote"></span>
+      </blockquote>
+      <p class="mt-6 text-sm text-plum-700" x-text="'— ' + (cfg.testimonial?.name || '')"></p>
+    </div>
+  </section>
+
+  <section class="py-14 md:py-24">
+    <div class="max-w-4xl mx-auto px-6 grid md:grid-cols-2 gap-10 md:gap-16">
+      <div>
+        <p class="text-xs uppercase tracking-[0.4em] text-plum-600 mb-4">Visit</p>
+        <h3 class="font-display text-3xl md:text-4xl text-plum-950 mb-6">Find us</h3>
+        <p class="text-plum-700 leading-relaxed" x-text="cfg.address"></p>
+        <div class="mt-8 space-y-3 text-sm">
+          <template x-for="(h, day) in cfg.hours" :key="day">
+            <div class="flex justify-between py-2 border-b border-plum-100">
+              <span class="capitalize text-plum-700" x-text="day"></span>
+              <span class="text-plum-900 font-medium" x-text="h"></span>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="flex flex-col justify-end">
+        <a :href="waLink('Hi! I would like to book an appointment.')" target="_blank" class="rounded-3xl bg-plum-900 text-cream p-10 flex flex-col items-start hover:bg-plum-800 transition">
+          <svg class="w-8 h-8 mb-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 0 0 3.2 17.1L2 22l5-1.3A11 11 0 1 0 20.5 3.5Z"/></svg>
+          <p class="text-xs uppercase tracking-widest text-plum-300">Ready when you are</p>
+          <p class="font-display text-3xl mt-2">Book on WhatsApp</p>
+          <p class="mt-2 text-sm text-plum-200">Reply within 5 minutes during business hours</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-plum-950 text-plum-300 py-10">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between gap-4 text-xs">
+      <p>© <span x-text="new Date().getFullYear()"></span> <span x-text="cfg.brand?.name"></span></p>
+      <p>Serving <span x-text="cfg.brand?.tagline"></span></p>
+    </div>
+  </footer>
+
+  <a :href="waLink('Hi! I want to book an appointment.')" target="_blank" class="fixed bottom-6 right-6 z-30 inline-flex items-center gap-2 px-5 py-3 rounded-full bg-plum-900 text-cream font-medium shadow-2xl hover:bg-plum-800 transition md:hidden">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 0 0 3.2 17.1L2 22l5-1.3A11 11 0 1 0 20.5 3.5Z"/></svg>
+    Book now
+  </a>
+</div>
+
+<script>
+function salonApp() {
+  return {
+    loading: true,
+    cfg: {},
+    brand: new URLSearchParams(location.search).get('brand') || 'glow-salon',
+    async init() {
+      try {
+        var res = await fetch('/templates/salon/data/config-' + this.brand + '.json?_=' + Date.now());
+        this.cfg = await res.json();
+      } catch (e) { console.error(e); this.cfg = { brand: { name: 'Salon' }, services: [], staff: [], gallery: [] }; }
+      this.loading = false;
+    },
+    waLink(msg) {
+      var d = String(this.cfg.whatsapp || '').replace(/\D/g, '');
+      return 'https://wa.me/' + d + '?text=' + encodeURIComponent(msg);
+    }
+  };
+}
+</script>
+</body>
+</html>

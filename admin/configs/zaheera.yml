@@ -10,97 +10,70 @@ media_library:
     cloud_name: e4kmlh67
     unsigned_upload: true
     upload_preset: outreach_unsigned
-
 collections:
   - name: "brands"
-    label: "Stores"
+    label: "My Store"
     files:
       - name: "zaheera"
         label: "Zaheera (Fragrances)"
         file: "data/config-zaheera.json"
         fields:
-          - { label: "Internal ID", name: "id", widget: "string", hint: "Do not change" }
-          - { label: "Layout", name: "layout", widget: "select", options: ["gallery", "grid", "list", "showcase"] }
-          - label: "Brand"
+          - { label: "Internal ID (do not change)", name: "id", widget: "string" }
+          - { label: "Layout (do not change)", name: "layout", widget: "hidden", default: "gallery" }
+          - label: "Your Store"
             name: "brand"
             widget: "object"
             fields:
-              - { label: "Name", name: "name", widget: "string" }
-              - { label: "Tagline", name: "tagline", widget: "string" }
-              - label: "Hero"
+              - { label: "Store Name", name: "name", widget: "string" }
+              - { label: "Slogan (short line under your name)", name: "tagline", widget: "string" }
+              - label: "Homepage Banner"
                 name: "hero"
                 widget: "object"
                 fields:
-                  - { label: "Title", name: "title", widget: "string" }
-                  - { label: "Subtitle", name: "subtitle", widget: "text" }
-          - label: "Theme (RGB, space-separated)"
-            name: "theme"
-            widget: "object"
-            fields:
-              - { label: "Primary", name: "primary", widget: "string" }
-              - { label: "Accent", name: "accent", widget: "string" }
-              - { label: "Ink", name: "ink", widget: "string" }
-              - { label: "Surface", name: "surface", widget: "string" }
-          - { label: "WhatsApp Number", name: "whatsapp", widget: "string", hint: "Format: +27821234567" }
-          - label: "Bank Details"
+                  - { label: "Big headline", name: "title", widget: "string" }
+                  - { label: "Small text below headline", name: "subtitle", widget: "text" }
+          - { label: "WhatsApp Order Number", name: "whatsapp", widget: "string", hint: "Format: +27821234567 - customers send orders and proof of payment here" }
+          - label: "Bank Account (for EFT payments)"
             name: "bank"
             widget: "object"
             fields:
-              - { label: "Account Name", name: "accountName", widget: "string" }
-              - { label: "Bank Name", name: "bankName", widget: "string" }
-              - { label: "Account Number", name: "accountNumber", widget: "string" }
-              - { label: "Branch Code", name: "branchCode", widget: "string" }
-              - { label: "Account Type", name: "accountType", widget: "string", required: false }
-          - label: "Payment Gateway (optional)"
-            name: "payment"
-            widget: "object"
-            required: false
-            fields:
-              - { label: "Provider", name: "provider", widget: "select", options: ["payfast", "yoco", "ozow"], required: false }
-              - { label: "Merchant ID / Checkout ID / Site Code", name: "merchantId", widget: "string", required: false }
-              - { label: "Merchant Key", name: "merchantKey", widget: "string", required: false }
-              - { label: "Checkout ID (Yoco)", name: "checkoutId", widget: "string", required: false }
-              - { label: "Site Code (Ozow)", name: "siteCode", widget: "string", required: false }
-              - { label: "Sandbox Mode", name: "sandbox", widget: "boolean", default: true, required: false }
-              - { label: "Return URL", name: "returnUrl", widget: "string", required: false }
-              - { label: "Cancel URL", name: "cancelUrl", widget: "string", required: false }
-          - label: "Sale (optional)"
-            name: "sale"
-            widget: "object"
-            required: false
-            fields:
-              - { label: "Label", name: "label", widget: "string", required: false }
-              - { label: "Ends At", name: "endsAt", widget: "datetime", required: false }
-              - { label: "Discount %", name: "discountPct", widget: "number", valueType: "int", required: false }
-          - label: "Categories"
+              - { label: "Account holder name", name: "accountName", widget: "string" }
+              - { label: "Bank name", name: "bankName", widget: "string" }
+              - { label: "Account number", name: "accountNumber", widget: "string" }
+              - { label: "Branch code", name: "branchCode", widget: "string" }
+              - { label: "Account type (Cheque / Savings / Current)", name: "accountType", widget: "string", required: false }
+          - label: "Product Categories"
             name: "categories"
             widget: "list"
-            field: { label: "Category", name: "category", widget: "string" }
+            hint: "e.g. Fragrances, Gift Sets - helps customers filter your products"
+            field: { label: "Category name", name: "category", widget: "string" }
           - label: "Products"
             name: "products"
             widget: "list"
             summary: "{{fields.name}} - R{{fields.price}}"
+            hint: "Click 'Add products' to add a new product"
             fields:
-              - { label: "ID", name: "id", widget: "string" }
-              - { label: "Name", name: "name", widget: "string" }
-              - { label: "Category", name: "category", widget: "string" }
-              - { label: "Mock Type (phone/bottle/tube/jar/box)", name: "mockType", widget: "string", required: false }
-              - { label: "Description", name: "blurb", widget: "string" }
-              - { label: "Price (R)", name: "price", widget: "number", valueType: "int" }
-              - { label: "Image URL", name: "image", widget: "string" }
-              - { label: "Stock (use only if no variants)", name: "stock", widget: "number", valueType: "int", required: false }
-              - label: "Specs"
+              - { label: "Product ID (leave as-is or make up a short name)", name: "id", widget: "string", hint: "Unique - no spaces. e.g. oud-noir" }
+              - { label: "Product Name", name: "name", widget: "string" }
+              - { label: "Category", name: "category", widget: "string", hint: "Must match one of your categories above" }
+              - { label: "Short description (appears under product name)", name: "blurb", widget: "string" }
+              - { label: "Price (Rands, no commas)", name: "price", widget: "number", valueType: "int" }
+              - { label: "Photo URL", name: "image", widget: "string", hint: "Open /admin/upload/ on your phone → upload photo → copy the URL → paste here" }
+              - { label: "Stock (leave empty for unlimited)", name: "stock", widget: "number", valueType: "int", required: false }
+              - label: "Product Specs (bullet points)"
                 name: "specs"
                 widget: "list"
                 required: false
+                hint: "e.g. 50ml bottle, Unisex, Lasts 8 hours"
                 field: { label: "Spec", name: "spec", widget: "string" }
-              - label: "Variants"
+              - label: "Size / Color Options"
                 name: "variants"
                 widget: "list"
                 required: false
+                hint: "Optional - if you sell the same product in different sizes or colors"
                 fields:
-                  - { label: "ID", name: "id", widget: "string" }
-                  - { label: "Name", name: "name", widget: "string" }
-                  - { label: "Stock", name: "stock", widget: "number", valueType: "int" }
-                  - { label: "Price Adjustment (R)", name: "priceDelta", widget: "number", valueType: "int", required: false }
-                  - { label: "Color (hex)", name: "color", widget: "string", required: false }
+                  - { label: "Option ID", name: "id", widget: "string", hint: "e.g. 128gb-blue" }
+                  - { label: "Option Name (shown to customer)", name: "name", widget: "string", hint: "e.g. 256GB Blue" }
+                  - { label: "Stock for this option", name: "stock", widget: "number", valueType: "int" }
+                  - { label: "Extra charge (R) if this option costs more", name: "priceDelta", widget: "number", valueType: "int", required: false }
+                  - { label: "Color hex (advanced - leave empty if unsure)", name: "color", widget: "string", required: false }

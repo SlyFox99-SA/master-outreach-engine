@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#0a0a0a',bone:'#f5f2ec',rust:'#b45a3a'},fontFamily:{display:['"Playfair Display"','serif'],sans:['Inter','system-ui','sans-serif']}}}}</script>
+<style>body{-webkit-tap-highlight-color:transparent;font-family:Inter,system-ui,sans-serif;letter-spacing:-0.01em}[x-cloak]{display:none!important}.serif{font-family:'Playfair Display',serif}</style>
+</head>
+<body class="bg-bone text-ink" x-data="studioApp()" x-init="init()" x-cloak>
+<div class="bg-amber-400 text-ink border-b border-amber-500/30 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-3 text-xs md:text-sm">
+    <p class="font-medium truncate">
+      <span class="hidden sm:inline">👀</span>
+      Demo site —
+      <a href="/pitch/" class="underline underline-offset-2 hover:no-underline font-semibold">get your own from R5,000 →</a>
+    </p>
+    <button onclick="this.closest('div').parentElement.style.display='none'" class="text-ink/60 hover:text-ink text-lg leading-none px-1">×</button>
+  </div>
+</div>
+
+
+<div x-show="loading" class="fixed inset-0 flex items-center justify-center bg-bone z-50">
+  <div class="w-10 h-10 border-2 border-ink/20 border-t-ink rounded-full animate-spin"></div>
+</div>
+
+<div x-show="!loading">
+<nav class="sticky top-0 z-40 bg-bone/90 backdrop-blur-sm border-b border-ink/10">
+  <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+    <h1 class="serif text-2xl italic" x-text="cfg.brand?.name"></h1>
+    <div class="hidden md:flex items-center gap-8 text-sm">
+      <a href="#work" class="hover:text-rust transition">Work</a>
+      <a href="#about" class="hover:text-rust transition">About</a>
+      <a href="#packages" class="hover:text-rust transition">Packages</a>
+      <a :href="waLink('Hi! I would like to book you.')" target="_blank" class="px-5 py-2 rounded-full bg-ink text-bone hover:bg-rust transition">Book me</a>
+    </div>
+  </div>
+</nav>
+
+<section class="pt-10 md:pt-24 pb-10 md:pb-20">
+  <div class="max-w-7xl mx-auto px-6">
+    <p class="text-xs uppercase tracking-[0.4em] text-rust mb-8" x-text="cfg.brand?.tagline"></p>
+    <h2 class="serif text-4xl sm:text-5xl md:text-8xl leading-[0.98] max-w-5xl" x-text="cfg.hero?.title"></h2>
+    <p class="mt-8 text-lg md:text-xl max-w-2xl text-ink/70 leading-relaxed" x-text="cfg.hero?.subtitle"></p>
+    <div class="mt-10 flex flex-wrap gap-3">
+      <a :href="waLink('Hi! I want to book you for my event.')" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-ink text-bone hover:bg-rust transition">Book an event</a>
+      <a href="#work" class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-ink/20 hover:bg-ink/5 transition">See my work</a>
+    </div>
+  </div>
+</section>
+
+<section class="pb-16 md:pb-24" id="work">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-10 flex items-baseline justify-between">
+      <h3 class="serif text-3xl md:text-5xl italic">Selected work</h3>
+      <p class="text-xs uppercase tracking-widest text-ink/50" x-text="cfg.portfolio?.length + ' projects'"></p>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+      <template x-for="(item, i) in cfg.portfolio" :key="i">
+        <div class="group cursor-pointer" :class="i % 5 === 0 ? 'md:col-span-2 md:row-span-2' : ''">
+          <div class="overflow-hidden rounded-lg" :class="i % 5 === 0 ? 'aspect-square md:aspect-[4/5]' : 'aspect-square'">
+            <img :src="item.image" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-[900ms]" :alt="item.title">
+          </div>
+          <p class="mt-3 text-xs uppercase tracking-widest text-ink/50" x-text="item.category"></p>
+          <p class="serif text-xl italic mt-1" x-text="item.title"></p>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>
+
+<section class="py-16 md:py-24 bg-ink text-bone" id="about">
+  <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+    <div class="aspect-[4/5] rounded-lg overflow-hidden">
+      <img :src="cfg.about?.image" class="w-full h-full object-cover" alt="">
+    </div>
+    <div>
+      <p class="text-xs uppercase tracking-[0.4em] text-rust mb-6">About</p>
+      <h3 class="serif text-4xl md:text-6xl italic leading-tight mb-8" x-text="cfg.about?.title"></h3>
+      <p class="text-lg leading-relaxed text-bone/80" x-text="cfg.about?.body"></p>
+      <div class="mt-10 grid grid-cols-3 gap-6 border-t border-bone/15 pt-8">
+        <div><p class="serif text-4xl" x-text="cfg.about?.years + '+'"></p><p class="text-xs uppercase tracking-widest text-bone/50 mt-1">Years</p></div>
+        <div><p class="serif text-4xl" x-text="cfg.about?.events + '+'"></p><p class="text-xs uppercase tracking-widest text-bone/50 mt-1">Events</p></div>
+        <div><p class="serif text-4xl" x-text="cfg.about?.cities"></p><p class="text-xs uppercase tracking-widest text-bone/50 mt-1">Cities</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-16 md:py-24" id="packages">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <p class="text-xs uppercase tracking-[0.4em] text-rust mb-4">Pricing</p>
+      <h3 class="serif text-4xl md:text-6xl italic">Packages</h3>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <template x-for="(pkg, i) in cfg.packages" :key="pkg.id">
+        <div class="rounded-2xl border border-ink/10 p-8 flex flex-col" :class="pkg.featured ? 'bg-ink text-bone' : ''">
+          <p class="text-xs uppercase tracking-widest mb-4" :class="pkg.featured ? 'text-rust' : 'text-ink/50'" x-text="pkg.tag || 'Package'"></p>
+          <h4 class="serif text-3xl italic" x-text="pkg.name"></h4>
+          <p class="mt-2 text-sm leading-relaxed" :class="pkg.featured ? 'text-bone/70' : 'text-ink/60'" x-text="pkg.description"></p>
+          <p class="serif text-5xl mt-8">R<span x-text="pkg.price"></span></p>
+          <p class="text-xs uppercase tracking-widest mt-1" :class="pkg.featured ? 'text-bone/50' : 'text-ink/40'" x-text="pkg.unit || 'per booking'"></p>
+          <ul class="mt-8 space-y-3 flex-1 text-sm">
+            <template x-for="f in pkg.features" :key="f">
+              <li class="flex gap-2"><span class="text-rust">✓</span><span x-text="f"></span></li>
+            </template>
+          </ul>
+          <a :href="waLink('Hi! I want to book the ' + pkg.name + ' package')" target="_blank" class="mt-8 block text-center py-4 rounded-full font-medium transition" :class="pkg.featured ? 'bg-rust text-bone hover:bg-orange-700' : 'bg-ink text-bone hover:bg-rust'">Book now</a>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>
+
+<section class="py-16 md:py-24 bg-bone border-t border-ink/10">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <p class="serif text-3xl md:text-5xl italic leading-snug" x-text="'&ldquo;' + (cfg.testimonial?.quote || '') + '&rdquo;'"></p>
+    <p class="mt-8 text-xs uppercase tracking-[0.4em] text-rust" x-text="cfg.testimonial?.name"></p>
+  </div>
+</section>
+
+<section class="py-16 md:py-24 bg-ink text-bone">
+  <div class="max-w-3xl mx-auto px-6 text-center">
+    <h3 class="serif text-4xl md:text-6xl italic mb-6">Let's create something</h3>
+    <p class="text-bone/70 mb-8">Available for bookings across South Africa.</p>
+    <a :href="waLink('Hi! I want to book you.')" target="_blank" class="inline-flex items-center gap-3 px-7 py-4 rounded-full bg-rust text-bone hover:bg-orange-700 transition">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 0 0 3.2 17.1L2 22l5-1.3A11 11 0 1 0 20.5 3.5Z"/></svg>
+      Book on WhatsApp
+    </a>
+  </div>
+</section>
+
+<footer class="bg-ink text-bone/50 py-8 text-center text-xs border-t border-bone/10">
+  <p>© <span x-text="new Date().getFullYear()"></span> <span x-text="cfg.brand?.name"></span> · <span x-text="cfg.brand?.instagram"></span></p>
+</footer>
+</div>
+
+<script>
+function studioApp(){return{
+  loading:true,cfg:{},
+  brand:new URLSearchParams(location.search).get('brand')||'nova-studio',
+  async init(){try{var r=await fetch('/templates/studio/data/config-'+this.brand+'.json?_='+Date.now());this.cfg=await r.json()}catch(e){console.error(e);this.cfg={brand:{name:'Studio'},portfolio:[],packages:[]}}this.loading=false},
+  waLink(msg){var d=String(this.cfg.whatsapp||'').replace(/\D/g,'');return 'https://wa.me/'+d+'?text='+encodeURIComponent(msg)}
+}}
+</script>
+</body>
+</html>

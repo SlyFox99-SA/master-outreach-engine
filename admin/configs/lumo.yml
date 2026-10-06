@@ -14,12 +14,12 @@ collections:
   - name: "brands"
     label: "My Store"
     files:
-      - name: "techhub"
-        label: "TechHub (Devices)"
-        file: "data/config-techhub.json"
+      - name: "lumo"
+        label: "Lumo (Skincare)"
+        file: "data/config-lumo.json"
         fields:
           - { label: "Internal ID (do not change)", name: "id", widget: "string" }
-          - { label: "Layout (do not change)", name: "layout", widget: "hidden", default: "list" }
+          - { label: "Layout (do not change)", name: "layout", widget: "hidden", default: "grid" }
           - label: "Your Store"
             name: "brand"
             widget: "object"

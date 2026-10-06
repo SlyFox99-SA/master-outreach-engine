@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Starter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { -webkit-tap-highlight-color: transparent; font-family: Inter, system-ui, sans-serif; }
+  .display { font-family: 'Fraunces', serif; font-variation-settings: 'opsz' 144; }
+</style>
+</head>
+<body class="bg-white text-stone-900">
+
+<section class="relative min-h-[70vh] flex items-end" style="background-image:url('https://images.unsplash.com/photo-1610289753943-c5e9d23d05a6?w=1400&q=80'); background-size:cover; background-position:center;">
+  <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+  <div class="relative max-w-5xl mx-auto px-6 py-16 md:py-24 text-white w-full">
+    <p class="text-xs uppercase tracking-[0.4em] opacity-70 mb-6">Handcrafted in Johannesburg</p>
+    <h1 class="display text-5xl md:text-7xl font-semibold leading-[0.98] max-w-2xl">Beautiful pieces, made to last.</h1>
+    <p class="mt-6 text-lg opacity-80 max-w-lg">Bespoke leather goods, hand-stitched and made to order. Delivered anywhere in South Africa.</p>
+    <a href="https://wa.me/27XXXXXXXXX?text=Hi!%20I%20am%20interested%20in%20your%20work." target="_blank" class="mt-8 inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-stone-900 font-medium hover:bg-stone-100 transition">Enquire on WhatsApp →</a>
+  </div>
+</section>
+
+<section class="py-16 md:py-24 px-6">
+  <div class="max-w-5xl mx-auto">
+    <p class="text-xs uppercase tracking-[0.4em] text-stone-500 mb-4">What I make</p>
+    <h2 class="display text-4xl md:text-5xl font-semibold leading-tight mb-12 max-w-2xl">Three core pieces. No compromises.</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="p-6 rounded-2xl bg-stone-50">
+        <div class="w-10 h-10 rounded-full bg-stone-900 text-white grid place-items-center mb-5 text-sm font-bold">01</div>
+        <h3 class="display text-2xl font-semibold mb-2">Leather Bags</h3>
+        <p class="text-sm text-stone-600 leading-relaxed">Full-grain vegetable-tanned leather. Every stitch by hand.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-stone-50">
+        <div class="w-10 h-10 rounded-full bg-stone-900 text-white grid place-items-center mb-5 text-sm font-bold">02</div>
+        <h3 class="display text-2xl font-semibold mb-2">Belts</h3>
+        <p class="text-sm text-stone-600 leading-relaxed">Solid brass buckles. Cut to your exact waist size.</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-stone-50">
+        <div class="w-10 h-10 rounded-full bg-stone-900 text-white grid place-items-center mb-5 text-sm font-bold">03</div>
+        <h3 class="display text-2xl font-semibold mb-2">Wallets</h3>
+        <p class="text-sm text-stone-600 leading-relaxed">Slim bifold. Ages beautifully. Yours for decades.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-16 md:py-24 px-6 bg-stone-50">
+  <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <div class="aspect-square rounded-3xl overflow-hidden">
+      <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&q=80" class="w-full h-full object-cover" alt="">
+    </div>
+    <div>
+      <p class="text-xs uppercase tracking-[0.4em] text-stone-500 mb-4">About</p>
+      <h3 class="display text-3xl md:text-4xl font-semibold leading-tight mb-5">Ten years, one workshop, my own hands.</h3>
+      <p class="text-stone-600 leading-relaxed">I'm Andile. I've been working leather from a small studio in Maboneng since 2016. Every piece leaves here with my initials stamped inside — because I stand behind all of it.</p>
+      <a href="https://wa.me/27XXXXXXXXX" target="_blank" class="mt-6 inline-flex items-center gap-2 text-stone-900 font-medium border-b-2 border-stone-900 pb-0.5 hover:border-stone-500 transition">Say hello on WhatsApp →</a>
+    </div>
+  </div>
+</section>
+
+<section class="py-16 md:py-24 px-6">
+  <div class="max-w-4xl mx-auto text-center">
+    <p class="text-xs uppercase tracking-[0.4em] text-stone-500 mb-4">Get in touch</p>
+    <h3 class="display text-3xl md:text-5xl font-semibold leading-tight mb-6">Custom orders welcome.</h3>
+    <p class="text-stone-600 mb-8 max-w-lg mx-auto">Tell me what you need. I quote within 24 hours and deliver in 2-3 weeks.</p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <a href="https://wa.me/27XXXXXXXXX?text=Hi%20Andile!%20I%20would%20like%20a%20custom%20piece." target="_blank" class="px-7 py-3.5 rounded-full bg-stone-900 text-white font-medium hover:bg-stone-700 transition">WhatsApp me</a>
+      <a href="mailto:hello@example.com" class="px-7 py-3.5 rounded-full border border-stone-300 font-medium hover:bg-stone-50 transition">Send an email</a>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-stone-200 py-8 px-6">
+  <div class="max-w-5xl mx-auto text-xs text-stone-500 flex flex-col md:flex-row justify-between gap-2">
+    <p>© 2026 Andile Leather Co. · Johannesburg</p>
+    <p>Handmade in South Africa · Worldwide shipping</p>
+  </div>
+</footer>
+
+</body>
+</html>

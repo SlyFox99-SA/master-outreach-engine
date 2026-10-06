@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Restaurant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<script>tailwind.config={theme:{extend:{colors:{ink:'#1a1815',cream:'#f9f5ee',chili:'#c13124',olive:'#556b2f',sun:'#e9a23b'},fontFamily:{display:['Fraunces','serif'],sans:['Inter','system-ui','sans-serif']}}}}</script>
+<style>body{-webkit-tap-highlight-color:transparent;font-family:Inter,system-ui,sans-serif}[x-cloak]{display:none!important}.display{font-family:'Fraunces',serif;font-variation-settings:'opsz' 144}</style>
+</head>
+<body class="bg-cream text-ink" x-data="restApp()" x-init="init()" x-cloak>
+<div class="bg-amber-400 text-ink border-b border-amber-500/30 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-3 text-xs md:text-sm">
+    <p class="font-medium truncate">
+      <span class="hidden sm:inline">👀</span>
+      Demo site —
+      <a href="/pitch/" class="underline underline-offset-2 hover:no-underline font-semibold">get your own from R5,000 →</a>
+    </p>
+    <button onclick="this.closest('div').parentElement.style.display='none'" class="text-ink/60 hover:text-ink text-lg leading-none px-1">×</button>
+  </div>
+</div>
+
+
+<div x-show="loading" class="fixed inset-0 flex items-center justify-center bg-cream z-50">
+  <div class="w-10 h-10 border-4 border-ink/20 border-t-chili rounded-full animate-spin"></div>
+</div>
+
+<div x-show="!loading">
+<nav class="sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-ink/10">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-full bg-chili text-cream grid place-items-center display text-2xl font-bold">M</div>
+      <div>
+        <h1 class="display text-xl md:text-2xl font-bold" x-text="cfg.brand?.name"></h1>
+        <p class="text-[10px] uppercase tracking-[0.25em] text-ink/60" x-text="cfg.brand?.tagline"></p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-olive/10 text-olive text-xs font-semibold" x-show="isOpen()">
+        <span class="w-2 h-2 rounded-full bg-olive animate-pulse"></span>
+        Open now
+      </div>
+      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-ink/5 text-ink/60 text-xs font-semibold" x-show="!isOpen()">
+        Closed
+      </div>
+      <a :href="waLink('Hi! I want to place an order.')" target="_blank" class="px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-medium hover:bg-chili transition">Order now</a>
+    </div>
+  </div>
+</nav>
+
+<section class="pt-8 md:pt-20 pb-6 md:pb-12">
+  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-5 gap-8 md:gap-12 items-center">
+    <div class="md:col-span-3">
+      <p class="text-xs uppercase tracking-[0.4em] text-chili mb-6" x-text="cfg.tagline2"></p>
+      <h2 class="display text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.05]" x-text="cfg.hero?.title"></h2>
+      <p class="mt-6 text-lg text-ink/70 leading-relaxed" x-text="cfg.hero?.subtitle"></p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#menu" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-chili text-cream hover:bg-red-800 transition font-medium">See the menu</a>
+        <a :href="waLink('Hi! I want to book a table.')" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-ink/20 hover:bg-ink/5 transition">Book a table</a>
+      </div>
+    </div>
+    <div class="md:col-span-2 aspect-square rounded-2xl overflow-hidden">
+      <img :src="cfg.hero?.image" class="w-full h-full object-cover" alt="">
+    </div>
+  </div>
+</section>
+
+<section class="py-12 md:py-20 border-t border-ink/10" id="menu">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-12">
+      <p class="text-xs uppercase tracking-[0.4em] text-chili mb-4">What's cooking</p>
+      <h3 class="display text-4xl md:text-6xl font-bold">The menu</h3>
+    </div>
+
+    <div class="flex flex-wrap gap-2 justify-center mb-10">
+      <template x-for="cat in cfg.categories" :key="cat">
+        <button @click="activeCat = cat" :class="activeCat === cat ? 'bg-ink text-cream' : 'bg-white border border-ink/10'" class="px-5 py-2.5 rounded-full text-sm font-medium transition" x-text="cat"></button>
+      </template>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-x-12 gap-y-1">
+      <template x-for="(item, i) in filteredMenu()" :key="item.id">
+        <div class="flex items-start gap-4 py-5 border-b border-ink/10 group">
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden flex-shrink-0 bg-ink/5">
+            <img :src="item.image" class="w-full h-full object-cover" :alt="item.name">
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline gap-3 flex-wrap">
+              <h4 class="display text-xl font-bold" x-text="item.name"></h4>
+              <span x-show="item.popular" class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-sun/30 text-ink font-bold">Popular</span>
+              <span x-show="item.vegan" class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-olive/20 text-olive font-bold">Vegan</span>
+            </div>
+            <p class="mt-1 text-sm text-ink/60 leading-relaxed" x-text="item.description"></p>
+            <div class="mt-2 flex items-center gap-3">
+              <p class="display text-xl font-bold">R<span x-text="item.price"></span></p>
+              <button @click="addToOrder(item)" class="text-xs font-semibold text-chili hover:underline">+ Add to order</button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 md:py-20 bg-ink text-cream">
+  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+    <div>
+      <p class="text-xs uppercase tracking-[0.4em] text-sun mb-4">Today's special</p>
+      <h3 class="display text-4xl md:text-5xl font-bold leading-tight" x-text="cfg.special?.name"></h3>
+      <p class="mt-4 text-cream/70 leading-relaxed" x-text="cfg.special?.description"></p>
+      <p class="display text-3xl mt-6">R<span x-text="cfg.special?.price"></span> <span class="text-cream/50 text-base line-through ml-2">R<span x-text="cfg.special?.originalPrice"></span></span></p>
+    </div>
+    <div class="aspect-[4/3] rounded-2xl overflow-hidden">
+      <img :src="cfg.special?.image" class="w-full h-full object-cover" alt="">
+    </div>
+  </div>
+</section>
+
+<section class="py-12 md:py-20">
+  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12">
+    <div>
+      <p class="text-xs uppercase tracking-[0.4em] text-chili mb-4">Visit us</p>
+      <h3 class="display text-3xl md:text-4xl font-bold mb-6">Find us</h3>
+      <p class="text-ink/70 leading-relaxed" x-text="cfg.address"></p>
+      <div class="mt-8 space-y-1">
+        <template x-for="(h, day) in cfg.hours" :key="day">
+          <div class="flex justify-between py-2.5 border-b border-ink/10 text-sm">
+            <span class="capitalize text-ink/70" x-text="day"></span>
+            <span class="font-medium" :class="h === 'Closed' ? 'text-ink/40' : ''" x-text="h"></span>
+          </div>
+        </template>
+      </div>
+    </div>
+    <div>
+      <p class="text-xs uppercase tracking-[0.4em] text-chili mb-4">Delivery</p>
+      <h3 class="display text-3xl md:text-4xl font-bold mb-6">Get it delivered</h3>
+      <div class="space-y-4">
+        <template x-for="(opt, i) in cfg.delivery" :key="i">
+          <div class="flex justify-between items-center py-4 border-b border-ink/10">
+            <div>
+              <p class="font-semibold" x-text="opt.name"></p>
+              <p class="text-sm text-ink/60" x-text="opt.time"></p>
+            </div>
+            <p class="display text-lg">R<span x-text="opt.fee"></span></p>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-ink text-cream/40 py-8 text-xs text-center border-t border-cream/10">
+  <p>© <span x-text="new Date().getFullYear()"></span> <span x-text="cfg.brand?.name"></span></p>
+</footer>
+
+<div x-show="order.length > 0" x-transition class="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:bottom-6 md:max-w-md z-40 rounded-2xl bg-ink text-cream p-5 shadow-2xl" style="display:none">
+  <div class="flex items-center justify-between mb-3">
+    <p class="text-xs uppercase tracking-widest text-cream/60">Your order</p>
+    <button @click="order = []" class="text-xs text-cream/60 hover:text-cream">Clear</button>
+  </div>
+  <div class="max-h-40 overflow-y-auto space-y-1 text-sm">
+    <template x-for="(item, i) in order" :key="i">
+      <div class="flex justify-between"><span x-text="item.qty + '× ' + item.name"></span><span>R<span x-text="item.qty * item.price"></span></span></div>
+    </template>
+  </div>
+  <div class="mt-3 pt-3 border-t border-cream/20 flex justify-between items-center">
+    <span class="text-sm">Total</span>
+    <span class="display text-2xl">R<span x-text="orderTotal()"></span></span>
+  </div>
+  <button @click="sendOrder()" class="mt-4 w-full py-3 rounded-xl bg-chili hover:bg-red-800 font-semibold">Send order on WhatsApp</button>
+</div>
+</div>
+
+<script>
+function restApp(){return{
+  loading:true,cfg:{},activeCat:'All',order:[],
+  brand:new URLSearchParams(location.search).get('brand')||'mama-thandi',
+  async init(){try{var r=await fetch('/templates/restaurant/data/config-'+this.brand+'.json?_='+Date.now());this.cfg=await r.json();if(!this.cfg.categories)this.cfg.categories=[];if(this.cfg.categories.length)this.activeCat='All';this.cfg.categories=['All'].concat(this.cfg.categories.filter(function(c){return c!=='All'}))}catch(e){console.error(e);this.cfg={brand:{name:'Restaurant'},menu:[],categories:['All'],hours:{}}}this.loading=false},
+  filteredMenu(){if(this.activeCat==='All')return this.cfg.menu||[];return (this.cfg.menu||[]).filter(function(m){return m.category===this.activeCat},this)},
+  isOpen(){var now=new Date();var day=now.toLocaleDateString('en-US',{weekday:'long'}).toLowerCase();var h=(this.cfg.hours||{})[day];if(!h||h==='Closed')return false;var m=h.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);if(!m)return false;var mins=now.getHours()*60+now.getMinutes();return mins>=parseInt(m[1])*60+parseInt(m[2])&&mins<=parseInt(m[3])*60+parseInt(m[4])},
+  addToOrder(item){var f=this.order.filter(function(o){return o.id===item.id})[0];if(f)f.qty++;else this.order.push({id:item.id,name:item.name,price:item.price,qty:1})},
+  orderTotal(){return this.order.reduce(function(s,i){return s+i.price*i.qty},0)},
+  sendOrder(){var lines=['Hi! I would like to order:',''];this.order.forEach(function(i){lines.push(i.qty+'× '+i.name+' = R'+(i.qty*i.price))});lines.push('');lines.push('Total: R'+this.orderTotal());var d=String(this.cfg.whatsapp||'').replace(/\D/g,'');window.open('https://wa.me/'+d+'?text='+encodeURIComponent(lines.join('\n')),'_blank')},
+  waLink(msg){var d=String(this.cfg.whatsapp||'').replace(/\D/g,'');return 'https://wa.me/'+d+'?text='+encodeURIComponent(msg)}
+}}
+</script>
+</body>
+</html>

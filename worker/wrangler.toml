@@ -1,0 +1,10 @@
+name = "outreach-save-api"
+main = "index.js"
+compatibility_date = "2024-10-01"
+workers_dev = true
+
+[vars]
+GITHUB_OWNER = "SlyFox99-SA"
+GITHUB_REPO = "master-outreach-engine"
+GITHUB_BRANCH = "main"
+ALLOWED_ORIGINS = "http://localhost:5173,https://fragrance-seller-mockup.pages.dev,https://techseller-mockup.pages.dev,https://lumo-mockup.pages.dev,https://monetech-outreach.pages.dev"

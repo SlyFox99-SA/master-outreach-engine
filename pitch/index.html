@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Master Outreach — Websites I build for SA businesses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: { bone: '#f5f2eb', ink: '#0a0a0a', mute: '#6b6259', terracotta: '#c96442', sand: '#e8e2d5' },
+    fontFamily: { serif: ['"Instrument Serif"','Georgia','serif'], sans: ['Inter','system-ui','sans-serif'], mono: ['"JetBrains Mono"','monospace'] }
+  }}
+}
+</script>
+<style>
+  body { -webkit-tap-highlight-color: transparent; font-family: Inter, system-ui, sans-serif; letter-spacing: -0.011em; }
+  .serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .tight { letter-spacing: -0.03em; }
+  .hairline { border-color: rgba(10,10,10,0.12); }
+  .tile { position: relative; width: 100%; aspect-ratio: 16/11; overflow: hidden; background: #e8e2d5; border-radius: 6px; }
+  .tile iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: top left; pointer-events: none; }
+  .tile-mask { position: absolute; inset: 0; background: rgba(10,10,10,0); transition: background .3s; }
+  .tile:hover .tile-mask { background: rgba(10,10,10,0.05); }
+  .tile-open { position: absolute; bottom: 12px; right: 12px; opacity: 0; transform: translateY(4px); transition: all .3s; }
+  .tile:hover .tile-open { opacity: 1; transform: translateY(0); }
+  .badge { position: absolute; top: 12px; left: 12px; z-index: 2; }
+</style>
+</head>
+<body class="bg-bone text-ink">
+
+<nav class="sticky top-0 z-40 bg-bone/95 backdrop-blur border-b hairline">
+  <div class="max-w-7xl mx-auto px-5 md:px-10 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-6 h-6 rounded-full bg-ink"></div>
+      <span class="mono text-xs tracking-wider uppercase">Master Outreach</span>
+    </div>
+    <div class="hidden md:flex items-center gap-8 mono text-xs tracking-wider uppercase">
+      <a href="#work" class="hover:text-terracotta transition">Demos</a>
+      <a href="#pricing" class="hover:text-terracotta transition">Pricing</a>
+      <a href="#how" class="hover:text-terracotta transition">How I work</a>
+      <a href="https://wa.me/27XXXXXXXXX" class="text-terracotta">Talk to me →</a>
+    </div>
+    <a href="https://wa.me/27XXXXXXXXX" class="md:hidden mono text-xs text-terracotta">Talk →</a>
+  </div>
+</nav>
+
+<section class="px-5 md:px-10 pt-14 md:pt-28 pb-12 md:pb-20 max-w-7xl mx-auto">
+  <p class="mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-mute mb-8 md:mb-14">Johannesburg · Solo developer · 2026</p>
+  <h1 class="serif tight text-[2.75rem] leading-[0.96] md:text-[7rem] md:leading-[0.92] max-w-6xl">
+    I build websites<br>
+    for SA <em class="italic">small business.</em>
+  </h1>
+  <div class="mt-10 md:mt-16 grid md:grid-cols-12 gap-8 md:gap-16">
+    <div class="md:col-span-6 md:col-start-7">
+      <p class="text-base md:text-xl text-ink/70 leading-relaxed">
+        You talk to me directly. I pick the right build for your business, ship it in 3 days, hand it over. Pay once, own it forever. No monthly fees to anyone.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-6">
+        <a href="#work" class="mono text-xs tracking-wider uppercase border-b-2 border-ink pb-1 hover:text-terracotta hover:border-terracotta transition">See the demos ↓</a>
+        <a href="#pricing" class="mono text-xs tracking-wider uppercase text-mute hover:text-ink transition">Pricing →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-t hairline px-5 md:px-10 py-4 md:py-6">
+  <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 md:gap-4 mono text-[10px] md:text-xs tracking-wider uppercase text-mute">
+    <span>R5,000 — R35,000+ once-off</span>
+    <span>Live in 3 days</span>
+    <span>Fully functional demos</span>
+    <span>You own everything</span>
+  </div>
+</section>
+
+<section id="work" class="px-5 md:px-10 pt-16 md:pt-32 pb-16 md:pb-24 max-w-7xl mx-auto">
+  <div class="flex items-end justify-between border-b hairline pb-5 md:pb-6 mb-12 md:mb-16">
+    <div>
+      <p class="mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-mute mb-3">01 / Demos</p>
+      <h2 class="serif tight text-3xl md:text-6xl leading-[0.95]">Every demo works.<br>Click anything.</h2>
+    </div>
+  </div>
+
+  <p class="text-sm md:text-base text-mute max-w-lg mb-12 md:mb-16">These are not mockups. Every site below is fully functional — cart, checkout, WhatsApp buttons, order flow. Open one and try it. What you see is exactly what you'll get.</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+
+    <a href="/templates/starter/" class="group block">
+      <div class="tile">
+        <span class="badge mono text-[9px] tracking-widest uppercase bg-bone text-ink px-2.5 py-1 rounded-full border hairline">Starter · R5,000</span>
+        <iframe src="/templates/starter/" loading="lazy" scrolling="no" tabindex="-1" data-w="1280" data-h="880"></iframe>
+        <div class="tile-mask"></div>
+        <span class="tile-open mono text-[10px] tracking-widest uppercase bg-ink text-bone px-3 py-1.5 rounded-full">Open demo →</span>
+      </div>
+      <div class="mt-5">
+        <h3 class="serif text-2xl md:text-3xl">One-Page Site</h3>
+        <p class="mt-1.5 text-sm text-mute leading-relaxed">Everything a small business needs on one page. Hero, services, gallery, WhatsApp CTA. This is the R5,000 Starter tier.</p>
+      </div>
+    </a>
+
+    <a href="/templates/salon/" class="group block">
+      <div class="tile">
+        <span class="badge mono text-[9px] tracking-widest uppercase bg-bone text-ink px-2.5 py-1 rounded-full border hairline">Service · R6,500</span>
+        <iframe src="/templates/salon/" loading="lazy" scrolling="no" tabindex="-1" data-w="1280" data-h="880"></iframe>
+        <div class="tile-mask"></div>
+        <span class="tile-open mono text-[10px] tracking-widest uppercase bg-ink text-bone px-3 py-1.5 rounded-full">Open demo →</span>
+      </div>
+      <div class="mt-5">
+        <h3 class="serif text-2xl md:text-3xl">Salon & Beauty</h3>
+        <p class="mt-1.5 text-sm text-mute leading-relaxed">Service menu with prices, staff profiles, gallery, one-tap WhatsApp bookings. Business tier.</p>
+      </div>
+    </a>
+
+    <a href="/templates/services/" class="group block">
+      <div class="tile">
+        <span class="badge mono text-[9px] tracking-widest uppercase bg-bone text-ink px-2.5 py-1 rounded-full border hairline">Service · R6,500</span>
+        <iframe src="/templates/services/" loading="lazy" scrolling="no" tabindex="-1" data-w="1280" data-h="880"></iframe>
+        <div class="tile-mask"></div>
+        <span class="tile-open mono text-[10px] tracking-widest uppercase bg-ink text-bone px-3 py-1.5 rounded-full">Open demo →</span>
+      </div>
+      <div class="mt-5">
+        <h3 class="serif text-2xl md:text-3xl">Services & Trades</h3>
+        <p class="mt-1.5 text-sm text-mute leading-relaxed">Trust signals, fixed prices, service-area chips, working quote form. Business tier.</p>
+      </div>
+    </a>
+
+    <a href="/?brand=techhub&demo=1" class="group block">
+      <div class="tile">
+        <span class="badge mono text-[9px] tracking-widest uppercase bg-bone text-ink px-2.5 py-1 rounded-full border hairline">Shop · R8,500</span>
+        <iframe src="/?brand=techhub&demo=1" loading="lazy" scrolling="no" tabindex="-1" data-w="1280" data-h="880"></iframe>
+        <div class="tile-mask"></div>
+        <span class="tile-open mono text-[10px] tracking-widest uppercase bg-ink text-bone px-3 py-1.5 rounded-full">Open demo →</span>
+      </div>
+      <div class="mt-5">
+        <h3 class="serif text-2xl md:text-3xl">Online Store</h3>
+        <p class="mt-1.5 text-sm text-mute leading-relaxed">Full cart, checkout, stock, variants. Seller dashboard + buyer order tracking. Business tier.</p>
+      </div>
+    </a>
+
+    <a href="/templates/studio/" class="group block">
+      <div class="tile">
+        <span class="badge mono text-[9px] tracking-widest uppercase bg-bone text-ink px-2.5 py-1 rounded-full border hairline">Service · R6,500</span>
+        <iframe src="/templates/studio/" loading="lazy" scrolling="no" tabindex="-1" data-w="1280" data-h="880"></iframe>
+        <div class="tile-mask"></div>
+        <span class="tile-open mono text-[10px] tracking-widest uppercase bg-ink text-bone px-3 py-1.5 rounded-full">Open demo →</span>
+      </div>
+      <div class="mt-5">
+        <h3 class="serif text-2xl md:text-3xl">Creative Studio</h3>
+        <p class="mt-1.5 text-sm text-mute leading-relaxed">Portfolio-first. Editorial layout. Working package selector + WhatsApp bookings. Business tier.</p>
+      </div>
+    </a>
+
+    <a href="/templates/restaurant/" class="group block">
+      <div class="tile">
+        <span class="badge mono text-[9px] tracking-widest uppercase bg-bone text-ink px-2.5 py-1 rounded-full border hairline">Shop · R8,500</span>
+        <iframe src="/templates/restaurant/" loading="lazy" scrolling="no" tabindex="-1" data-w="1280" data-h="880"></iframe>
+        <div class="tile-mask"></div>
+        <span class="tile-open mono text-[10px] tracking-widest uppercase bg-ink text-bone px-3 py-1.5 rounded-full">Open demo →</span>
+      </div>
+      <div class="mt-5">
+        <h3 class="serif text-2xl md:text-3xl">Food & Restaurant</h3>
+        <p class="mt-1.5 text-sm text-mute leading-relaxed">Menu filters, cart drawer, WhatsApp order. Delivery options + hours. Business tier.</p>
+      </div>
+    </a>
+
+    <a href="/templates/personal/" class="group block">
+      <div class="tile">
+        <span class="badge mono text-[9px] tracking-widest uppercase bg-bone text-ink px-2.5 py-1 rounded-full border hairline">Service · R6,500</span>
+        <iframe src="/templates/personal/" loading="lazy" scrolling="no" tabindex="-1" data-w="1280" data-h="880"></iframe>
+        <div class="tile-mask"></div>
+        <span class="tile-open mono text-[10px] tracking-widest uppercase bg-ink text-bone px-3 py-1.5 rounded-full">Open demo →</span>
+      </div>
+      <div class="mt-5">
+        <h3 class="serif text-2xl md:text-3xl">Personal Brand</h3>
+        <p class="mt-1.5 text-sm text-mute leading-relaxed">Story-first. Book sessions. Own your name. Working WhatsApp + email CTAs. Business tier.</p>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<section id="pricing" class="border-t hairline px-5 md:px-10 pt-16 md:pt-32 pb-16 md:pb-24 bg-bone">
+  <div class="max-w-7xl mx-auto">
+    <div class="border-b hairline pb-5 md:pb-6 mb-12 md:mb-16">
+      <p class="mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-mute mb-3">02 / Pricing</p>
+      <h2 class="serif tight text-3xl md:text-6xl leading-[0.95]">Priced by what<br>you actually get.</h2>
+    </div>
+
+    <p class="text-base md:text-lg text-ink/70 max-w-2xl mb-12 md:mb-16">A portfolio site and a full shop aren't the same thing. Neither is the price. Pick the tier that fits your business.</p>
+
+    <div class="space-y-12 md:space-y-16">
+
+      <div class="grid md:grid-cols-12 gap-6 md:gap-12 pb-12 md:pb-16 border-b hairline">
+        <div class="md:col-span-4">
+          <p class="mono text-xs tracking-widest uppercase text-mute mb-3">01</p>
+          <h3 class="serif text-3xl md:text-4xl">Starter</h3>
+          <p class="serif tight text-5xl md:text-6xl mt-4">R5,000</p>
+          <p class="mono text-[10px] tracking-wider uppercase text-mute mt-3">once-off · single-page site</p>
+        </div>
+        <div class="md:col-span-5">
+          <p class="text-sm text-ink/70 leading-relaxed mb-6">One clean page with everything a small business needs. Perfect for a first online presence.</p>
+          <ul class="space-y-2 text-sm text-ink/75">
+            <li>— Hero + services + gallery + contact</li>
+            <li>— Your own .co.za domain</li>
+            <li>— WhatsApp click-to-chat everywhere</li>
+            <li>— Mobile-perfect, loads in under 1 second</li>
+          </ul>
+        </div>
+        <div class="md:col-span-3 md:text-right">
+          <a href="/templates/starter/" class="mono text-xs tracking-widest uppercase border-b-2 border-ink pb-1 hover:text-terracotta hover:border-terracotta transition">Open the demo →</a>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-6 md:gap-12 pb-12 md:pb-16 border-b hairline">
+        <div class="md:col-span-4">
+          <p class="mono text-xs tracking-widest uppercase text-mute mb-3">02</p>
+          <h3 class="serif text-3xl md:text-4xl">Service</h3>
+          <p class="serif tight text-5xl md:text-6xl mt-4">R6,500</p>
+          <p class="mono text-[10px] tracking-wider uppercase text-mute mt-3">once-off · booking & enquiry sites</p>
+        </div>
+        <div class="md:col-span-5">
+          <p class="text-sm text-ink/70 leading-relaxed mb-6">Multi-section site for businesses that take bookings or quotes. No cart, no inventory — just customers reaching out.</p>
+          <ul class="space-y-2 text-sm text-ink/75">
+            <li>— Salon · Services · Studio · Personal Brand</li>
+            <li>— Service menu, gallery, staff or portfolio</li>
+            <li>— WhatsApp booking / quote flow</li>
+            <li>— Working enquiry form</li>
+            <li>— Mobile-perfect, no cart needed</li>
+          </ul>
+        </div>
+        <div class="md:col-span-3 md:text-right">
+          <a href="#work" class="mono text-xs tracking-widest uppercase border-b-2 border-ink pb-1 hover:text-terracotta hover:border-terracotta transition">4 demos →</a>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-6 md:gap-12 pb-12 md:pb-16 border-b hairline">
+        <div class="md:col-span-4">
+          <div class="flex items-baseline gap-3 mb-3">
+            <p class="mono text-xs tracking-widest uppercase text-terracotta">03</p>
+            <span class="mono text-[10px] tracking-widest uppercase text-terracotta">Most chosen</span>
+          </div>
+          <h3 class="serif text-3xl md:text-4xl">Shop</h3>
+          <p class="serif tight text-5xl md:text-6xl mt-4">R8,500</p>
+          <p class="mono text-[10px] tracking-wider uppercase text-mute mt-3">once-off · full online store</p>
+        </div>
+        <div class="md:col-span-5">
+          <p class="text-sm text-ink/70 leading-relaxed mb-6">Full e-commerce build. Cart, checkout, orders, tracking. Built for sellers running real volume.</p>
+          <ul class="space-y-2 text-sm text-ink/75">
+            <li>— Store · Restaurant verticals</li>
+            <li>— Cart + checkout flow</li>
+            <li>— Seller dashboard (edit products from your phone)</li>
+            <li>— Buyer order tracking page</li>
+            <li>— Image auto-compression, variants, stock</li>
+            <li>— Up to 100 orders/month on free-tier infrastructure</li>
+          </ul>
+        </div>
+        <div class="md:col-span-3 md:text-right">
+          <a href="#work" class="mono text-xs tracking-widest uppercase border-b-2 border-ink pb-1 hover:text-terracotta hover:border-terracotta transition">2 demos →</a>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-6 md:gap-12 pb-12 md:pb-16 border-b hairline">
+        <div class="md:col-span-4">
+          <p class="mono text-xs tracking-widest uppercase text-mute mb-3">04</p>
+          <h3 class="serif text-3xl md:text-4xl">Pro</h3>
+          <p class="serif tight text-5xl md:text-6xl mt-4">R15,000</p>
+          <p class="mono text-[10px] tracking-wider uppercase text-mute mt-3">once-off · any vertical, maximum features</p>
+        </div>
+        <div class="md:col-span-5">
+          <p class="text-sm text-ink/70 leading-relaxed mb-6">Whatever you picked above, plus extras you'd normally pay a marketing agency for. Built for a business already selling.</p>
+          <ul class="space-y-2 text-sm text-ink/75">
+            <li>— Everything in Service or Shop</li>
+            <li>— Multi-admin access (you + a manager)</li>
+            <li>— Email notifications to buyers</li>
+            <li>— SMS notifications to buyers</li>
+            <li>— Priority support, direct line to me</li>
+          </ul>
+        </div>
+        <div class="md:col-span-3 md:text-right">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute">Demo coming soon</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-6 md:gap-12 pb-12 md:pb-16 border-b hairline">
+        <div class="md:col-span-4">
+          <p class="mono text-xs tracking-widest uppercase text-mute mb-3">05</p>
+          <h3 class="serif text-3xl md:text-4xl">Bespoke</h3>
+          <p class="serif tight text-5xl md:text-6xl mt-4">from R35,000</p>
+          <p class="mono text-[10px] tracking-wider uppercase text-mute mt-3">scope-based · no cap</p>
+        </div>
+        <div class="md:col-span-5">
+          <p class="text-sm text-ink/70 leading-relaxed mb-6">Have a specific idea? Send me the brief and I'll quote it. No cap on this tier — some builds are R35k, some are R100k.</p>
+          <ul class="space-y-2 text-sm text-ink/75">
+            <li>— Fully custom design, no template</li>
+            <li>— Integrations with your existing tools</li>
+            <li>— Multi-language, multi-currency</li>
+            <li>— Custom buyer flows and admin panels</li>
+          </ul>
+        </div>
+        <div class="md:col-span-3 md:text-right">
+          <a href="https://wa.me/27XXXXXXXXX?text=Bespoke%20build%20enquiry" class="mono text-xs tracking-widest uppercase border-b-2 border-ink pb-1 hover:text-terracotta hover:border-terracotta transition">Send a brief →</a>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-6 md:gap-12">
+        <div class="md:col-span-4">
+          <p class="mono text-xs tracking-widest uppercase text-mute mb-3">06</p>
+          <h3 class="serif text-3xl md:text-4xl">Retainer</h3>
+          <p class="serif tight text-5xl md:text-6xl mt-4">from R8,000<span class="text-2xl">/mo</span></p>
+          <p class="mono text-[10px] tracking-wider uppercase text-mute mt-3">ongoing · no cap</p>
+        </div>
+        <div class="md:col-span-5">
+          <p class="text-sm text-ink/70 leading-relaxed mb-6">For businesses that keep growing and need constant dev support. I work on your site monthly — new features, campaigns, fixes.</p>
+          <ul class="space-y-2 text-sm text-ink/75">
+            <li>— Monthly development hours</li>
+            <li>— New features, landing pages, campaigns</li>
+            <li>— Content updates handled by me</li>
+            <li>— Priority response within hours, not days</li>
+          </ul>
+        </div>
+        <div class="md:col-span-3 md:text-right">
+          <a href="https://wa.me/27XXXXXXXXX?text=Retainer%20enquiry" class="mono text-xs tracking-widest uppercase border-b-2 border-ink pb-1 hover:text-terracotta hover:border-terracotta transition">Discuss retainer →</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 pt-10 border-t hairline">
+      <div class="grid md:grid-cols-12 gap-6 md:gap-12 items-start">
+        <div class="md:col-span-4">
+          <p class="mono text-xs tracking-widest uppercase text-terracotta mb-3">The rule</p>
+          <h3 class="serif text-3xl md:text-4xl">50% reservation fee. No exceptions.</h3>
+        </div>
+        <div class="md:col-span-8">
+          <p class="text-base md:text-lg text-ink/70 leading-relaxed">Every build starts with a 50% reservation fee. Your slot in the build queue is only confirmed once that lands. The remaining 50% is paid on handover, before your domain goes live. This is not negotiable — it protects both our time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="border-t hairline px-5 md:px-10 pt-16 md:pt-32 pb-16 md:pb-24">
+  <div class="max-w-7xl mx-auto">
+    <div class="border-b hairline pb-5 md:pb-6 mb-12 md:mb-16">
+      <p class="mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-mute mb-3">03 / How I work</p>
+      <h2 class="serif tight text-3xl md:text-6xl leading-[0.95]">Three days. That's it.</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-x-10 gap-y-12">
+      <div>
+        <p class="mono text-xs text-terracotta mb-3">Day 01</p>
+        <h3 class="serif text-2xl md:text-4xl mb-3">You message me.</h3>
+        <p class="text-sm md:text-base text-ink/70 leading-relaxed">Tell me what you sell, who buys from you, how you take payments today. 15 minutes on WhatsApp. I send you the exact demo that fits your business.</p>
+      </div>
+      <div>
+        <p class="mono text-xs text-terracotta mb-3">Day 02</p>
+        <h3 class="serif text-2xl md:text-4xl mb-3">I build.</h3>
+        <p class="text-sm md:text-base text-ink/70 leading-relaxed">You send your logo, products, bank details, WhatsApp number. I customise the demo to your brand — colours, name, content — and hand you a live URL to review.</p>
+      </div>
+      <div>
+        <p class="mono text-xs text-terracotta mb-3">Day 03</p>
+        <h3 class="serif text-2xl md:text-4xl mb-3">I hand over.</h3>
+        <p class="text-sm md:text-base text-ink/70 leading-relaxed">Your domain goes live. You get a 10-minute walkthrough and access to your seller dashboard. You own everything from that moment — code, domain, data, customers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-t hairline px-5 md:px-10 pt-16 md:pt-32 pb-16 md:pb-24">
+  <div class="max-w-7xl mx-auto">
+    <div class="border-b hairline pb-5 md:pb-6 mb-12 md:mb-16">
+      <p class="mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-mute mb-3">04 / The real cost</p>
+      <h2 class="serif tight text-3xl md:text-6xl leading-[0.95]">The numbers.<br>Do them yourself.</h2>
+    </div>
+
+    <p class="text-base md:text-lg text-ink/70 max-w-2xl mb-12">Different ways you could get online. Setup + monthly + five-year total. Ballpark SA market figures — your business might need more or less. Just so you can see what each approach actually costs over time.</p>
+
+    <div class="border-t hairline">
+
+      <div class="hidden md:grid grid-cols-12 gap-4 py-3 mono text-[10px] tracking-widest uppercase text-mute border-b hairline">
+        <div class="col-span-5">Approach</div>
+        <div class="col-span-2">Setup</div>
+        <div class="col-span-2">Monthly</div>
+        <div class="col-span-3 text-right">5-year total</div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-3 py-5 border-b hairline items-baseline">
+        <div class="col-span-12 md:col-span-5">
+          <p class="serif text-xl md:text-2xl">Instagram / WhatsApp only</p>
+          <p class="text-sm text-mute mt-1">No website, no customer list, no ownership.</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Setup</p>
+          <p class="serif text-lg mt-1">R0</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Monthly</p>
+          <p class="serif text-lg mt-1">R0</p>
+        </div>
+        <div class="col-span-4 md:col-span-3 md:text-right">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">5 years</p>
+          <p class="serif text-lg md:text-xl mt-1">R0</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-3 py-5 border-b hairline items-baseline">
+        <div class="col-span-12 md:col-span-5">
+          <p class="serif text-xl md:text-2xl">DIY website builder</p>
+          <p class="text-sm text-mute mt-1">You build it yourself. Monthly subscription.</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Setup</p>
+          <p class="serif text-lg mt-1">R0</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Monthly</p>
+          <p class="serif text-lg mt-1">R150 – R400</p>
+        </div>
+        <div class="col-span-4 md:col-span-3 md:text-right">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">5 years</p>
+          <p class="serif text-lg md:text-xl mt-1">R9,000 – R24,000</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-3 py-5 border-b hairline items-baseline">
+        <div class="col-span-12 md:col-span-5">
+          <p class="serif text-xl md:text-2xl">Freelancer build</p>
+          <p class="text-sm text-mute mt-1">One developer builds it. You might pay maintenance.</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Setup</p>
+          <p class="serif text-lg mt-1">R15,000 – R40,000</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Monthly</p>
+          <p class="serif text-lg mt-1">R0 – R500</p>
+        </div>
+        <div class="col-span-4 md:col-span-3 md:text-right">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">5 years</p>
+          <p class="serif text-lg md:text-xl mt-1">R15,000 – R70,000</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-3 py-5 border-b hairline items-baseline">
+        <div class="col-span-12 md:col-span-5">
+          <p class="serif text-xl md:text-2xl">Agency retainer</p>
+          <p class="text-sm text-mute mt-1">Full service. Monthly bill forever.</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Setup</p>
+          <p class="serif text-lg mt-1">R20,000+</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Monthly</p>
+          <p class="serif text-lg mt-1">R2,500 – R8,000</p>
+        </div>
+        <div class="col-span-4 md:col-span-3 md:text-right">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">5 years</p>
+          <p class="serif text-lg md:text-xl mt-1">R170,000 – R500,000</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-3 py-5 border-b hairline items-baseline bg-terracotta/5 -mx-3 px-3 rounded-sm">
+        <div class="col-span-12 md:col-span-5">
+          <p class="serif text-xl md:text-2xl">With me — Starter</p>
+          <p class="text-sm text-mute mt-1">One page. You own it.</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Setup</p>
+          <p class="serif text-lg mt-1">R5,000</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Monthly</p>
+          <p class="serif text-lg mt-1">R0</p>
+        </div>
+        <div class="col-span-4 md:col-span-3 md:text-right">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">5 years</p>
+          <p class="serif text-lg md:text-xl mt-1">R5,000</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-3 py-5 border-b hairline items-baseline bg-terracotta/5 -mx-3 px-3 rounded-sm">
+        <div class="col-span-12 md:col-span-5">
+          <p class="serif text-xl md:text-2xl">With me — Business</p>
+          <p class="text-sm text-mute mt-1">Full storefront. Seller dashboard.</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Setup</p>
+          <p class="serif text-lg mt-1">R8,500</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Monthly</p>
+          <p class="serif text-lg mt-1">R0</p>
+        </div>
+        <div class="col-span-4 md:col-span-3 md:text-right">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">5 years</p>
+          <p class="serif text-lg md:text-xl mt-1">R8,500</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-3 py-5 border-b hairline items-baseline bg-terracotta/5 -mx-3 px-3 rounded-sm">
+        <div class="col-span-12 md:col-span-5">
+          <p class="serif text-xl md:text-2xl">With me — Pro</p>
+          <p class="text-sm text-mute mt-1">Everything. Multi-admin, SMS, priority.</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Setup</p>
+          <p class="serif text-lg mt-1">R15,000</p>
+        </div>
+        <div class="col-span-4 md:col-span-2">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">Monthly</p>
+          <p class="serif text-lg mt-1">R0</p>
+        </div>
+        <div class="col-span-4 md:col-span-3 md:text-right">
+          <p class="mono text-[10px] tracking-widest uppercase text-mute md:hidden">5 years</p>
+          <p class="serif text-lg md:text-xl mt-1">R15,000</p>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="mt-8 text-sm text-mute max-w-2xl">These are ballpark figures for the South African market. Your business might need more or less. The math is straightforward — monthly subscriptions add up. Paying once means paying once.</p>
+  </div>
+</section>
+<section class="border-t hairline px-5 md:px-10 pt-16 md:pt-32 pb-16 md:pb-24">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-12 gap-8 md:gap-16">
+    <div class="md:col-span-4">
+      <p class="mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-mute mb-3">05 / Questions</p>
+      <h2 class="serif tight text-3xl md:text-5xl leading-[0.95]">Straight answers.</h2>
+    </div>
+    <div class="md:col-span-7 md:col-start-6 space-y-6 md:space-y-8">
+      <div class="border-b hairline pb-5 md:pb-6">
+        <h3 class="serif text-lg md:text-2xl mb-2">Is this really once-off?</h3>
+        <p class="text-sm md:text-base text-ink/70 leading-relaxed">Yes. You pay once, you own it. The only recurring cost is your domain (R150/year). Skip the care plan if you want to handle renewals yourself.</p>
+      </div>
+      <div class="border-b hairline pb-5 md:pb-6">
+        <h3 class="serif text-lg md:text-2xl mb-2">What does the care plan cover?</h3>
+        <p class="text-sm md:text-base text-ink/70 leading-relaxed">Domain renewal, uptime monitoring, and two free content edits a year. Optional but recommended.</p>
+      </div>
+      <div class="border-b hairline pb-5 md:pb-6">
+        <h3 class="serif text-lg md:text-2xl mb-2">Can I edit it myself?</h3>
+        <p class="text-sm md:text-base text-ink/70 leading-relaxed">Yes. You get a phone-friendly dashboard. Change prices, add products, upload photos, mark orders paid and shipped. No code.</p>
+      </div>
+      <div class="border-b hairline pb-5 md:pb-6">
+        <h3 class="serif text-lg md:text-2xl mb-2">What if I want to leave?</h3>
+        <p class="text-sm md:text-base text-ink/70 leading-relaxed">You own everything — code, domain, data, customers. I hand it over cleanly. No lock-in, ever.</p>
+      </div>
+
+      <div class="pb-5 md:pb-6">
+        <h3 class="serif text-lg md:text-2xl mb-2">Who am I talking to?</h3>
+        <p class="text-sm md:text-base text-ink/70 leading-relaxed">Me. Not an agency. Not a team. A solo developer who built this system and answers his own WhatsApp. You'll talk to the same person from first message to handover.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-t hairline bg-ink text-bone px-5 md:px-10 pt-16 md:pt-32 pb-16 md:pb-24">
+  <div class="max-w-7xl mx-auto">
+    <p class="mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-bone/50 mb-8 md:mb-10">Start</p>
+    <h2 class="serif tight text-5xl md:text-[8rem] leading-[0.9] max-w-6xl mb-10 md:mb-12">
+      Message me.<br>
+      <em class="italic">I'll reply.</em>
+    </h2>
+    <div class="grid md:grid-cols-12 gap-8 md:gap-16 items-end">
+      <div class="md:col-span-6">
+        <p class="text-base md:text-xl text-bone/70 leading-relaxed max-w-lg">
+          Tell me what you sell and where you're based. I'll send the right demo within the hour.
+        </p>
+      </div>
+      <div class="md:col-span-5 md:col-start-8">
+        <a href="https://wa.me/27XXXXXXXXX?text=Hi!%20I%20saw%20your%20demos." class="inline-flex items-center gap-3 px-6 md:px-8 py-4 md:py-5 bg-bone text-ink hover:bg-terracotta hover:text-bone transition">
+          <span class="mono text-xs tracking-widest uppercase">WhatsApp me</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t hairline px-5 md:px-10 py-6 md:py-8">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-4 mono text-[10px] md:text-xs tracking-wider uppercase text-mute">
+    <span>© 2026 Master Outreach</span>
+    <span>Johannesburg · Solo developer</span>
+    <span>Demos are live · No data stored</span>
+  </div>
+</footer>
+
+<script>
+  function sizeTiles() {
+    document.querySelectorAll('.tile').forEach(function(tile) {
+      var iframe = tile.querySelector('iframe');
+      if (!iframe) return;
+      var w = parseInt(iframe.getAttribute('data-w')) || 1280;
+      var h = parseInt(iframe.getAttribute('data-h')) || 880;
+      iframe.style.width = w + 'px';
+      iframe.style.height = h + 'px';
+      var scale = tile.clientWidth / w;
+      iframe.style.transform = 'scale(' + scale + ')';
+    });
+  }
+  window.addEventListener('load', sizeTiles);
+  window.addEventListener('resize', sizeTiles);
+  sizeTiles();
+  setInterval(sizeTiles, 800);
+</script>
+
+</body>
+</html>

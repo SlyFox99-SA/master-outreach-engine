@@ -1,0 +1,94 @@
+{
+  "TE-251010-A4K2X9M7": {
+    "ref": "TE-251010-A4K2X9M7",
+    "createdAt": "2026-10-08T08:14:00+02:00",
+    "status": "pending",
+    "buyer": { "firstName": "Nomsa", "phone": "+27821112222", "address": "12 Rose St, Sandton" },
+    "items": [
+      { "id": "musk-white", "name": "White Musk", "variant": "50ml", "qty": 2, "price": 320, "image": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=900&q=80" }
+    ],
+    "subtotal": 640,
+    "shipping": { "id": "paxi", "name": "Paxi (PEP to PEP)", "price": 60 },
+    "total": 700,
+    "trackingNumber": null,
+    "carrier": null,
+    "timeline": [
+      { "at": "2026-10-08T08:14:00+02:00", "event": "Order placed", "note": "Waiting for POP" }
+    ]
+  },
+  "TE-251009-B3P1Y7M2": {
+    "ref": "TE-251009-B3P1Y7M2",
+    "createdAt": "2026-10-07T14:22:00+02:00",
+    "status": "paid",
+    "buyer": { "firstName": "Sipho", "phone": "+27839998888", "address": "45 Main Rd, Randburg" },
+    "items": [
+      { "id": "ip13", "name": "iPhone 13", "variant": "128GB - Midnight", "qty": 1, "price": 8999, "image": "https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=900&q=80" }
+    ],
+    "subtotal": 8999,
+    "shipping": { "id": "courier", "name": "Courier door-to-door", "price": 100 },
+    "total": 9099,
+    "trackingNumber": null,
+    "carrier": null,
+    "timeline": [
+      { "at": "2026-10-07T14:22:00+02:00", "event": "Order placed", "note": "" },
+      { "at": "2026-10-07T15:01:00+02:00", "event": "Payment confirmed", "note": "EFT matched ref" }
+    ]
+  },
+  "TE-251006-C5R8K4Q1": {
+    "ref": "TE-251006-C5R8K4Q1",
+    "createdAt": "2026-10-04T10:30:00+02:00",
+    "status": "shipped",
+    "buyer": { "firstName": "Zanele", "phone": "+27845556666", "address": "8 Oak Ave, Pretoria" },
+    "items": [
+      { "id": "ip14p", "name": "iPhone 14 Pro", "variant": "256GB - Deep Purple", "qty": 1, "price": 17699, "image": "https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=900&q=80" }
+    ],
+    "subtotal": 17699,
+    "shipping": { "id": "paxi", "name": "Paxi (PEP to PEP)", "price": 60 },
+    "total": 17759,
+    "trackingNumber": "PEP123456789",
+    "carrier": "Paxi",
+    "timeline": [
+      { "at": "2026-10-04T10:30:00+02:00", "event": "Order placed", "note": "" },
+      { "at": "2026-10-04T11:15:00+02:00", "event": "Payment confirmed", "note": "" },
+      { "at": "2026-10-05T09:00:00+02:00", "event": "Shipped", "note": "Paxi PEP123456789" }
+    ]
+  },
+  "TE-251001-D2M9P6N8": {
+    "ref": "TE-251001-D2M9P6N8",
+    "createdAt": "2026-10-01T16:45:00+02:00",
+    "status": "delivered",
+    "buyer": { "firstName": "Thabo", "phone": "+27826667777", "address": "22 Palm St, Cape Town" },
+    "items": [
+      { "id": "case-15", "name": "Silicone Case", "variant": "Black", "qty": 1, "price": 350, "image": "https://images.unsplash.com/photo-1603313011121-f7d5d3d47d52?w=900&q=80" }
+    ],
+    "subtotal": 350,
+    "shipping": { "id": "collect", "name": "Collection", "price": 0 },
+    "total": 350,
+    "trackingNumber": null,
+    "carrier": "Self-delivered",
+    "timeline": [
+      { "at": "2026-10-01T16:45:00+02:00", "event": "Order placed", "note": "" },
+      { "at": "2026-10-01T17:30:00+02:00", "event": "Payment confirmed", "note": "" },
+      { "at": "2026-10-02T10:00:00+02:00", "event": "Shipped", "note": "Self-delivery" },
+      { "at": "2026-10-02T14:30:00+02:00", "event": "Delivered", "note": "Handed to buyer" }
+    ]
+  },
+  "TE-250928-E7K3W1B5": {
+    "ref": "TE-250928-E7K3W1B5",
+    "createdAt": "2026-09-28T12:00:00+02:00",
+    "status": "cancelled",
+    "buyer": { "firstName": "Lerato", "phone": "+27827778888", "address": "5 Beach Rd, Durban" },
+    "items": [
+      { "id": "ip12", "name": "iPhone 12", "variant": "64GB - Blue", "qty": 1, "price": 6299, "image": "https://images.unsplash.com/photo-1607936854279-55e8a4c64888?w=900&q=80" }
+    ],
+    "subtotal": 6299,
+    "shipping": { "id": "paxi", "name": "Paxi (PEP to PEP)", "price": 60 },
+    "total": 6359,
+    "trackingNumber": null,
+    "carrier": null,
+    "timeline": [
+      { "at": "2026-09-28T12:00:00+02:00", "event": "Order placed", "note": "" },
+      { "at": "2026-09-29T10:00:00+02:00", "event": "Cancelled", "note": "Buyer changed mind" }
+    ]
+  }
+}
