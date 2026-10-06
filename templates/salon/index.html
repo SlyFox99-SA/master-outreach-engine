@@ -87,7 +87,7 @@ tailwind.config = {
         </div>
         <div class="relative">
           <div class="aspect-[4/5] sm:aspect-square md:aspect-[4/5] rounded-[2rem] sm:rounded-[3rem] overflow-hidden elegant-shadow max-w-md mx-auto">
-            <img :src="cfg.hero?.image" class="w-full h-full object-cover" alt="">
+            <img :src="cfg.hero?.image" class="w-full h-full object-cover" alt="" onerror="this.src='https://placehold.co/600x600/e5e7eb/9ca3af?text=Web+Forge+SA'">
           </div>
           <div class="absolute -bottom-6 -left-6 bg-cream rounded-3xl p-5 elegant-shadow hidden md:block">
             <p class="text-[10px] uppercase tracking-widest text-plum-600">Today's availability</p>
@@ -136,7 +136,7 @@ tailwind.config = {
         <template x-for="person in cfg.staff" :key="person.id">
           <div class="text-center">
             <div class="aspect-square rounded-full overflow-hidden mb-4 mx-auto max-w-[180px]">
-              <img :src="person.image" class="w-full h-full object-cover" :alt="person.name">
+              <img :src="person.image" class="w-full h-full object-cover" :alt="person.name" onerror="this.src='https://placehold.co/600x600/e5e7eb/9ca3af?text=Web+Forge+SA'">
             </div>
             <h4 class="font-display text-xl text-cream" x-text="person.name"></h4>
             <p class="text-xs uppercase tracking-widest text-plum-300 mt-1" x-text="person.role"></p>
@@ -156,7 +156,7 @@ tailwind.config = {
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <template x-for="(img, i) in cfg.gallery" :key="i">
           <div class="aspect-square rounded-3xl overflow-hidden bg-plum-100">
-            <img :src="img" class="w-full h-full object-cover hover:scale-105 transition duration-700" alt="">
+            <img :src="img" class="w-full h-full object-cover hover:scale-105 transition duration-700" alt="" onerror="this.src='https://placehold.co/600x600/e5e7eb/9ca3af?text=Web+Forge+SA'">
           </div>
         </template>
       </div>
