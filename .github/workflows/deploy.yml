@@ -1,8 +1,10 @@
-﻿name: Deploy All Brands
+name: Deploy All Brands
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
@@ -20,7 +22,7 @@ jobs:
           if ('${{ github.event_name }}' -eq 'workflow_dispatch') { $buildAll = $true }
           else {
             $changed = git diff --name-only HEAD~1 HEAD
-            $infra = @('main.js','index.html','style.css','configs.js','tailwind.config.js','postcss.config.js','package.json','package-lock.json','vite.config.js')
+            $infra = @('main.js','index.html','style.css','configs.js','tailwind.config.js','postcss.config.js','package.json','package-lock.json','vite.config.js','checkout.html')
             $infraHit = $changed | Where-Object { $infra -contains $_ -or $_ -like 'admin/*' -or $_ -like 'scripts/*' }
             if ($infraHit) { $buildAll = $true }
           }
@@ -36,23 +38,31 @@ jobs:
         run: |
           $brands = '${{ steps.detect.outputs.list }}'.Split(',')
           foreach ($b in $brands) { Write-Host "Building $b..." -ForegroundColor Cyan; & ./scripts/Build-Brand.ps1 -Brand $b }
-      - name: Deploy zaheera
+      - name: Deploy zaheera to Cloudflare Pages
         if: contains(steps.detect.outputs.list, 'zaheera')
-        uses: nwtgck/actions-netlify@v3
-        with: { publish-dir: './dist-zaheera', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
-        env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_ZAHEERA }}' }
-      - name: Deploy monetech
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-zaheera --project-name=fragrance-seller-mockup --branch=main
+      - name: Deploy monetech to Cloudflare Pages
         if: contains(steps.detect.outputs.list, 'monetech')
-        uses: nwtgck/actions-netlify@v3
-        with: { publish-dir: './dist-monetech', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
-        env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_MONETECH }}' }
-      - name: Deploy lumo
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-monetech --project-name=monetech-outreach --branch=main
+      - name: Deploy lumo to Cloudflare Pages
         if: contains(steps.detect.outputs.list, 'lumo')
-        uses: nwtgck/actions-netlify@v3
-        with: { publish-dir: './dist-lumo', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
-        env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_LUMO }}' }
-      - name: Deploy techhub
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-lumo --project-name=lumo-mockup --branch=main
+      - name: Deploy techhub to Cloudflare Pages
         if: contains(steps.detect.outputs.list, 'techhub')
-        uses: nwtgck/actions-netlify@v3
-        with: { publish-dir: './dist-techhub', production-deploy: true, github-token: '${{ secrets.GITHUB_TOKEN }}' }
-        env: { NETLIFY_AUTH_TOKEN: '${{ secrets.NETLIFY_AUTH_TOKEN }}', NETLIFY_SITE_ID: '${{ secrets.NETLIFY_SITE_TECHHUB }}' }
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-techhub --project-name=techseller-mockup --branch=main
