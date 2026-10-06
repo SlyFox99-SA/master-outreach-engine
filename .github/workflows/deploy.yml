@@ -15,52 +15,47 @@ jobs:
         with: { node-version: '20', cache: 'npm' }
       - run: npm install
 
-      - name: Detect changed scope
-        id: detect
+      - name: Ensure Cloudflare Pages projects exist
         shell: pwsh
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          $all = $false
-          if ('${{ github.event_name }}' -eq 'workflow_dispatch') { $all = $true }
-          else {
-            $changed = git diff --name-only HEAD~1 HEAD
-            $infra = @('main.js','index.html','style.css','tailwind.config.js','postcss.config.js','package.json','package-lock.json','vite.config.js','checkout.html','scripts/*','.github/*')
-            $hit = $changed | Where-Object { $f = $_; $infra | Where-Object { $f -like $_ } }
-            if ($hit) { $all = $true }
+          $projects = @(
+            'fragrance-seller-mockup',
+            'monetech-outreach',
+            'lumo-mockup',
+            'techseller-mockup',
+            'salon-demo',
+            'services-demo',
+            'restaurant-demo',
+            'studio-demo',
+            'personal-demo',
+            'starter-demo',
+            'master-outreach'
+          )
+          foreach ($name in $projects) {
+            $out = npx --yes wrangler pages project create $name --production-branch=main 2>&1 | Out-String
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host "created: $name"
+            } elseif ($out -match 'already exists' -or $out -match 'A project with this name') {
+              Write-Host "exists: $name"
+            } else {
+              Write-Host "unknown: $name"
+            }
           }
-          echo "all=$($all.ToString().ToLower())" >> $env:GITHUB_OUTPUT
 
-      # ---------- Brands (product stores) ----------
-      - name: Build all brands
-        if: steps.detect.outputs.all == 'true'
+      - name: Build all
         shell: pwsh
         run: |
           foreach ($b in @('zaheera','monetech','lumo','techhub')) {
             & ./scripts/Build-Brand.ps1 -Brand $b
           }
-
-      - name: Build changed brands
-        if: steps.detect.outputs.all == 'false'
-        shell: pwsh
-        run: |
-          $changed = git diff --name-only HEAD~1 HEAD
-          $brands = @()
-          foreach ($f in $changed) { if ($f -match '^data/config-([a-z]+)\.json$') { $brands += $Matches[1] } }
-          foreach ($b in ($brands | Select-Object -Unique)) {
-            & ./scripts/Build-Brand.ps1 -Brand $b
-          }
-
-      # ---------- Verticals (standalone demos) ----------
-      - name: Build all verticals
-        if: steps.detect.outputs.all == 'true'
-        shell: pwsh
-        run: |
           foreach ($v in @('salon','services','restaurant','studio','personal','starter','pitch')) {
             & ./scripts/Build-Vertical.ps1 -Vertical $v
           }
 
-      # ---------- Deploy brands ----------
       - name: Deploy zaheera
-        if: steps.detect.outputs.all == 'true' || hashFiles('dist-zaheera/index.html') != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -68,7 +63,6 @@ jobs:
           command: pages deploy ./dist-zaheera --project-name=fragrance-seller-mockup --branch=main
 
       - name: Deploy monetech
-        if: steps.detect.outputs.all == 'true' || hashFiles('dist-monetech/index.html') != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -76,7 +70,6 @@ jobs:
           command: pages deploy ./dist-monetech --project-name=monetech-outreach --branch=main
 
       - name: Deploy lumo
-        if: steps.detect.outputs.all == 'true' || hashFiles('dist-lumo/index.html') != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -84,16 +77,13 @@ jobs:
           command: pages deploy ./dist-lumo --project-name=lumo-mockup --branch=main
 
       - name: Deploy techhub
-        if: steps.detect.outputs.all == 'true' || hashFiles('dist-techhub/index.html') != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy ./dist-techhub --project-name=techseller-mockup --branch=main
 
-      # ---------- Deploy verticals ----------
       - name: Deploy salon
-        if: steps.detect.outputs.all == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -101,7 +91,6 @@ jobs:
           command: pages deploy ./dist-salon --project-name=salon-demo --branch=main
 
       - name: Deploy services
-        if: steps.detect.outputs.all == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -109,7 +98,6 @@ jobs:
           command: pages deploy ./dist-services --project-name=services-demo --branch=main
 
       - name: Deploy restaurant
-        if: steps.detect.outputs.all == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -117,7 +105,6 @@ jobs:
           command: pages deploy ./dist-restaurant --project-name=restaurant-demo --branch=main
 
       - name: Deploy studio
-        if: steps.detect.outputs.all == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -125,7 +112,6 @@ jobs:
           command: pages deploy ./dist-studio --project-name=studio-demo --branch=main
 
       - name: Deploy personal
-        if: steps.detect.outputs.all == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -133,7 +119,6 @@ jobs:
           command: pages deploy ./dist-personal --project-name=personal-demo --branch=main
 
       - name: Deploy starter
-        if: steps.detect.outputs.all == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -141,7 +126,6 @@ jobs:
           command: pages deploy ./dist-starter --project-name=starter-demo --branch=main
 
       - name: Deploy pitch
-        if: steps.detect.outputs.all == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
