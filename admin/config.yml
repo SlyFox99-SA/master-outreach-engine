@@ -1,4 +1,5 @@
-﻿backend:
+﻿local_backend: true
+backend:
   name: git-gateway
   branch: main
 
@@ -61,6 +62,8 @@ collections:
                   - { label: "ID", name: "id", widget: "string" }
                   - { label: "Name", name: "name", widget: "string" }
                   - { label: "Stock", name: "stock", widget: "number", valueType: "int" }
+                  - { label: "Price Adjustment (R)", name: "priceDelta", widget: "number", valueType: "int", required: false, hint: "Adds to base price for this variant" }
+                  - { label: "Color (hex)", name: "color", widget: "string", required: false }
       - name: "monetech"
         label: "MoneTech (iPhones)"
         file: "data/config-monetech.json"
@@ -112,6 +115,8 @@ collections:
                   - { label: "ID", name: "id", widget: "string" }
                   - { label: "Name", name: "name", widget: "string" }
                   - { label: "Stock", name: "stock", widget: "number", valueType: "int" }
+                  - { label: "Price Adjustment (R)", name: "priceDelta", widget: "number", valueType: "int", required: false, hint: "Adds to base price for this variant" }
+                  - { label: "Color (hex)", name: "color", widget: "string", required: false }
       - name: "lumo"
         label: "Lumo (Skincare)"
         file: "data/config-lumo.json"
@@ -205,3 +210,5 @@ collections:
                   - { label: "ID", name: "id", widget: "string" }
                   - { label: "Name", name: "name", widget: "string" }
                   - { label: "Stock", name: "stock", widget: "number", valueType: "int" }
+                  - { label: "Price Adjustment (R)", name: "priceDelta", widget: "number", valueType: "int", required: false, hint: "Adds to base price for this variant" }
+                  - { label: "Color (hex)", name: "color", widget: "string", required: false }

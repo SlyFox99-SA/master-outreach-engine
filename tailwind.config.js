@@ -1,6 +1,6 @@
-/** @type {import('tailwindcss').Config} */
+﻿/** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './main.js'],
+  content: ['./index.html', './main.js', './checkout.html'],
   theme: {
     extend: {
       colors: {

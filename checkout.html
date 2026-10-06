@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Checkout</title>
+<link rel="stylesheet" href="/style.css">
+<script src="/configs.js"></script>
+</head>
+<body class="min-h-screen bg-brand-surface text-brand-ink font-body">
+<header class="sticky top-0 z-30 bg-brand-surface border-b border-black/5"><div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between"><a href="/" class="text-sm opacity-60 hover:opacity-100">&#8592; Back to store</a><div id="brand" class="font-display text-lg font-semibold"></div></div></header>
+<main class="max-w-3xl mx-auto px-4 py-8">
+<h1 class="font-display text-3xl md:text-4xl font-semibold mb-8">Checkout</h1>
+<div id="empty" class="hidden py-20 text-center opacity-50">Your cart is empty. <a href="/" class="underline">Go shop &#8594;</a></div>
+<div id="content" class="space-y-5">
+<section class="rounded-2xl bg-white ring-1 ring-black/5 p-5"><h2 class="text-xs uppercase tracking-widest opacity-60 mb-4">Order Summary</h2><div id="items"></div><div id="totals" class="mt-4 pt-4 border-t border-black/5 space-y-2 text-sm"></div></section>
+<section class="rounded-2xl bg-white ring-1 ring-black/5 p-5"><h2 class="text-xs uppercase tracking-widest opacity-60 mb-4">Shipping</h2><div id="shipping"></div></section>
+<section class="rounded-2xl bg-white ring-1 ring-black/5 p-5"><h2 class="text-xs uppercase tracking-widest opacity-60 mb-4">Payment</h2><div id="payment"></div></section>
+</div>
+<div id="thanks" class="hidden py-20 text-center"><div class="mx-auto h-16 w-16 rounded-full bg-emerald-100 grid place-items-center mb-6"><svg viewBox="0 0 24 24" class="h-8 w-8 fill-none stroke-emerald-600" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></div><h2 class="font-display text-2xl font-semibold mb-3">Order sent!</h2><p class="text-sm opacity-70 mb-2">Reference</p><p id="thanksRef" class="font-mono text-lg font-semibold mb-8"></p><a href="/" class="inline-flex items-center justify-center rounded-full bg-brand-primary text-white px-8 py-3.5 text-sm font-semibold">Back to store</a></div>
+</main>
+<script>
+(function(){
+var P = new URLSearchParams(location.search);
+var brand = P.get("brand") || localStorage.getItem("brand") || "active";
+var all = window.__CONFIGS || {};
+var cfg = all[brand] || all.active || {};
+var cid = cfg.id || "active";
+var key = "cart." + cid + ".";
+var items = [];
+try { items = JSON.parse(localStorage.getItem(key + "items") || "[]") || []; } catch(e){ items = []; }
+var sid = localStorage.getItem(key + "shipping") || "";
+var note = localStorage.getItem(key + "note") || "";
+var ref = localStorage.getItem(key + "ref") || "";
+var F = function(v){ return new Intl.NumberFormat("en-ZA",{style:"currency",currency:"ZAR",maximumFractionDigits:0}).format(v||0); };
+var dShip = [{id:"paxi",name:"Paxi (PEP to PEP)",price:60},{id:"courier",name:"Courier door-to-door",price:100},{id:"collect",name:"Collection by arrangement",price:0}];
+var opts = (cfg.shipping && cfg.shipping.length) ? cfg.shipping : dShip;
+if (!sid) sid = opts[0].id;
+var ship = opts.filter(function(o){ return o.id === sid; })[0] || opts[0];
+var subtotal = items.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
+var total = subtotal + (ship.price || 0);
+if (!items.length) { document.getElementById("empty").classList.remove("hidden"); document.getElementById("content").classList.add("hidden"); return; }
+document.getElementById("brand").textContent = (cfg.brand && cfg.brand.name) || "Store";
+document.title = "Checkout - " + ((cfg.brand && cfg.brand.name) || "Store");
+var DQ = String.fromCharCode(34);
+document.getElementById("items").innerHTML = items.map(function(i){ var v = i.variantName ? " <span class=" + DQ + "text-xs opacity-60" + DQ + ">(" + i.variantName + ")</span>" : ""; return "<div class=" + DQ + "flex gap-3 py-3 border-b border-black/5 last:border-0" + DQ + "><div class=" + DQ + "w-14 h-14 rounded-lg overflow-hidden bg-black/5 flex-shrink-0" + DQ + "><img src=" + DQ + (i.image||"") + DQ + " class=" + DQ + "w-full h-full object-cover" + DQ + " /></div><div class=" + DQ + "flex-1 min-w-0" + DQ + "><div class=" + DQ + "text-sm font-semibold truncate" + DQ + ">" + i.name + v + "</div><div class=" + DQ + "text-xs opacity-60" + DQ + ">Qty " + i.qty + "</div></div><div class=" + DQ + "text-sm font-semibold" + DQ + ">" + F(i.price*i.qty) + "</div></div>"; }).join("");
+document.getElementById("totals").innerHTML = "<div class=" + DQ + "flex justify-between" + DQ + "><span class=" + DQ + "opacity-60" + DQ + ">Subtotal</span><span>" + F(subtotal) + "</span></div><div class=" + DQ + "flex justify-between" + DQ + "><span class=" + DQ + "opacity-60" + DQ + ">Shipping</span><span>" + F(ship.price) + "</span></div><div class=" + DQ + "flex justify-between pt-2 border-t border-black/5" + DQ + "><span class=" + DQ + "font-semibold" + DQ + ">Total</span><span class=" + DQ + "font-display text-2xl font-semibold" + DQ + ">" + F(total) + "</span></div>";
+document.getElementById("shipping").innerHTML = opts.map(function(o){ var ck = o.id === sid ? " checked" : ""; var cls = o.id === sid ? "border-brand-primary bg-brand-primary/5" : "border-black/10"; return "<label class=" + DQ + "flex items-center gap-3 p-3 rounded-xl border cursor-pointer " + cls + DQ + "><input type=" + DQ + "radio" + DQ + " name=" + DQ + "ship" + DQ + " value=" + DQ + o.id + DQ + ck + " data-ship=" + DQ + o.id + DQ + " /><span class=" + DQ + "flex-1 text-sm" + DQ + ">" + o.name + "</span><span class=" + DQ + "text-sm font-semibold" + DQ + ">" + F(o.price) + "</span></label>"; }).join("");
+var hasGw = !!(cfg.payment && cfg.payment.provider);
+var payHtml = "";
+if (hasGw) { var gwUrl = "#"; if (cfg.payment.provider === "payfast") { var base = cfg.payment.sandbox ? "https://sandbox.payfast.co.za/eng/process" : "https://www.payfast.co.za/eng/process"; var q = new URLSearchParams({merchant_id:cfg.payment.merchantId,merchant_key:cfg.payment.merchantKey,amount:Number(total).toFixed(2),item_name:"Order " + ref,return_url:cfg.payment.returnUrl||location.href,cancel_url:cfg.payment.cancelUrl||location.href}); gwUrl = base + "?" + q.toString(); } payHtml += "<a href=" + DQ + gwUrl + DQ + " target=" + DQ + "_blank" + DQ + " class=" + DQ + "block w-full text-center rounded-2xl bg-emerald-600 text-white px-6 py-4 font-semibold mb-3 hover:opacity-90" + DQ + ">Pay " + F(total) + " Online Now</a><p class=" + DQ + "text-xs text-center opacity-50 mb-4" + DQ + ">&#8212; or pay via EFT &#8212;</p>"; }
+var b = cfg.bank || {};
+payHtml += "<div class=" + DQ + "rounded-xl bg-black/[0.03] p-4 space-y-1.5 text-xs font-mono" + DQ + "><div class=" + DQ + "flex justify-between" + DQ + "><span class=" + DQ + "opacity-50" + DQ + ">Bank</span><span>" + (b.bankName||"") + "</span></div><div class=" + DQ + "flex justify-between" + DQ + "><span class=" + DQ + "opacity-50" + DQ + ">Account</span><span>" + (b.accountName||"") + "</span></div><div class=" + DQ + "flex justify-between" + DQ + "><span class=" + DQ + "opacity-50" + DQ + ">Number</span><span>" + (b.accountNumber||"") + "</span></div><div class=" + DQ + "flex justify-between" + DQ + "><span class=" + DQ + "opacity-50" + DQ + ">Branch</span><span>" + (b.branchCode||"") + "</span></div><div class=" + DQ + "flex justify-between" + DQ + "><span class=" + DQ + "opacity-50" + DQ + ">Reference</span><span class=" + DQ + "font-semibold" + DQ + ">" + (ref||"N/A") + "</span></div></div>";
+payHtml += "<div class=" + DQ + "mt-4" + DQ + "><textarea id=" + DQ + "note" + DQ + " rows=" + DQ + "2" + DQ + " placeholder=" + DQ + "Delivery address (optional)" + DQ + " class=" + DQ + "w-full rounded-xl border border-black/10 px-4 py-3 text-sm" + DQ + ">" + note + "</textarea></div>";
+payHtml += "<button id=" + DQ + "popBtn" + DQ + " class=" + DQ + "mt-4 block w-full text-center rounded-2xl bg-brand-primary text-white px-6 py-4 font-semibold hover:opacity-90" + DQ + ">Send Proof of Payment via WhatsApp</button>";
+document.getElementById("payment").innerHTML = payHtml;
+var ships = document.querySelectorAll("input[name=ship]");
+for (var i = 0; i < ships.length; i++) { ships[i].addEventListener("change", function(e){ localStorage.setItem(key + "shipping", e.target.getAttribute("data-ship")); location.reload(); }); }
+document.getElementById("popBtn").addEventListener("click", function(){ var newNote = document.getElementById("note").value || ""; localStorage.setItem(key + "note", newNote); var lines = ["Hi " + ((cfg.brand && cfg.brand.name) || "store") + "! Proof of payment attached.",""]; lines.push("Ref: " + (ref || "N/A")); lines.push(""); items.forEach(function(it){ lines.push(it.qty + "x " + it.name + (it.variantName ? " (" + it.variantName + ")" : "") + " - R" + (it.price*it.qty)); }); lines.push(""); lines.push("Subtotal: R" + subtotal); lines.push("Shipping: " + ship.name + " - R" + ship.price); lines.push("Total: R" + total); if (newNote) { lines.push(""); lines.push("Note: " + newNote); } var digits = String(cfg.whatsapp || "").replace(/\D/g, ""); window.open("https://wa.me/" + digits + "?text=" + encodeURIComponent(lines.join("\n")), "_blank"); localStorage.removeItem(key + "items"); document.getElementById("content").classList.add("hidden"); document.getElementById("thanks").classList.remove("hidden"); document.getElementById("thanksRef").textContent = ref; });
+})();
+</script>
+</body>
+</html>
