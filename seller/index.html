@@ -450,8 +450,11 @@ function app() {
       var sess = localStorage.getItem('session.' + this.brandId);
       if (sess) this.session = sess;
       try {
-        var r = await fetch('/data/config-' + this.brandId + '.json?_=' + Date.now());
+        var url1 = '/data/config-' + this.brandId + '.json?_=' + Date.now();
+        var r = await fetch(url1);
+        if (!r.ok) r = await fetch('/data/active-config.json?_=' + Date.now());
         this.store = await r.json();
+        this.vertical = this.store.vertical || 'store';
       } catch(e) { console.error(e); }
       this.vertical = this.store.vertical || 'store';
       this.aboutBody = (this.store.about && this.store.about.paragraphs) ? this.store.about.paragraphs.join('\n\n') : '';
