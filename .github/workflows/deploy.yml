@@ -30,13 +30,13 @@ jobs:
             'monetech-outreach',
             'lumo-mockup',
             'techseller-mockup',
-            'salon-demo',
-            'services-demo',
-            'restaurant-demo',
-            'studio-demo',
-            'personal-demo',
-            'starter-demo',
-            'master-outreach'
+            'sfox-salon',
+            'sfox-services',
+            'sfox-restaurant',
+            'sfox-studio',
+            'sfox-personal',
+            'sfox-starter',
+            'sfox-pitch'
           )
           foreach ($name in $projects) {
             Write-Host ""
@@ -95,46 +95,46 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-salon --project-name=salon-demo --branch=main
+          command: pages deploy ./dist-salon --project-name=sfox-salon --branch=main
 
       - name: Deploy services
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-services --project-name=services-demo --branch=main
+          command: pages deploy ./dist-services --project-name=sfox-services --branch=main
 
       - name: Deploy restaurant
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-restaurant --project-name=restaurant-demo --branch=main
+          command: pages deploy ./dist-restaurant --project-name=sfox-restaurant --branch=main
 
       - name: Deploy studio
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-studio --project-name=studio-demo --branch=main
+          command: pages deploy ./dist-studio --project-name=sfox-studio --branch=main
 
       - name: Deploy personal
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-personal --project-name=personal-demo --branch=main
+          command: pages deploy ./dist-personal --project-name=sfox-personal --branch=main
 
       - name: Deploy starter
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-starter --project-name=starter-demo --branch=main
+          command: pages deploy ./dist-starter --project-name=sfox-starter --branch=main
 
       - name: Deploy pitch
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-pitch --project-name=master-outreach --branch=main
+          command: pages deploy ./dist-pitch --project-name=sfox-pitch --branch=main
