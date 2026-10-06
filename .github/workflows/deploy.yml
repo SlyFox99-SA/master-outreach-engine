@@ -1,4 +1,4 @@
-name: Deploy All Brands
+name: Deploy All
 
 on:
   push:
@@ -14,55 +14,136 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: '20', cache: 'npm' }
       - run: npm install
-      - name: Detect changed brands
+
+      - name: Detect changed scope
         id: detect
         shell: pwsh
         run: |
-          $buildAll = $false
-          if ('${{ github.event_name }}' -eq 'workflow_dispatch') { $buildAll = $true }
+          $all = $false
+          if ('${{ github.event_name }}' -eq 'workflow_dispatch') { $all = $true }
           else {
             $changed = git diff --name-only HEAD~1 HEAD
-            $infra = @('main.js','index.html','style.css','configs.js','tailwind.config.js','postcss.config.js','package.json','package-lock.json','vite.config.js','checkout.html')
-            $infraHit = $changed | Where-Object { $infra -contains $_ -or $_ -like 'admin/*' -or $_ -like 'scripts/*' }
-            if ($infraHit) { $buildAll = $true }
+            $infra = @('main.js','index.html','style.css','tailwind.config.js','postcss.config.js','package.json','package-lock.json','vite.config.js','checkout.html','scripts/*','.github/*')
+            $hit = $changed | Where-Object { $f = $_; $infra | Where-Object { $f -like $_ } }
+            if ($hit) { $all = $true }
           }
-          if ($buildAll) { echo "list=zaheera,monetech,lumo,techhub" >> $env:GITHUB_OUTPUT; Write-Host "BUILD ALL" -ForegroundColor Yellow; exit 0 }
-          $brands = @()
-          git diff --name-only HEAD~1 HEAD | ForEach-Object { if ($_ -match '^data/config-([a-z]+)\.json$') { $brands += $Matches[1] } }
-          $brands = $brands | Select-Object -Unique
-          if ($brands.Count -eq 0) { echo "list=" >> $env:GITHUB_OUTPUT; Write-Host "NOTHING TO BUILD" -ForegroundColor Gray }
-          else { echo "list=$($brands -join ',')" >> $env:GITHUB_OUTPUT; Write-Host "BUILD: $($brands -join ',')" -ForegroundColor Cyan }
-      - name: Build changed brands
-        if: steps.detect.outputs.list != ''
+          echo "all=$($all.ToString().ToLower())" >> $env:GITHUB_OUTPUT
+
+      # ---------- Brands (product stores) ----------
+      - name: Build all brands
+        if: steps.detect.outputs.all == 'true'
         shell: pwsh
         run: |
-          $brands = '${{ steps.detect.outputs.list }}'.Split(',')
-          foreach ($b in $brands) { Write-Host "Building $b..." -ForegroundColor Cyan; & ./scripts/Build-Brand.ps1 -Brand $b }
-      - name: Deploy zaheera to Cloudflare Pages
-        if: contains(steps.detect.outputs.list, 'zaheera')
+          foreach ($b in @('zaheera','monetech','lumo','techhub')) {
+            & ./scripts/Build-Brand.ps1 -Brand $b
+          }
+
+      - name: Build changed brands
+        if: steps.detect.outputs.all == 'false'
+        shell: pwsh
+        run: |
+          $changed = git diff --name-only HEAD~1 HEAD
+          $brands = @()
+          foreach ($f in $changed) { if ($f -match '^data/config-([a-z]+)\.json$') { $brands += $Matches[1] } }
+          foreach ($b in ($brands | Select-Object -Unique)) {
+            & ./scripts/Build-Brand.ps1 -Brand $b
+          }
+
+      # ---------- Verticals (standalone demos) ----------
+      - name: Build all verticals
+        if: steps.detect.outputs.all == 'true'
+        shell: pwsh
+        run: |
+          foreach ($v in @('salon','services','restaurant','studio','personal','starter','pitch')) {
+            & ./scripts/Build-Vertical.ps1 -Vertical $v
+          }
+
+      # ---------- Deploy brands ----------
+      - name: Deploy zaheera
+        if: steps.detect.outputs.all == 'true' || hashFiles('dist-zaheera/index.html') != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy ./dist-zaheera --project-name=fragrance-seller-mockup --branch=main
-      - name: Deploy monetech to Cloudflare Pages
-        if: contains(steps.detect.outputs.list, 'monetech')
+
+      - name: Deploy monetech
+        if: steps.detect.outputs.all == 'true' || hashFiles('dist-monetech/index.html') != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy ./dist-monetech --project-name=monetech-outreach --branch=main
-      - name: Deploy lumo to Cloudflare Pages
-        if: contains(steps.detect.outputs.list, 'lumo')
+
+      - name: Deploy lumo
+        if: steps.detect.outputs.all == 'true' || hashFiles('dist-lumo/index.html') != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy ./dist-lumo --project-name=lumo-mockup --branch=main
-      - name: Deploy techhub to Cloudflare Pages
-        if: contains(steps.detect.outputs.list, 'techhub')
+
+      - name: Deploy techhub
+        if: steps.detect.outputs.all == 'true' || hashFiles('dist-techhub/index.html') != ''
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy ./dist-techhub --project-name=techseller-mockup --branch=main
+
+      # ---------- Deploy verticals ----------
+      - name: Deploy salon
+        if: steps.detect.outputs.all == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-salon --project-name=salon-demo --branch=main
+
+      - name: Deploy services
+        if: steps.detect.outputs.all == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-services --project-name=services-demo --branch=main
+
+      - name: Deploy restaurant
+        if: steps.detect.outputs.all == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-restaurant --project-name=restaurant-demo --branch=main
+
+      - name: Deploy studio
+        if: steps.detect.outputs.all == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-studio --project-name=studio-demo --branch=main
+
+      - name: Deploy personal
+        if: steps.detect.outputs.all == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-personal --project-name=personal-demo --branch=main
+
+      - name: Deploy starter
+        if: steps.detect.outputs.all == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-starter --project-name=starter-demo --branch=main
+
+      - name: Deploy pitch
+        if: steps.detect.outputs.all == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist-pitch --project-name=master-outreach --branch=main
