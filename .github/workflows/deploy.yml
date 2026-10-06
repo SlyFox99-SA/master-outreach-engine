@@ -16,11 +16,15 @@ jobs:
       - run: npm install
 
       - name: Ensure Cloudflare Pages projects exist
+        continue-on-error: true
         shell: pwsh
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          Write-Host "Wrangler version:"
+          npx wrangler --version
+          Write-Host ""
           $projects = @(
             'fragrance-seller-mockup',
             'monetech-outreach',
@@ -35,15 +39,18 @@ jobs:
             'master-outreach'
           )
           foreach ($name in $projects) {
-            $out = npx --yes wrangler pages project create $name --production-branch=main 2>&1 | Out-String
-            if ($LASTEXITCODE -eq 0) {
-              Write-Host "created: $name"
-            } elseif ($out -match 'already exists' -or $out -match 'A project with this name') {
-              Write-Host "exists: $name"
+            Write-Host ""
+            Write-Host "=== $name ==="
+            $out = npx wrangler pages project create $name --production-branch=main 2>&1 | Out-String
+            Write-Host $out
+            if ($out -match 'already exists' -or $out -match 'A project with this name' -or $out -match 'Successfully created') {
+              Write-Host "OK: $name"
             } else {
-              Write-Host "unknown: $name"
+              Write-Host "WARN: $name - see output above"
             }
           }
+          Write-Host ""
+          Write-Host "Provisioning pass complete."
 
       - name: Build all
         shell: pwsh
