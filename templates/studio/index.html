@@ -144,7 +144,7 @@
 function studioApp(){return{
   loading:true,cfg:{},
   brand:new URLSearchParams(location.search).get('brand')||'nova-studio',
-  async init(){try{var r=await fetch('/templates/studio/data/config-'+this.brand+'.json?_='+Date.now());this.cfg=await r.json()}catch(e){console.error(e);this.cfg={brand:{name:'Studio'},portfolio:[],packages:[]}}this.loading=false},
+  async init(){try{var r=await fetch('/data/config-'+this.brand+'.json?_='+Date.now());this.cfg=await r.json()}catch(e){console.error(e);this.cfg={brand:{name:'Studio'},portfolio:[],packages:[]}}this.loading=false},
   waLink(msg){var d=String(this.cfg.whatsapp||'').replace(/\D/g,'');return 'https://wa.me/'+d+'?text='+encodeURIComponent(msg)}
 }}
 </script>

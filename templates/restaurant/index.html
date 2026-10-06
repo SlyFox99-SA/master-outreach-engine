@@ -178,7 +178,7 @@
 function restApp(){return{
   loading:true,cfg:{},activeCat:'All',order:[],
   brand:new URLSearchParams(location.search).get('brand')||'mama-thandi',
-  async init(){try{var r=await fetch('/templates/restaurant/data/config-'+this.brand+'.json?_='+Date.now());this.cfg=await r.json();if(!this.cfg.categories)this.cfg.categories=[];if(this.cfg.categories.length)this.activeCat='All';this.cfg.categories=['All'].concat(this.cfg.categories.filter(function(c){return c!=='All'}))}catch(e){console.error(e);this.cfg={brand:{name:'Restaurant'},menu:[],categories:['All'],hours:{}}}this.loading=false},
+  async init(){try{var r=await fetch('/data/config-'+this.brand+'.json?_='+Date.now());this.cfg=await r.json();if(!this.cfg.categories)this.cfg.categories=[];if(this.cfg.categories.length)this.activeCat='All';this.cfg.categories=['All'].concat(this.cfg.categories.filter(function(c){return c!=='All'}))}catch(e){console.error(e);this.cfg={brand:{name:'Restaurant'},menu:[],categories:['All'],hours:{}}}this.loading=false},
   filteredMenu(){if(this.activeCat==='All')return this.cfg.menu||[];return (this.cfg.menu||[]).filter(function(m){return m.category===this.activeCat},this)},
   isOpen(){var now=new Date();var day=now.toLocaleDateString('en-US',{weekday:'long'}).toLowerCase();var h=(this.cfg.hours||{})[day];if(!h||h==='Closed')return false;var m=h.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);if(!m)return false;var mins=now.getHours()*60+now.getMinutes();return mins>=parseInt(m[1])*60+parseInt(m[2])&&mins<=parseInt(m[3])*60+parseInt(m[4])},
   addToOrder(item){var f=this.order.filter(function(o){return o.id===item.id})[0];if(f)f.qty++;else this.order.push({id:item.id,name:item.name,price:item.price,qty:1})},

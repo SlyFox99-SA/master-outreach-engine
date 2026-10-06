@@ -220,7 +220,7 @@ function salonApp() {
     brand: new URLSearchParams(location.search).get('brand') || 'glow-salon',
     async init() {
       try {
-        var res = await fetch('/templates/salon/data/config-' + this.brand + '.json?_=' + Date.now());
+        var res = await fetch('/data/config-' + this.brand + '.json?_=' + Date.now());
         this.cfg = await res.json();
       } catch (e) { console.error(e); this.cfg = { brand: { name: 'Salon' }, services: [], staff: [], gallery: [] }; }
       this.loading = false;

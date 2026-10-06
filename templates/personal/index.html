@@ -140,7 +140,7 @@
 function personalApp(){return{
   loading:true,cfg:{},
   brand:new URLSearchParams(location.search).get('brand')||'naledi',
-  async init(){try{var r=await fetch('/templates/personal/data/config-'+this.brand+'.json?_='+Date.now());this.cfg=await r.json()}catch(e){console.error(e);this.cfg={brand:{name:'Personal'},services:[],testimonials:[]}}this.loading=false},
+  async init(){try{var r=await fetch('/data/config-'+this.brand+'.json?_='+Date.now());this.cfg=await r.json()}catch(e){console.error(e);this.cfg={brand:{name:'Personal'},services:[],testimonials:[]}}this.loading=false},
   waLink(msg){var d=String(this.cfg.whatsapp||'').replace(/\D/g,'');return 'https://wa.me/'+d+'?text='+encodeURIComponent(msg)}
 }}
 </script>

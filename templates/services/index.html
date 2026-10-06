@@ -192,7 +192,7 @@ function svcApp() {
     brand: new URLSearchParams(location.search).get('brand') || 'thabo-handyman',
     async init() {
       try {
-        var res = await fetch('/templates/services/data/config-' + this.brand + '.json?_=' + Date.now());
+        var res = await fetch('/data/config-' + this.brand + '.json?_=' + Date.now());
         this.cfg = await res.json();
       } catch (e) { console.error(e); this.cfg = { brand: { name: 'Services' }, services: [], areas: [], testimonials: [] }; }
       this.loading = false;
