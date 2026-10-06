@@ -7,40 +7,63 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 <style>
-  body { -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  :root {
+    --brand-primary: 15 23 42;
+    --brand-accent: 59 130 246;
+    --brand-ink: 15 23 42;
+    --brand-surface: 248 250 252;
+    --font-display: system-ui;
+    --radius: 0.75rem;
+  }
+  body { -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: rgb(var(--brand-surface)); color: rgb(var(--brand-ink)); }
   input, textarea, button, select { font-size: 16px !important; }
   @media (min-width: 768px) { input, textarea, button, select { font-size: 14px !important; } }
   [x-cloak] { display: none !important; }
+  .font-display { font-family: var(--font-display); }
+  .bg-brand-surface { background-color: rgb(var(--brand-surface)); }
+  .bg-brand-primary { background-color: rgb(var(--brand-primary)); }
+  .bg-brand-accent { background-color: rgb(var(--brand-accent)); }
+  .text-brand-primary { color: rgb(var(--brand-primary)); }
+  .text-brand-ink { color: rgb(var(--brand-ink)); }
+  .text-brand-surface { color: rgb(var(--brand-surface)); }
+  .border-brand-primary { border-color: rgb(var(--brand-primary)); }
+  .btn-primary { background-color: rgb(var(--brand-primary)); color: rgb(var(--brand-surface)); border-radius: var(--radius); }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-accent { background-color: rgb(var(--brand-accent)); color: #fff; border-radius: var(--radius); }
+  .btn-accent:hover { opacity: 0.9; }
+  .card { background-color: #fff; border-radius: var(--radius); }
+  .chip { background-color: rgb(var(--brand-primary) / 0.08); color: rgb(var(--brand-primary)); border-radius: 999px; }
 </style>
 </head>
-<body class="bg-gray-50" x-data="app()" x-init="init()" x-cloak>
+<body x-data="app()" x-init="init()" x-cloak>
 
-<div x-show="loading" class="fixed inset-0 flex items-center justify-center bg-white z-50">
-  <div class="w-10 h-10 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin"></div>
+<div x-show="loading" class="fixed inset-0 flex items-center justify-center bg-brand-surface z-50">
+  <div class="w-10 h-10 border-4 border-black/10 rounded-full animate-spin" style="border-top-color: rgb(var(--brand-primary));"></div>
 </div>
 
 <!-- LOGIN -->
 <div x-show="!loading && !session" class="min-h-screen flex items-center justify-center p-5">
-  <div class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8">
+  <div class="card w-full max-w-md p-8 shadow-xl">
     <div x-show="loginStep === 'email'">
-      <div class="w-12 h-12 rounded-full bg-gray-900 text-white grid place-items-center mx-auto mb-6">
+      <div class="w-12 h-12 rounded-full bg-brand-primary text-brand-surface grid place-items-center mx-auto mb-6">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
       </div>
-      <h1 class="text-2xl font-semibold text-center mb-2">Sign in to your store</h1>
-      <p class="text-sm text-gray-500 text-center mb-6">I'll email you a login code.</p>
+      <h1 class="font-display text-2xl font-semibold text-center mb-2" x-text="'Sign in to ' + (store.brand?.name || 'your store')"></h1>
+      <p class="text-sm opacity-60 text-center mb-6">We'll email you a login code.</p>
       <form @submit.prevent="sendCode()">
-        <input type="email" x-model="loginEmail" placeholder="your@email.com" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none mb-3">
-        <button type="submit" class="w-full py-4 rounded-2xl bg-gray-900 text-white font-semibold">Send login code</button>
+        <input type="email" x-model="loginEmail" placeholder="your@email.com" required class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none mb-3" style="border-radius: var(--radius);">
+        <button type="submit" class="w-full py-4 btn-primary font-semibold">Send login code</button>
       </form>
-      <button @click="skipLogin()" class="w-full mt-3 text-center text-xs text-gray-500 hover:text-gray-900">Skip for now (demo mode)</button>
+      <button @click="skipLogin()" class="w-full mt-3 text-center text-xs opacity-50 hover:opacity-100">Skip for now (demo mode)</button>
     </div>
     <div x-show="loginStep === 'code'">
-      <button @click="loginStep = 'email'" class="text-sm text-gray-500 mb-6">← Back</button>
-      <h1 class="text-2xl font-semibold mb-2">Enter your code</h1>
-      <p class="text-sm text-gray-500 mb-6">Sent to <span x-text="loginEmail" class="font-medium text-gray-900"></span></p>
+      <button @click="loginStep = 'email'" class="text-sm opacity-60 mb-6">← Back</button>
+      <h1 class="font-display text-2xl font-semibold mb-2">Enter your code</h1>
+      <p class="text-sm opacity-60 mb-6">Sent to <span x-text="loginEmail" class="font-medium"></span></p>
       <form @submit.prevent="verifyCode()">
-        <input type="text" x-model="loginCode" maxlength="6" placeholder="000000" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none mb-3 text-center tracking-widest text-2xl font-mono">
-        <button type="submit" class="w-full py-4 rounded-2xl bg-gray-900 text-white font-semibold">Sign in</button>
+        <input type="text" x-model="loginCode" maxlength="6" placeholder="000000" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none mb-3 text-center tracking-widest text-2xl font-mono" style="border-radius: var(--radius);">
+        <button type="submit" class="w-full py-4 btn-primary font-semibold">Sign in</button>
       </form>
     </div>
   </div>
@@ -48,24 +71,24 @@
 
 <!-- MAIN -->
 <div x-show="!loading && session" class="min-h-screen">
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+  <header class="bg-brand-surface sticky top-0 z-30 border-b border-black/5 backdrop-blur-sm">
     <div class="max-w-md md:max-w-6xl mx-auto px-4 md:px-6">
       <div class="py-3 flex items-center justify-between gap-4">
         <div class="min-w-0">
-          <h1 class="text-lg md:text-2xl font-semibold text-gray-900 truncate" x-text="store.brand?.name"></h1>
-          <p class="text-xs text-gray-500 mt-0.5">
-            <span class="inline-block px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[10px] uppercase tracking-wider font-medium" x-text="vertical"></span>
-            <span class="ml-1">Seller Dashboard</span>
+          <h1 class="font-display text-lg md:text-2xl font-semibold truncate" x-text="store.brand?.name"></h1>
+          <p class="text-xs mt-0.5 flex items-center gap-2">
+            <span class="chip inline-block px-2 py-0.5 text-[10px] uppercase tracking-wider font-semibold" x-text="vertical"></span>
+            <span class="opacity-50">Seller Dashboard</span>
           </p>
         </div>
         <div class="flex items-center gap-2">
-          <button @click="activeTab = 'settings'" class="px-3 py-2 rounded-xl text-xs text-gray-700 hover:bg-gray-100">Settings</button>
-          <button @click="logout()" class="px-3 py-2 rounded-xl text-xs text-gray-500 hover:bg-gray-100">Sign out</button>
+          <button @click="activeTab = 'settings'" class="px-3 py-2 text-xs hover:bg-black/5" style="border-radius: var(--radius);">Settings</button>
+          <button @click="logout()" class="px-3 py-2 text-xs opacity-60 hover:opacity-100">Sign out</button>
         </div>
       </div>
       <nav class="flex gap-1 pb-2 overflow-x-auto no-scrollbar -mb-px">
         <template x-for="t in tabs" :key="t">
-          <button @click="activeTab = t" :class="activeTab === t ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-900'" class="px-3 py-2 border-b-2 text-sm font-medium whitespace-nowrap" x-text="tabLabel(t)"></button>
+          <button @click="activeTab = t" :class="activeTab === t ? 'border-brand-primary text-brand-primary' : 'border-transparent opacity-60 hover:opacity-100'" class="px-3 py-2 border-b-2 text-sm font-medium whitespace-nowrap" x-text="tabLabel(t)"></button>
         </template>
       </nav>
     </div>
@@ -73,337 +96,288 @@
 
   <main class="max-w-md md:max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8">
 
-    <!-- PRODUCTS (store only) -->
-    <div x-show="activeTab === 'products'">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Products <span class="text-gray-400" x-text="'(' + (store.products||[]).length + ')'"></span></h2>
-        <button @click="openNew('products')" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add Product
-        </button>
+    <!-- Stat cards -->
+    <div x-show="activeTab === 'products' || activeTab === 'orders' || activeTab === 'menu'" class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
+      <div class="card p-4 border border-black/5">
+        <p class="text-xs opacity-60 font-medium uppercase tracking-wide" x-text="activeTab === 'menu' ? 'Dishes' : (activeTab === 'orders' ? 'New orders' : 'Products')"></p>
+        <p class="mt-1 font-display text-2xl font-semibold" x-text="activeTab === 'menu' ? (store.menu||[]).length : (activeTab === 'orders' ? ordersByStatus('new').length : (store.products||[]).length)"></p>
       </div>
-      <div class="md:bg-white md:rounded-2xl md:border md:border-gray-200 md:overflow-hidden">
-        <div class="hidden md:grid grid-cols-[80px_1fr_140px_140px_100px] gap-4 px-5 py-3 bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-          <div>Photo</div><div>Product</div><div>Price</div><div>Stock</div><div class="text-right">Actions</div>
-        </div>
-        <div class="space-y-3 md:space-y-0 md:divide-y md:divide-gray-100">
-          <template x-for="(p, i) in (store.products||[])" :key="p.id || i">
-            <div class="flex gap-3 p-3 md:grid md:grid-cols-[80px_1fr_140px_140px_100px] md:gap-4 md:px-5 md:py-4 md:items-center rounded-2xl bg-white border border-gray-100 md:border-0 md:rounded-0">
-              <div class="w-16 h-16 rounded-xl bg-gray-100 flex-shrink-0 overflow-hidden">
-                <img :src="p.image" class="w-full h-full object-cover" onerror="this.style.display='none'">
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="font-medium text-gray-900 truncate" x-text="p.name"></div>
-                <div class="text-xs text-gray-500 truncate mt-0.5" x-text="p.blurb || ''"></div>
-              </div>
-              <div class="hidden md:block text-sm font-medium self-center" x-text="'R' + p.price"></div>
-              <div class="hidden md:block text-sm text-gray-600 self-center" x-text="p.stock == null ? 'Unlimited' : p.stock"></div>
-              <div class="text-right self-center">
-                <button @click="openEdit('products', i)" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100">Edit</button>
-              </div>
-              <div class="md:hidden text-xs text-gray-500 mt-1"><span x-text="'R' + p.price"></span> · <span x-text="p.stock == null ? 'Unlimited' : (p.stock + ' in stock')"></span></div>
-            </div>
-          </template>
-        </div>
+      <div class="card p-4 border border-black/5">
+        <p class="text-xs opacity-60 font-medium uppercase tracking-wide">To ship</p>
+        <p class="mt-1 font-display text-2xl font-semibold" x-text="ordersByStatus('paid').length"></p>
+      </div>
+      <div class="card p-4 border border-black/5">
+        <p class="text-xs opacity-60 font-medium uppercase tracking-wide">Shipped</p>
+        <p class="mt-1 font-display text-2xl font-semibold" x-text="ordersByStatus('shipped').length"></p>
+      </div>
+      <div class="card p-4 border border-black/5">
+        <p class="text-xs opacity-60 font-medium uppercase tracking-wide">Delivered</p>
+        <p class="mt-1 font-display text-2xl font-semibold" x-text="ordersByStatus('delivered').length"></p>
       </div>
     </div>
 
-    <!-- ORDERS (store + restaurant) -->
-    <div x-show="activeTab === 'orders'">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
-        <div class="p-4 rounded-2xl bg-white border border-gray-100"><p class="text-xs text-gray-500 font-medium uppercase tracking-wide">New</p><p class="mt-1 text-2xl font-semibold" x-text="ordersByStatus('new').length"></p></div>
-        <div class="p-4 rounded-2xl bg-white border border-gray-100"><p class="text-xs text-gray-500 font-medium uppercase tracking-wide">To ship</p><p class="mt-1 text-2xl font-semibold" x-text="ordersByStatus('paid').length"></p></div>
-        <div class="p-4 rounded-2xl bg-white border border-gray-100"><p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Shipped</p><p class="mt-1 text-2xl font-semibold" x-text="ordersByStatus('shipped').length"></p></div>
-        <div class="p-4 rounded-2xl bg-white border border-gray-100"><p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Delivered</p><p class="mt-1 text-2xl font-semibold" x-text="ordersByStatus('delivered').length"></p></div>
-      </div>
-      <div class="space-y-3">
-        <template x-for="o in orders" :key="o.ref">
-          <div class="p-4 rounded-2xl bg-white border border-gray-100">
-            <div class="flex items-start justify-between gap-3 mb-2">
-              <div><div class="font-mono text-xs text-gray-500" x-text="o.ref"></div><div class="font-medium text-gray-900 mt-1" x-text="o.buyer.name"></div></div>
-              <div class="text-right"><div class="font-semibold" x-text="'R' + o.total"></div><div class="text-xs text-gray-500" x-text="o.status"></div></div>
-            </div>
-            <div class="text-sm text-gray-600" x-text="(o.items||[]).map(i => i.qty + '× ' + i.name).join(', ')"></div>
-          </div>
-        </template>
-        <p x-show="orders.length === 0" class="py-20 text-center text-sm text-gray-400">No orders yet.</p>
-      </div>
-    </div>
-
-    <!-- GENERIC LIST TABS (services, staff, gallery, portfolio, menu, packages, areas, testimonials, delivery) -->
+    <!-- Generic list tabs -->
     <template x-for="listKey in listTabs" :key="listKey">
       <div x-show="activeTab === listKey">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+          <h2 class="text-xs font-semibold opacity-60 uppercase tracking-wide">
             <span x-text="schema(listKey).label"></span>
-            <span class="text-gray-400" x-text="'(' + (store[listKey]||[]).length + ')'"></span>
+            <span class="opacity-40" x-text="'(' + (store[listKey]||[]).length + ')'"></span>
           </h2>
-          <button @click="openNew(listKey)" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium">
+          <button @click="openNew(listKey)" class="inline-flex items-center gap-2 px-4 py-2 btn-primary text-sm font-semibold">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add
           </button>
         </div>
         <div class="space-y-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0">
           <template x-for="(item, idx) in (store[listKey]||[])" :key="idx">
-            <div class="flex gap-3 p-3 rounded-2xl bg-white border border-gray-100">
+            <div class="card flex gap-3 p-4 border border-black/5">
               <template x-if="schema(listKey).imageField">
-                <div class="w-16 h-16 rounded-xl bg-gray-100 flex-shrink-0 overflow-hidden">
+                <div class="w-16 h-16 flex-shrink-0 overflow-hidden bg-black/5" style="border-radius: var(--radius);">
                   <img :src="item[schema(listKey).imageField]" class="w-full h-full object-cover" onerror="this.style.display='none'">
                 </div>
               </template>
               <div class="flex-1 min-w-0">
-                <div class="font-medium text-gray-900 truncate" x-text="displayTitle(listKey, item)"></div>
-                <div class="text-xs text-gray-500 truncate mt-0.5" x-text="displaySubtitle(listKey, item)"></div>
+                <div class="font-display font-semibold truncate" x-text="displayTitle(listKey, item)"></div>
+                <div class="text-xs opacity-60 truncate mt-0.5" x-text="displaySubtitle(listKey, item)"></div>
               </div>
               <div class="flex flex-col gap-1">
-                <button @click="openEdit(listKey, idx)" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-100">Edit</button>
-                <button @click="deleteItem(listKey, idx)" class="px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50">Delete</button>
+                <button @click="openEdit(listKey, idx)" class="px-3 py-1.5 text-xs font-medium hover:bg-black/5" style="border-radius: var(--radius);">Edit</button>
+                <button @click="deleteItem(listKey, idx)" class="px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50" style="border-radius: var(--radius);">Delete</button>
               </div>
             </div>
           </template>
-          <p x-show="(store[listKey]||[]).length === 0" class="col-span-full py-12 text-center text-sm text-gray-400">No items yet. Click Add to create one.</p>
+          <p x-show="(store[listKey]||[]).length === 0" class="col-span-full py-16 text-center text-sm opacity-40">No items yet. Click Add to create one.</p>
         </div>
       </div>
     </template>
 
-    <!-- HOURS TAB -->
+    <!-- ORDERS -->
+    <div x-show="activeTab === 'orders'">
+      <div class="space-y-3">
+        <template x-for="o in orders" :key="o.ref">
+          <div class="card p-4 border border-black/5">
+            <div class="flex items-start justify-between gap-3 mb-2">
+              <div>
+                <div class="font-mono text-xs opacity-50" x-text="o.ref"></div>
+                <div class="font-display font-semibold mt-1" x-text="o.buyer.name"></div>
+              </div>
+              <div class="text-right">
+                <div class="font-display font-semibold" x-text="'R' + o.total"></div>
+                <div class="text-xs opacity-60 capitalize" x-text="o.status"></div>
+              </div>
+            </div>
+            <div class="text-sm opacity-70" x-text="(o.items||[]).map(i => i.qty + '× ' + i.name).join(', ')"></div>
+          </div>
+        </template>
+        <p x-show="orders.length === 0" class="py-20 text-center text-sm opacity-40">No orders yet.</p>
+      </div>
+    </div>
+
+    <!-- HOURS -->
     <div x-show="activeTab === 'hours'">
-      <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Opening Hours</h2>
-      <div class="rounded-2xl bg-white border border-gray-100 overflow-hidden">
+      <h2 class="text-xs font-semibold opacity-60 uppercase tracking-wide mb-4">Opening Hours</h2>
+      <div class="card border border-black/5 overflow-hidden">
         <template x-for="day in hourKeys" :key="day">
-          <div class="flex items-center gap-4 p-4 border-b border-gray-100 last:border-b-0">
+          <div class="flex items-center gap-4 p-4 border-b border-black/5 last:border-b-0">
             <div class="w-24 font-medium text-sm" x-text="day"></div>
-            <input type="text" x-model="store.hours[day]" :placeholder="day === 'Sunday' ? 'Closed' : '9:00 - 17:00'" class="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-900 focus:outline-none">
+            <input type="text" x-model="store.hours[day]" :placeholder="day === 'Sunday' ? 'Closed' : '9:00 - 17:00'" class="flex-1 px-3 py-2 border border-black/10 bg-white text-sm focus:outline-none" style="border-radius: var(--radius);">
           </div>
         </template>
       </div>
     </div>
 
-    <!-- ABOUT TAB -->
+    <!-- ABOUT -->
     <div x-show="activeTab === 'about'">
-      <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">About</h2>
-      <div class="rounded-2xl bg-white border border-gray-100 p-5 space-y-4">
+      <h2 class="text-xs font-semibold opacity-60 uppercase tracking-wide mb-4">About</h2>
+      <div class="card border border-black/5 p-5 space-y-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Headline</label>
-          <input type="text" x-model="store.about.title" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none">
+          <label class="block text-sm font-medium mb-2">Headline</label>
+          <input type="text" x-model="store.about.title" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Body text</label>
-          <textarea x-model="aboutBody" rows="5" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none resize-none"></textarea>
+          <label class="block text-sm font-medium mb-2">Body text</label>
+          <textarea x-model="aboutBody" rows="5" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none resize-none" style="border-radius: var(--radius);"></textarea>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Photo</label>
+          <label class="block text-sm font-medium mb-2">Photo</label>
           <div class="flex gap-2">
-            <input type="text" x-model="store.about.image" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none text-sm">
-            <button @click="uploadTo('store.about.image')" class="px-4 py-3 rounded-xl bg-gray-900 text-white text-xs font-semibold whitespace-nowrap">Upload</button>
+            <input type="text" x-model="store.about.image" class="flex-1 px-4 py-3 border border-black/10 bg-white focus:outline-none text-sm" style="border-radius: var(--radius);">
+            <button @click="uploadTo('store.about.image')" class="px-4 py-3 btn-primary text-xs font-semibold whitespace-nowrap">Upload</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SETTINGS TAB -->
+    <!-- SETTINGS -->
     <div x-show="activeTab === 'settings'">
-      <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Store Settings</h2>
-      <div class="rounded-2xl bg-white border border-gray-100 p-5 space-y-4 md:grid md:grid-cols-2 md:gap-6 md:space-y-0">
+      <h2 class="text-xs font-semibold opacity-60 uppercase tracking-wide mb-4">Settings</h2>
+      <div class="card border border-black/5 p-5 space-y-4 md:grid md:grid-cols-2 md:gap-6 md:space-y-0">
         <div class="space-y-4">
-          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Store info</p>
-          <div><label class="block text-sm font-medium text-gray-700 mb-2">Store name</label><input type="text" x-model="store.brand.name" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
-          <div><label class="block text-sm font-medium text-gray-700 mb-2">Slogan</label><input type="text" x-model="store.brand.tagline" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
-          <div><label class="block text-sm font-medium text-gray-700 mb-2">WhatsApp number</label><input type="text" x-model="store.whatsapp" placeholder="+27821234567" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
+          <p class="text-xs font-semibold opacity-60 uppercase tracking-wide">Store info</p>
+          <div><label class="block text-sm font-medium mb-2">Store name</label><input type="text" x-model="store.brand.name" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);"></div>
+          <div><label class="block text-sm font-medium mb-2">Slogan</label><input type="text" x-model="store.brand.tagline" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);"></div>
+          <div><label class="block text-sm font-medium mb-2">WhatsApp number</label><input type="text" x-model="store.whatsapp" placeholder="+27821234567" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);"></div>
         </div>
         <div class="space-y-4 mt-4 md:mt-0">
-          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Bank details</p>
-          <div><label class="block text-sm font-medium text-gray-700 mb-2">Account holder</label><input type="text" x-model="store.bank.accountName" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
-          <div><label class="block text-sm font-medium text-gray-700 mb-2">Bank</label><input type="text" x-model="store.bank.bankName" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
-          <div><label class="block text-sm font-medium text-gray-700 mb-2">Account number</label><input type="text" x-model="store.bank.accountNumber" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
-          <div><label class="block text-sm font-medium text-gray-700 mb-2">Branch code</label><input type="text" x-model="store.bank.branchCode" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none"></div>
+          <p class="text-xs font-semibold opacity-60 uppercase tracking-wide">Bank details</p>
+          <div><label class="block text-sm font-medium mb-2">Account holder</label><input type="text" x-model="store.bank.accountName" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);"></div>
+          <div><label class="block text-sm font-medium mb-2">Bank</label><input type="text" x-model="store.bank.bankName" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);"></div>
+          <div><label class="block text-sm font-medium mb-2">Account number</label><input type="text" x-model="store.bank.accountNumber" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);"></div>
+          <div><label class="block text-sm font-medium mb-2">Branch code</label><input type="text" x-model="store.bank.branchCode" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);"></div>
         </div>
       </div>
       <div class="mt-4">
-        <button @click="saveSettings()" class="w-full md:w-auto md:px-8 py-3 rounded-2xl bg-gray-900 text-white font-semibold">Save Settings</button>
+        <button @click="saveSettings()" class="w-full md:w-auto md:px-8 py-3 btn-primary font-semibold">Save Settings</button>
       </div>
     </div>
 
   </main>
 </div>
 
-<!-- GENERIC MODAL -->
+<!-- MODAL -->
 <div x-show="modalOpen" class="fixed inset-0 z-50" x-cloak>
   <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeModal()"></div>
-  <div class="absolute inset-x-0 bottom-0 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-3xl md:shadow-2xl md:max-w-lg md:w-[90%] md:max-h-[90vh] bg-white rounded-t-3xl shadow-2xl max-h-[92vh] overflow-hidden flex flex-col">
-    <header class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-      <h2 class="text-base font-semibold" x-text="(editIndex === null ? 'New ' : 'Edit ') + schema(editList).label"></h2>
-      <button @click="closeModal()" class="p-2 -mr-2 text-gray-500 hover:bg-gray-100 rounded-lg">
+  <div class="absolute inset-x-0 bottom-0 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 bg-white shadow-2xl max-h-[92vh] overflow-hidden flex flex-col md:w-[90%] md:max-w-lg" style="border-radius: var(--radius) var(--radius) 0 0; md:border-radius: var(--radius);">
+    <header class="flex items-center justify-between px-5 py-4 border-b border-black/5">
+      <h2 class="font-display text-base font-semibold" x-text="(editIndex === null ? 'New ' : 'Edit ') + schema(editList).label"></h2>
+      <button @click="closeModal()" class="p-2 -mr-2 opacity-50 hover:opacity-100" style="border-radius: var(--radius);">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     </header>
     <div class="flex-1 overflow-y-auto p-5 space-y-4">
       <template x-for="f in schema(editList).fields" :key="f.name">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2" x-text="f.label"></label>
+          <label class="block text-sm font-medium mb-2" x-text="f.label"></label>
           <template x-if="f.type === 'textarea'">
-            <textarea x-model="editing[f.name]" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none resize-none"></textarea>
+            <textarea x-model="editing[f.name]" rows="3" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none resize-none" style="border-radius: var(--radius);"></textarea>
           </template>
           <template x-if="f.type === 'number'">
-            <input type="number" x-model.number="editing[f.name]" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none">
+            <input type="number" x-model.number="editing[f.name]" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);">
           </template>
           <template x-if="f.type === 'text'">
-            <input type="text" x-model="editing[f.name]" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none">
+            <input type="text" x-model="editing[f.name]" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);">
           </template>
           <template x-if="f.type === 'image'">
             <div class="flex gap-2">
-              <input type="text" x-model="editing[f.name]" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-900 focus:outline-none text-sm">
-              <button @click="uploadTo('editing.' + f.name)" class="px-4 py-3 rounded-xl bg-gray-900 text-white text-xs font-semibold whitespace-nowrap">Upload</button>
+              <input type="text" x-model="editing[f.name]" class="flex-1 px-4 py-3 border border-black/10 bg-white focus:outline-none text-sm" style="border-radius: var(--radius);">
+              <button @click="uploadTo('editing.' + f.name)" class="px-4 py-3 btn-primary text-xs font-semibold whitespace-nowrap">Upload</button>
             </div>
           </template>
         </div>
       </template>
     </div>
-    <div class="border-t border-gray-100 px-5 py-4 flex justify-end">
-      <button @click="saveItem()" class="w-full md:w-auto md:px-8 py-3 rounded-2xl bg-gray-900 text-white font-semibold">Save</button>
+    <div class="border-t border-black/5 px-5 py-4 flex justify-end">
+      <button @click="saveItem()" class="w-full md:w-auto md:px-8 py-3 btn-primary font-semibold">Save</button>
     </div>
   </div>
 </div>
 
-<!-- ABOUT body helper for paragraphs -->
 <script>
-  window.__parseAbout = function(str) {
-    return (str || '').split('\n\n').map(s => s.trim()).filter(Boolean);
-  };
-</script>
+window.__parseAbout = function(str) {
+  return (str || '').split('\n\n').map(s => s.trim()).filter(Boolean);
+};
 
-<script>
+var VERTICAL_STYLE = {
+  store:      { font: 'Inter',              radius: '0.75rem' },
+  salon:      { font: 'Cormorant Garamond', radius: '1rem' },
+  services:   { font: 'Barlow Condensed',   radius: '0.5rem' },
+  restaurant: { font: 'Fraunces',           radius: '1rem' },
+  studio:     { font: 'Playfair Display',   radius: '0.5rem' },
+  personal:   { font: 'Instrument Serif',   radius: '1rem' },
+  starter:    { font: 'Fraunces',           radius: '1rem' }
+};
+
+function loadFont(family) {
+  if (!family) return;
+  var slug = family.replace(/ /g, '+');
+  var link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://fonts.googleapis.com/css2?family=' + slug + ':ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap';
+  document.head.appendChild(link);
+  document.documentElement.style.setProperty('--font-display', "'" + family + "', system-ui, sans-serif");
+}
+
+function applyTheme(theme, vertical) {
+  if (theme) {
+    if (theme.primary) document.documentElement.style.setProperty('--brand-primary', theme.primary);
+    if (theme.accent)  document.documentElement.style.setProperty('--brand-accent', theme.accent);
+    if (theme.ink)     document.documentElement.style.setProperty('--brand-ink', theme.ink);
+    if (theme.surface) document.documentElement.style.setProperty('--brand-surface', theme.surface);
+  }
+  var style = VERTICAL_STYLE[vertical] || VERTICAL_STYLE.store;
+  document.documentElement.style.setProperty('--radius', style.radius);
+  loadFont(style.font);
+}
+
 function app() {
   return {
     loading: true,
     session: null, loginEmail: '', loginCode: '', loginStep: 'email',
-    activeTab: 'products',
+    activeTab: 'services',
     brandId: 'techhub',
     vertical: 'store',
     store: { brand: { name: '', tagline: '' }, bank: {}, products: [], orders: [] },
     orders: [],
-
     modalOpen: false, editList: 'products', editIndex: null, editing: {},
     aboutBody: '',
-
     hourKeys: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
 
     schemas: {
-      products: {
-        label: 'Product',
-        imageField: 'image',
-        titleField: 'name',
-        subtitleField: 'blurb',
-        fields: [
-          { name: 'name', label: 'Product name', type: 'text' },
-          { name: 'category', label: 'Category', type: 'text' },
-          { name: 'blurb', label: 'Short description', type: 'text' },
-          { name: 'price', label: 'Price (R)', type: 'number' },
-          { name: 'stock', label: 'Stock (blank = unlimited)', type: 'number' },
-          { name: 'image', label: 'Photo', type: 'image' }
-        ]
-      },
-      services: {
-        label: 'Service',
-        imageField: null,
-        titleField: 'name',
-        subtitleField: 'description',
-        fields: [
-          { name: 'name', label: 'Service name', type: 'text' },
-          { name: 'description', label: 'Description', type: 'textarea' },
-          { name: 'price', label: 'Price (R)', type: 'number' },
-          { name: 'duration', label: 'Duration (60 min, 3h…)', type: 'text' },
-          { name: 'unit', label: 'Unit (callout, per sqm)', type: 'text' }
-        ]
-      },
-      staff: {
-        label: 'Team Member',
-        imageField: 'image',
-        titleField: 'name',
-        subtitleField: 'role',
-        fields: [
-          { name: 'name', label: 'Name', type: 'text' },
-          { name: 'role', label: 'Role', type: 'text' },
-          { name: 'specialties', label: 'Specialties', type: 'text' },
-          { name: 'image', label: 'Photo', type: 'image' }
-        ]
-      },
-      gallery: {
-        label: 'Gallery',
-        imageField: null,
-        titleField: null,
-        subtitleField: null,
-        isArrayOfImages: true,
-        fields: [
-          { name: 'url', label: 'Image URL', type: 'image' }
-        ]
-      },
-      portfolio: {
-        label: 'Portfolio Item',
-        imageField: 'image',
-        titleField: 'title',
-        subtitleField: 'category',
-        fields: [
-          { name: 'title', label: 'Project name', type: 'text' },
-          { name: 'category', label: 'Category (Wedding, Editorial…)', type: 'text' },
-          { name: 'image', label: 'Photo', type: 'image' }
-        ]
-      },
-      packages: {
-        label: 'Package',
-        imageField: null,
-        titleField: 'name',
-        subtitleField: 'description',
-        fields: [
-          { name: 'name', label: 'Package name', type: 'text' },
-          { name: 'description', label: 'Description', type: 'textarea' },
-          { name: 'price', label: 'Price (R)', type: 'number' },
-          { name: 'unit', label: 'Unit (per bride, per day)', type: 'text' }
-        ]
-      },
-      menu: {
-        label: 'Menu Item',
-        imageField: 'image',
-        titleField: 'name',
-        subtitleField: 'category',
-        fields: [
-          { name: 'name', label: 'Dish name', type: 'text' },
-          { name: 'category', label: 'Category (Mains, Sides…)', type: 'text' },
-          { name: 'description', label: 'Description', type: 'textarea' },
-          { name: 'price', label: 'Price (R)', type: 'number' },
-          { name: 'image', label: 'Photo', type: 'image' }
-        ]
-      },
-      areas: {
-        label: 'Service Area',
-        imageField: null,
-        titleField: null,
-        subtitleField: null,
-        isArrayOfStrings: true,
-        fields: [
-          { name: 'name', label: 'Suburb or area name', type: 'text' }
-        ]
-      },
-      testimonials: {
-        label: 'Testimonial',
-        imageField: null,
-        titleField: 'name',
-        subtitleField: 'quote',
-        fields: [
-          { name: 'quote', label: 'What they said', type: 'textarea' },
-          { name: 'name', label: 'Client name', type: 'text' },
-          { name: 'area', label: 'Their area', type: 'text' }
-        ]
-      },
-      delivery: {
-        label: 'Delivery Option',
-        imageField: null,
-        titleField: 'name',
-        subtitleField: 'time',
-        fields: [
-          { name: 'name', label: 'Option name', type: 'text' },
-          { name: 'time', label: 'Estimated time', type: 'text' },
-          { name: 'fee', label: 'Fee (R)', type: 'number' }
-        ]
-      }
+      products: { label: 'Product', imageField: 'image', titleField: 'name', subtitleField: 'blurb', fields: [
+        { name: 'name', label: 'Product name', type: 'text' },
+        { name: 'category', label: 'Category', type: 'text' },
+        { name: 'blurb', label: 'Short description', type: 'text' },
+        { name: 'price', label: 'Price (R)', type: 'number' },
+        { name: 'stock', label: 'Stock (blank = unlimited)', type: 'number' },
+        { name: 'image', label: 'Photo', type: 'image' }
+      ]},
+      services: { label: 'Service', imageField: null, titleField: 'name', subtitleField: 'description', fields: [
+        { name: 'name', label: 'Service name', type: 'text' },
+        { name: 'description', label: 'Description', type: 'textarea' },
+        { name: 'price', label: 'Price (R)', type: 'number' },
+        { name: 'duration', label: 'Duration', type: 'text' },
+        { name: 'unit', label: 'Unit', type: 'text' }
+      ]},
+      staff: { label: 'Team Member', imageField: 'image', titleField: 'name', subtitleField: 'role', fields: [
+        { name: 'name', label: 'Name', type: 'text' },
+        { name: 'role', label: 'Role', type: 'text' },
+        { name: 'specialties', label: 'Specialties', type: 'text' },
+        { name: 'image', label: 'Photo', type: 'image' }
+      ]},
+      gallery: { label: 'Gallery', imageField: null, isArrayOfImages: true, fields: [
+        { name: 'url', label: 'Image URL', type: 'image' }
+      ]},
+      portfolio: { label: 'Portfolio Item', imageField: 'image', titleField: 'title', subtitleField: 'category', fields: [
+        { name: 'title', label: 'Project name', type: 'text' },
+        { name: 'category', label: 'Category', type: 'text' },
+        { name: 'image', label: 'Photo', type: 'image' }
+      ]},
+      packages: { label: 'Package', imageField: null, titleField: 'name', subtitleField: 'description', fields: [
+        { name: 'name', label: 'Package name', type: 'text' },
+        { name: 'description', label: 'Description', type: 'textarea' },
+        { name: 'price', label: 'Price (R)', type: 'number' },
+        { name: 'unit', label: 'Unit', type: 'text' }
+      ]},
+      menu: { label: 'Menu Item', imageField: 'image', titleField: 'name', subtitleField: 'category', fields: [
+        { name: 'name', label: 'Dish name', type: 'text' },
+        { name: 'category', label: 'Category', type: 'text' },
+        { name: 'description', label: 'Description', type: 'textarea' },
+        { name: 'price', label: 'Price (R)', type: 'number' },
+        { name: 'image', label: 'Photo', type: 'image' }
+      ]},
+      areas: { label: 'Service Area', isArrayOfStrings: true, fields: [
+        { name: 'name', label: 'Suburb or area', type: 'text' }
+      ]},
+      testimonials: { label: 'Review', titleField: 'name', subtitleField: 'quote', fields: [
+        { name: 'quote', label: 'What they said', type: 'textarea' },
+        { name: 'name', label: 'Client name', type: 'text' },
+        { name: 'area', label: 'Their area', type: 'text' }
+      ]},
+      delivery: { label: 'Delivery Option', titleField: 'name', subtitleField: 'time', fields: [
+        { name: 'name', label: 'Option name', type: 'text' },
+        { name: 'time', label: 'Estimated time', type: 'text' },
+        { name: 'fee', label: 'Fee (R)', type: 'number' }
+      ]}
     },
 
     schema(key) { return this.schemas[key] || { label: key, fields: [] }; },
@@ -411,13 +385,13 @@ function app() {
     get tabs() {
       var v = this.vertical || 'store';
       var map = {
-        store:      ['products','orders','settings'],
+        store: ['products','orders','settings'],
         restaurant: ['menu','orders','hours','delivery','settings'],
-        salon:      ['services','staff','gallery','hours','settings'],
-        services:   ['services','areas','testimonials','settings'],
-        studio:     ['portfolio','packages','about','settings'],
-        personal:   ['services','about','testimonials','settings'],
-        starter:    ['settings']
+        salon: ['services','staff','gallery','hours','settings'],
+        services: ['services','areas','testimonials','settings'],
+        studio: ['portfolio','packages','about','settings'],
+        personal: ['services','about','testimonials','settings'],
+        starter: ['settings']
       };
       return map[v] || map.store;
     },
@@ -425,22 +399,19 @@ function app() {
     get listTabs() {
       var v = this.vertical || 'store';
       var map = {
-        store:      ['products'],
+        store: ['products'],
         restaurant: ['menu','delivery'],
-        salon:      ['services','staff','gallery'],
-        services:   ['services','areas','testimonials'],
-        studio:     ['portfolio','packages'],
-        personal:   ['services','testimonials'],
-        starter:    []
+        salon: ['services','staff','gallery'],
+        services: ['services','areas','testimonials'],
+        studio: ['portfolio','packages'],
+        personal: ['services','testimonials'],
+        starter: []
       };
       return map[v] || [];
     },
 
     tabLabel(t) {
-      var m = { products: 'Products', orders: 'Orders', settings: 'Settings',
-                services: 'Services', staff: 'Team', gallery: 'Gallery', hours: 'Hours',
-                menu: 'Menu', delivery: 'Delivery', areas: 'Areas', testimonials: 'Reviews',
-                portfolio: 'Portfolio', packages: 'Packages', about: 'About', content: 'Content' };
+      var m = { products: 'Products', orders: 'Orders', settings: 'Settings', services: 'Services', staff: 'Team', gallery: 'Gallery', hours: 'Hours', menu: 'Menu', delivery: 'Delivery', areas: 'Areas', testimonials: 'Reviews', portfolio: 'Portfolio', packages: 'Packages', about: 'About' };
       return m[t] || t;
     },
 
@@ -450,13 +421,13 @@ function app() {
       var sess = localStorage.getItem('session.' + this.brandId);
       if (sess) this.session = sess;
       try {
-        var url1 = '/data/config-' + this.brandId + '.json?_=' + Date.now();
-        var r = await fetch(url1);
+        var r = await fetch('/data/config-' + this.brandId + '.json?_=' + Date.now());
         if (!r.ok) r = await fetch('/data/active-config.json?_=' + Date.now());
         this.store = await r.json();
-        this.vertical = this.store.vertical || 'store';
-      } catch(e) { console.error(e); }
+      } catch(e) { console.error('[config]', e); }
       this.vertical = this.store.vertical || 'store';
+      applyTheme(this.store.theme, this.vertical);
+      this.activeTab = this.tabs[0];
       this.aboutBody = (this.store.about && this.store.about.paragraphs) ? this.store.about.paragraphs.join('\n\n') : '';
       try { this.orders = JSON.parse(localStorage.getItem('orders.' + this.brandId) || '[]'); } catch(e) { this.orders = []; }
       if (this.orders.length === 0 && (this.vertical === 'store' || this.vertical === 'restaurant')) this.seedDemoOrders();
@@ -468,25 +439,8 @@ function app() {
     skipLogin() { this.session = 'demo@example.com'; localStorage.setItem('session.' + this.brandId, 'demo@example.com'); },
     logout() { this.session = null; localStorage.removeItem('session.' + this.brandId); this.loginStep = 'email'; this.loginCode = ''; },
 
-    openNew(listKey) {
-      this.editList = listKey;
-      this.editIndex = null;
-      this.editing = {};
-      var s = this.schema(listKey);
-      s.fields.forEach(f => this.editing[f.name] = f.type === 'number' ? 0 : '');
-      if (listKey === 'products') this.editing.id = 'item-' + Date.now();
-      this.modalOpen = true;
-    },
-
-    openEdit(listKey, index) {
-      this.editList = listKey;
-      this.editIndex = index;
-      var item = (this.store[listKey] || [])[index] || {};
-      this.editing = JSON.parse(JSON.stringify(item));
-      if (typeof this.editing === 'string') this.editing = { url: this.editing, name: this.editing };
-      this.modalOpen = true;
-    },
-
+    openNew(listKey) { this.editList = listKey; this.editIndex = null; this.editing = {}; var s = this.schema(listKey); s.fields.forEach(f => this.editing[f.name] = f.type === 'number' ? 0 : ''); if (listKey === 'products') this.editing.id = 'item-' + Date.now(); this.modalOpen = true; },
+    openEdit(listKey, index) { this.editList = listKey; this.editIndex = index; var item = (this.store[listKey] || [])[index] || {}; this.editing = JSON.parse(JSON.stringify(item)); if (typeof this.editing === 'string') this.editing = { url: this.editing, name: this.editing }; this.modalOpen = true; },
     closeModal() { this.modalOpen = false; this.editing = {}; this.editIndex = null; },
 
     saveItem() {
@@ -502,42 +456,18 @@ function app() {
       this.closeModal();
     },
 
-    deleteItem(listKey, idx) {
-      if (!confirm('Delete this item?')) return;
-      this.store[listKey].splice(idx, 1);
-      this.commit('Deleted from ' + this.schema(listKey).label);
-    },
+    deleteItem(listKey, idx) { if (!confirm('Delete this item?')) return; this.store[listKey].splice(idx, 1); this.commit('Deleted from ' + this.schema(listKey).label); },
 
-    displayTitle(listKey, item) {
-      var s = this.schema(listKey);
-      if (typeof item === 'string') return item;
-      if (s.titleField) return item[s.titleField] || '';
-      return 'Item';
-    },
-
-    displaySubtitle(listKey, item) {
-      var s = this.schema(listKey);
-      if (typeof item === 'string') return '';
-      if (s.subtitleField) return item[s.subtitleField] || '';
-      return '';
-    },
+    displayTitle(listKey, item) { var s = this.schema(listKey); if (typeof item === 'string') return item; if (s.titleField) return item[s.titleField] || ''; return 'Item'; },
+    displaySubtitle(listKey, item) { var s = this.schema(listKey); if (typeof item === 'string') return ''; if (s.subtitleField) return item[s.subtitleField] || ''; return ''; },
 
     ordersByStatus(s) { return this.orders.filter(o => o.status === s); },
 
-    saveSettings() {
-      this.store.about = this.store.about || {};
-      this.store.about.paragraphs = window.__parseAbout(this.aboutBody);
-      this.commit('Settings saved');
-    },
+    saveSettings() { this.store.about = this.store.about || {}; this.store.about.paragraphs = window.__parseAbout(this.aboutBody); this.commit('Settings saved'); },
 
     async commit(msg) {
-      try {
-        await fetch('/api/save', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ brand: this.brandId, data: this.store, message: msg })
-        });
-      } catch(e) { console.log('[seller] save (local demo):', msg); }
+      try { await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ brand: this.brandId, data: this.store, message: msg }) }); }
+      catch(e) { console.log('[seller] save:', msg); }
       try { localStorage.setItem('orders.' + this.brandId, JSON.stringify(this.orders)); } catch(e) {}
     },
 
@@ -573,16 +503,9 @@ function app() {
       var arr = [];
       for (var i = 0; i < 6; i++) {
         var p = products[i % products.length];
-        var st = statuses[i];
         var d = new Date(); d.setDate(d.getDate() - (6 - i)); d.setHours(9 + i);
         var ref = 'WF-' + String(d.getFullYear()).slice(2) + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + '-' + String.fromCharCode(65 + i) + ((i*2)+1) + 'K' + (10 + i);
-        arr.push({
-          ref: ref, createdAt: d.toISOString(),
-          buyer: { name: names[i], phone: '+2782000000' + i, address: 'Unit ' + (i+1) + ', 123 Main Rd, Sandton 2196' },
-          items: [{ id: p.id || ('item-' + i), name: p.name, price: p.price, qty: 1 }],
-          subtotal: p.price, shipping: { name: 'Paxi (PEP to PEP)', price: 60 }, total: p.price + 60,
-          status: st
-        });
+        arr.push({ ref: ref, createdAt: d.toISOString(), buyer: { name: names[i], phone: '+2782000000' + i, address: 'Unit ' + (i+1) + ', 123 Main Rd, Sandton 2196' }, items: [{ id: p.id || ('item-' + i), name: p.name, price: p.price, qty: 1 }], subtotal: p.price, shipping: { name: 'Paxi (PEP to PEP)', price: 60 }, total: p.price + 60, status: statuses[i] });
       }
       this.orders = arr;
     }
