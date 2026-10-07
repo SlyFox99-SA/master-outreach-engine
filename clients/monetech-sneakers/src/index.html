@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script>window.__BRAND__ = "techhub";</script>
+<script src="/configs.js"></script>
+<style>
+  :root {
+    --paper: #ffffff;
+    --ink: #0a0a0a;
+    --bone: #f4f4f2;
+    --rule: rgba(10,10,10,0.12);
+    --hot: #d4ff00;
+    --hot-ink: #0a0a0a;
+    --warn: #ff3b30;
+    --f-display: 'Archivo Black', system-ui, sans-serif;
+    --f-body: 'Archivo', system-ui, sans-serif;
+    --f-mono: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--f-body);
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    overflow-x: hidden;
+  }
+  .mono { font-family: var(--f-mono); }
+  .disp { font-family: var(--f-display); letter-spacing: -0.02em; line-height: 0.92; }
+
+  /* marquee ticker */
+  .ticker { background: var(--ink); color: var(--paper); overflow: hidden; border-bottom: 2px solid var(--ink); }
+  .ticker-track {
+    display: flex; gap: 48px; padding: 10px 0; white-space: nowrap;
+    font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em; font-weight: 500;
+    animation: ticker 28s linear infinite;
+  }
+  .ticker-track > span { display: inline-flex; align-items: center; gap: 10px; }
+  .ticker-track .dot { width: 5px; height: 5px; border-radius: 100px; background: var(--hot); }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+
+  /* header */
+  header {
+    position: sticky; top: 0; z-index: 40;
+    background: var(--paper);
+    border-bottom: 2px solid var(--ink);
+  }
+  header .row {
+    max-width: 1400px; margin: 0 auto; padding: 0 18px; height: 62px;
+    display: flex; align-items: center; gap: 22px;
+  }
+  header .logo { font-family: var(--f-display); font-size: 24px; letter-spacing: -0.04em; text-decoration: none; color: var(--ink); text-transform: uppercase; }
+  header nav { display: none; gap: 22px; font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+  header nav a { color: var(--ink); text-decoration: none; }
+  header nav a:hover { background: var(--hot); padding: 4px 6px; margin: -4px -6px; }
+  @media (min-width: 800px) { header nav { display: flex; } }
+  header .spacer { flex: 1; }
+  header .cart-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--ink); color: var(--paper);
+    border: 2px solid var(--ink); padding: 8px 14px;
+    font-family: var(--f-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  header .cart-btn:hover { background: var(--hot); color: var(--hot-ink); border-color: var(--hot-ink); }
+  header .cart-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+
+  /* hero — full banner, hype style */
+  .hero {
+    background: var(--ink); color: var(--paper);
+    padding: 60px 0 70px;
+    position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(-45deg, transparent 0 40px, rgba(212,255,0,0.03) 40px 42px);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 1400px; margin: 0 auto; padding: 0 18px; position: relative; z-index: 1; }
+  .hero .tag { display: inline-block; background: var(--hot); color: var(--hot-ink); padding: 5px 12px; font-family: var(--f-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .hero h1 { font-family: var(--f-display); font-size: clamp(46px, 10vw, 130px); margin: 18px 0 0; text-transform: uppercase; letter-spacing: -0.045em; line-height: 0.86; }
+  .hero h1 .stroke { -webkit-text-stroke: 2px var(--paper); color: transparent; }
+  .hero h1 .hot { color: var(--hot); }
+  .hero .sub { font-family: var(--f-mono); font-size: 13px; color: rgba(255,255,255,0.65); margin: 22px 0 0; max-width: 520px; line-height: 1.6; }
+  .hero .stat-row { margin-top: 34px; display: flex; gap: 40px; flex-wrap: wrap; }
+  .hero .stat { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .hero .stat b { display: block; font-family: var(--f-display); font-size: 22px; font-weight: 400; letter-spacing: -0.02em; color: var(--hot); margin-bottom: 4px; }
+
+  /* category filter bar */
+  .filter-bar {
+    position: sticky; top: 62px; z-index: 30;
+    background: var(--paper); border-bottom: 1px solid var(--rule);
+    padding: 12px 0;
+  }
+  .filter-bar .inner { max-width: 1400px; margin: 0 auto; padding: 0 18px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .filter-bar .inner::-webkit-scrollbar { display: none; }
+  .filter-bar button {
+    flex-shrink: 0; background: none; border: 1px solid var(--rule);
+    padding: 7px 14px;
+    font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer; transition: all .15s;
+  }
+  .filter-bar button:hover { border-color: var(--ink); }
+  .filter-bar button.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* product grid — dense, tight */
+  .grid-wrap { max-width: 1400px; margin: 0 auto; padding: 30px 18px 60px; }
+  .grid-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px; border-bottom: 1px solid var(--rule); padding-bottom: 14px; }
+  .grid-head h2 { font-family: var(--f-display); font-size: 24px; margin: 0; text-transform: uppercase; letter-spacing: -0.02em; }
+  .grid-head .count { font-family: var(--f-mono); font-size: 11px; color: rgba(10,10,10,0.5); letter-spacing: 0.06em; }
+  .p-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 12px; }
+  @media (min-width: 640px) { .p-grid { grid-template-columns: repeat(3, 1fr); gap: 24px 16px; } }
+  @media (min-width: 1024px) { .p-grid { grid-template-columns: repeat(4, 1fr); gap: 30px 20px; } }
+  @media (min-width: 1280px) { .p-grid { gap: 34px 22px; } }
+
+  .p-tile { display: flex; flex-direction: column; position: relative; cursor: pointer; }
+  .p-photo { position: relative; aspect-ratio: 1/1; background: var(--bone); overflow: hidden; border: 1px solid var(--rule); }
+  .p-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+  .p-tile:hover .p-photo img { transform: scale(1.06); }
+  .p-badge {
+    position: absolute; top: 8px; left: 8px;
+    font-family: var(--f-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 8px;
+  }
+  .p-badge.new { background: var(--hot); color: var(--hot-ink); }
+  .p-badge.rare { background: var(--ink); color: var(--hot); }
+  .p-badge.sold { background: var(--warn); color: #fff; }
+  .p-stock {
+    position: absolute; bottom: 8px; left: 8px;
+    background: rgba(10,10,10,0.85); color: var(--paper);
+    font-family: var(--f-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+    padding: 4px 8px;
+  }
+  .p-info { padding-top: 12px; }
+  .p-name { font-family: var(--f-display); font-size: 15px; margin: 0 0 4px; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.1; }
+  .p-blurb { font-size: 12px; color: rgba(10,10,10,0.55); margin: 0 0 10px; }
+  .p-price { font-family: var(--f-mono); font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+  .p-price small { font-family: var(--f-mono); font-size: 11px; font-weight: 400; color: rgba(10,10,10,0.4); text-decoration: line-through; margin-left: 6px; }
+  .p-actions { display: flex; gap: 6px; margin-top: 10px; }
+  .p-add {
+    flex: 1; background: var(--ink); color: var(--paper); border: none;
+    padding: 11px;
+    font-family: var(--f-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer; transition: background .15s, color .15s;
+  }
+  .p-add:hover:not(:disabled) { background: var(--hot); color: var(--hot-ink); }
+  .p-add:disabled { background: var(--bone); color: rgba(10,10,10,0.3); cursor: not-allowed; }
+
+  /* big banner strip */
+  .banner-strip {
+    background: var(--hot); color: var(--hot-ink);
+    padding: 40px 18px;
+    border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink);
+    text-align: center;
+  }
+  .banner-strip h3 { font-family: var(--f-display); font-size: clamp(28px, 5vw, 56px); margin: 0; text-transform: uppercase; letter-spacing: -0.03em; line-height: 0.95; }
+
+  /* trust row */
+  .trust-row { max-width: 1400px; margin: 0 auto; padding: 40px 18px; display: grid; grid-template-columns: 1fr; gap: 22px; }
+  @media (min-width: 800px) { .trust-row { grid-template-columns: repeat(3, 1fr); gap: 40px; padding: 56px 18px; } }
+  .trust-item { border-top: 2px solid var(--ink); padding-top: 16px; }
+  .trust-item .num { font-family: var(--f-display); font-size: 32px; letter-spacing: -0.02em; margin: 0 0 6px; color: var(--ink); }
+  .trust-item .lbl { font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(10,10,10,0.55); margin: 0 0 8px; }
+  .trust-item p { font-size: 13px; line-height: 1.55; margin: 0; color: rgba(10,10,10,0.75); }
+
+  /* footer */
+  footer { background: var(--ink); color: var(--paper); padding: 40px 18px 30px; }
+  footer .inner { max-width: 1400px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; align-items: center; }
+  footer .brand-foot { font-family: var(--f-display); font-size: 22px; text-transform: uppercase; letter-spacing: -0.02em; }
+  footer .meta { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.06em; color: rgba(255,255,255,0.55); text-transform: uppercase; }
+
+  /* detail modal */
+  .modal { position: fixed; inset: 0; z-index: 60; background: rgba(10,10,10,0.75); display: flex; padding: 0; }
+  @media (min-width: 800px) { .modal { padding: 40px; align-items: center; justify-content: center; } }
+  .modal-inner { background: var(--paper); width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+  @media (min-width: 800px) { .modal-inner { max-width: 1000px; height: auto; max-height: 92vh; flex-direction: row; } }
+  .modal-photo { position: relative; background: var(--bone); aspect-ratio: 1/1; flex-shrink: 0; }
+  @media (min-width: 800px) { .modal-photo { width: 52%; aspect-ratio: auto; } }
+  .modal-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .modal-close {
+    position: absolute; top: 12px; right: 12px;
+    width: 38px; height: 38px; background: var(--ink); color: var(--paper);
+    border: none; cursor: pointer; display: grid; place-items: center;
+    font-family: var(--f-mono); font-weight: 700; font-size: 16px;
+  }
+  .modal-body { flex: 1; overflow-y: auto; padding: 28px 22px 36px; }
+  @media (min-width: 800px) { .modal-body { padding: 40px; } }
+  .modal-body .eyebrow { font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(10,10,10,0.5); }
+  .modal-body h2 { font-family: var(--f-display); font-size: 34px; margin: 10px 0 0; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1; }
+  .modal-body .story { font-size: 14px; line-height: 1.65; color: rgba(10,10,10,0.7); margin-top: 18px; }
+  .modal-body .price { font-family: var(--f-mono); font-size: 26px; font-weight: 700; margin-top: 24px; }
+  .modal-specs { list-style: none; padding: 0; margin: 24px 0 0; }
+  .modal-specs li { font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(10,10,10,0.6); padding: 10px 0; border-top: 1px solid var(--rule); display: flex; gap: 12px; }
+  .modal-specs li::before { content: '→'; color: var(--ink); }
+  .modal-actions { margin-top: 30px; display: flex; flex-direction: column; gap: 8px; }
+  .btn-primary, .btn-ghost {
+    padding: 16px; font-family: var(--f-mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+  }
+  .btn-primary { background: var(--ink); color: var(--paper); border: none; }
+  .btn-primary:hover:not(:disabled) { background: var(--hot); color: var(--hot-ink); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--ink); border: 2px solid var(--ink); }
+
+  /* cart */
+  .cart-scrim { position: fixed; inset: 0; z-index: 50; background: rgba(10,10,10,0.55); }
+  .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 60; width: 100%; max-width: 420px; background: var(--paper); border-left: 2px solid var(--ink); display: flex; flex-direction: column; }
+  .cart-head { padding: 18px 22px; border-bottom: 2px solid var(--ink); display: flex; justify-content: space-between; align-items: center; }
+  .cart-head p { font-family: var(--f-display); font-size: 18px; text-transform: uppercase; margin: 0; letter-spacing: -0.02em; }
+  .cart-head button { background: none; border: none; font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; }
+  .cart-body { flex: 1; overflow-y: auto; padding: 18px 22px; }
+  .cart-line { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  .cart-line-photo { width: 60px; height: 68px; background: var(--bone); flex-shrink: 0; overflow: hidden; border: 1px solid var(--rule); }
+  .cart-line-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .cart-line-info { flex: 1; min-width: 0; }
+  .cart-line-name { font-family: var(--f-display); font-size: 14px; text-transform: uppercase; margin: 0 0 3px; letter-spacing: -0.01em; }
+  .cart-line-meta { font-family: var(--f-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; color: rgba(10,10,10,0.5); text-transform: uppercase; margin: 0 0 6px; }
+  .cart-line-price { font-family: var(--f-mono); font-size: 13px; font-weight: 700; }
+  .cart-remove { font-family: var(--f-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(10,10,10,0.4); background: none; border: none; cursor: pointer; padding: 0; align-self: flex-start; }
+  .cart-empty { text-align: center; padding: 40px 0; font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(10,10,10,0.4); }
+  .cart-foot { padding: 18px 22px; border-top: 2px solid var(--ink); }
+  .cart-sub { display: flex; justify-content: space-between; margin-bottom: 14px; font-family: var(--f-mono); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+  .cart-sub b { font-weight: 700; }
+  .checkout-link { display: block; text-align: center; background: var(--ink); color: var(--paper); padding: 16px; font-family: var(--f-mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+  .checkout-link:hover { background: var(--hot); color: var(--hot-ink); }
+
+  [x-cloak] { display: none !important; }
+</style>
+<script data-brand-default="monetech">if(!new URLSearchParams(location.search).get("brand")){var u=new URL(location.href);u.searchParams.set("brand","monetech");history.replaceState(null,"",u);}</script>
+</head>
+<body x-data>
+
+<!-- ticker -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span><span class="dot"></span>NEW ARRIVALS LIVE</span>
+    <span><span class="dot"></span>FREE COURIER OVER R1000</span>
+    <span><span class="dot"></span>12 MONTH WARRANTY</span>
+    <span><span class="dot"></span>IMEI VERIFIED</span>
+    <span><span class="dot"></span>TRUSTED SINCE 2021</span>
+    <span><span class="dot"></span>NEW ARRIVALS LIVE</span>
+    <span><span class="dot"></span>FREE COURIER OVER R1000</span>
+    <span><span class="dot"></span>12 MONTH WARRANTY</span>
+    <span><span class="dot"></span>IMEI VERIFIED</span>
+    <span><span class="dot"></span>TRUSTED SINCE 2021</span>
+  </div>
+</div>
+
+<!-- header -->
+<header>
+  <div class="row">
+    <a href="./" class="logo" x-text="$store.config.brand?.name || 'TECHHUB'"></a>
+    <nav>
+      <a href="#shop">Shop</a>
+      <a href="#trust">Warranty</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="spacer"></div>
+    <button class="cart-btn" @click="$store.cart.open = true">
+      <svg viewBox="0 0 24 24"><path d="M3 3h2l2 12h11l2-9H6"/></svg>
+      <span x-text="($store.cart && $store.cart.count ? $store.cart.count() : 0) + ' · CART'"></span>
+    </button>
+  </div>
+</header>
+
+<!-- hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="tag">// LIVE INVENTORY</span>
+    <h1>
+      <span x-text="($store.config.brand?.name || 'TECH').toUpperCase()"></span><br>
+      <span class="stroke">UPGRADE</span> <span class="hot">SMART.</span>
+    </h1>
+    <p class="sub" x-text="$store.config.brand?.blurb || 'Certified pre-owned devices. Every phone inspected, tested, warranty-covered. Delivered nationwide in 2-3 days.'"></p>
+    <div class="stat-row">
+      <div class="stat"><b x-text="(($store.config.visibleProducts && $store.config.visibleProducts().length) || 0)"></b>IN STOCK</div>
+      <div class="stat"><b>12<span style="font-size: 14px;">MO</span></b>WARRANTY</div>
+      <div class="stat"><b>40</b>PT CHECK</div>
+    </div>
+  </div>
+</section>
+
+<!-- filter bar -->
+<div class="filter-bar">
+  <div class="inner">
+    <button class="on">ALL</button>
+    <button>IPHONES</button>
+    <button>ACCESSORIES</button>
+    <button>UNDER R5K</button>
+    <button>NEW IN</button>
+  </div>
+</div>
+
+<!-- product grid -->
+<section id="shop" class="grid-wrap">
+  <div class="grid-head">
+    <h2>THE DROP</h2>
+    <span class="count" x-text="(($store.config.visibleProducts && $store.config.visibleProducts().length) || 0) + ' ITEMS'"></span>
+  </div>
+  <div class="p-grid">
+    <template x-for="(p, idx) in $store.config.visibleProducts()" :key="p.id">
+      <article class="p-tile" @click="$store.config.openDetail(p)">
+        <div class="p-photo">
+          <img :src="p.image || (p.images && p.images[0])" :alt="p.name" @error="if(!$event.target.dataset.f){$event.target.dataset.f='1';$event.target.src='https://placehold.co/600x600/f4f4f2/0a0a0a?text='+encodeURIComponent(p.name)}">
+          <template x-if="!$store.config.inStock(p)"><span class="p-badge sold">SOLD OUT</span></template>
+          <template x-if="idx === 0 && $store.config.inStock(p)"><span class="p-badge new">JUST IN</span></template>
+          <template x-if="idx === 1 && $store.config.inStock(p)"><span class="p-badge rare">RARE</span></template>
+          <span class="p-stock" x-show="$store.config.inStock(p)" x-text="($store.config.getStock ? ($store.config.getStock(p) === Infinity ? 'IN STOCK' : $store.config.getStock(p) + ' LEFT') : 'IN STOCK')"></span>
+        </div>
+        <div class="p-info">
+          <h3 class="p-name" x-text="p.name"></h3>
+          <p class="p-blurb" x-text="p.blurb"></p>
+          <div class="p-price" x-text="$store.config.formatZAR(p.price)"></div>
+          <div class="p-actions">
+            <button class="p-add" @click.stop="$store.cart.add(p, $store.config.pickVariant(p))" :disabled="!$store.config.inStock(p)" x-text="$store.config.inStock(p) ? 'ADD TO CART' : 'SOLD OUT'"></button>
+          </div>
+        </div>
+      </article>
+    </template>
+  </div>
+</section>
+
+<!-- hot banner strip -->
+<section class="banner-strip">
+  <h3>UPGRADE<br>SMART. NOT<br>EXPENSIVE.</h3>
+</section>
+
+<!-- trust row -->
+<section id="trust" class="trust-row">
+  <div class="trust-item">
+    <p class="num">40</p>
+    <p class="lbl">POINT CHECK</p>
+    <p>Battery, screen, camera, speakers, cellular, IMEI — every device logged and attached to your invoice.</p>
+  </div>
+  <div class="trust-item">
+    <p class="num">12 MO</p>
+    <p class="lbl">WARRANTY</p>
+    <p>Free repair or replace within 12 months if it's not physical damage. No small print.</p>
+  </div>
+  <div class="trust-item">
+    <p class="num">2-3</p>
+    <p class="lbl">DAY DELIVERY</p>
+    <p>The Courier Guy nationwide. Tracking sent same day. Collection available in Gauteng.</p>
+  </div>
+</section>
+
+<!-- footer -->
+<footer id="contact">
+  <div class="inner">
+    <span class="brand-foot" x-text="$store.config.brand?.name || 'TECHHUB'"></span>
+    <span class="meta" x-text="$store.config.whatsapp ? 'WHATSAPP ' + $store.config.whatsapp : ''"></span>
+    <span class="meta">© <span x-text="new Date().getFullYear()"></span></span>
+  </div>
+</footer>
+
+<!-- detail modal -->
+<div x-show="$store.config.detailOpen" x-cloak class="modal" @click.self="$store.config.closeDetail()">
+  <div class="modal-inner" @click.stop>
+    <div class="modal-photo">
+      <img :src="$store.config.detailImage()" :alt="$store.config.detailProduct?.name">
+      <button class="modal-close" @click="$store.config.closeDetail()">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="eyebrow" x-text="'// ' + ($store.config.detailProduct?.category || 'ITEM').toUpperCase()"></p>
+      <h2 x-text="$store.config.detailProduct?.name"></h2>
+      <p class="story" x-text="$store.config.detailProduct?.story || $store.config.detailProduct?.blurb"></p>
+      <div class="price" x-text="$store.config.formatZAR($store.config.detailTotal())"></div>
+      <template x-if="$store.config.detailProduct?.specs && $store.config.detailProduct.specs.length">
+        <ul class="modal-specs">
+          <template x-for="(s, i) in $store.config.detailProduct.specs" :key="i">
+            <li x-text="s"></li>
+          </template>
+        </ul>
+      </template>
+      <div class="modal-actions">
+        <button class="btn-primary" @click="$store.config.detailAddToCart()" :disabled="!$store.config.detailInStock()">ADD TO CART</button>
+        <button class="btn-ghost" @click="$store.config.detailBuyNow()" :disabled="!$store.config.detailInStock()">BUY NOW</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- cart -->
+<div x-show="$store.cart.open" x-cloak @click="$store.cart.open = false" class="cart-scrim"></div>
+<aside x-show="$store.cart.open" x-cloak @click.stop class="cart-drawer">
+  <div class="cart-head">
+    <p>CART</p>
+    <button @click="$store.cart.open = false">CLOSE ×</button>
+  </div>
+  <div class="cart-body">
+    <template x-for="i in ($store.cart?.items || [])" :key="i.id + ':' + (i.variantId || 'd')">
+      <div class="cart-line">
+        <div class="cart-line-photo"><img :src="i.image"></div>
+        <div class="cart-line-info">
+          <p class="cart-line-name" x-text="i.name"></p>
+          <p class="cart-line-meta" x-text="(i.variantName ? i.variantName + ' · ' : '') + 'QTY ' + i.qty"></p>
+          <p class="cart-line-price" x-text="$store.config.formatZAR(i.price * i.qty)"></p>
+        </div>
+        <button class="cart-remove" @click="$store.cart.remove(i.id, i.variantId)">REMOVE</button>
+      </div>
+    </template>
+    <p class="cart-empty" x-show="!$store.cart?.items?.length">CART IS EMPTY</p>
+  </div>
+  <div class="cart-foot" x-show="$store.cart?.items?.length">
+    <div class="cart-sub">
+      <span>SUBTOTAL</span>
+      <b x-text="$store.config.formatZAR($store.cart && $store.cart.subtotal ? $store.cart.subtotal() : 0)"></b>
+    </div>
+    <a href="./checkout.html" class="checkout-link">CHECKOUT →</a>
+  </div>
+</aside>
+
+<script src="/main.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+﻿document.addEventListener("alpine:init", function() {
+  var params = new URLSearchParams(location.search);
+  var brand = params.get("brand") || window.__BRAND__ || localStorage.getItem("brand") || "active";
+  var all = window.__CONFIGS || {};
+  var cfg = all[brand] || all.active || {};
+  var defShip = [{id:"paxi",name:"Paxi (PEP to PEP)",price:60},{id:"courier",name:"Courier door-to-door",price:100},{id:"collect",name:"Collection by arrangement",price:0}];
+  var store = Object.assign({}, cfg, {
+    formatZAR: function(v){ return new Intl.NumberFormat("en-ZA",{style:"currency",currency:"ZAR",maximumFractionDigits:0}).format(v||0); },
+    hasPayment: function(){ return !!(this.payment && this.payment.merchantId); }, saleActive: function(){ if(!this.sale || !this.sale.endsAt) return false; return new Date(this.sale.endsAt).getTime() > Date.now(); }, salePrice: function(p){ if(!this.saleActive()) return p.price; var d = (p.price * this.sale.discountPct / 100); return Math.round(p.price - d); }, saleEndsIn: function(){ if(!this.saleActive()) return ""; var s = Math.floor((new Date(this.sale.endsAt).getTime() - Date.now())/1000); var d = Math.floor(s/86400); var hrs = Math.floor((s%86400)/3600); var m = Math.floor((s%3600)/60); var sec = s%60; return d + "d " + String(hrs).padStart(2,"0") + "h " + String(m).padStart(2,"0") + "m " + String(sec).padStart(2,"0") + "s"; }, soldOffset: function(p, vid){ try { return Number(localStorage.getItem("sold." + (this.id||"x") + "." + p.id + ":" + (vid||"d"))) || 0; } catch(e){ return 0; } }, addSold: function(p, vid, qty){ try { var k = "sold." + (this.id||"x") + "." + p.id + ":" + (vid||"d"); var cur = Number(localStorage.getItem(k)) || 0; localStorage.setItem(k, String(cur + qty)); } catch(e){} }, makeMock: function(t,c,l){ var bg="#f5f5f5", fg="#ffffff", col=c||"#1e293b", lab=l||"", svg=""; if(t==="phone"){ svg="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 600\"><rect width=\"600\" height=\"600\" fill=\""+bg+"\"/><rect x=\"180\" y=\"70\" width=\"240\" height=\"460\" rx=\"42\" fill=\""+col+"\"/><rect x=\"194\" y=\"84\" width=\"212\" height=\"432\" rx=\"34\" fill=\"#000\" opacity=\"0.08\"/><rect x=\"270\" y=\"92\" width=\"60\" height=\"18\" rx=\"9\" fill=\"#000\" opacity=\"0.4\"/><text x=\"300\" y=\"300\" text-anchor=\"middle\" font-family=\"-apple-system,sans-serif\" font-size=\"22\" font-weight=\"700\" fill=\""+fg+"\" opacity=\"0.85\">"+lab+"</text></svg>"; } else if(t==="bottle"){ svg="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 600\"><rect width=\"600\" height=\"600\" fill=\""+bg+"\"/><rect x=\"250\" y=\"120\" width=\"100\" height=\"80\" rx=\"8\" fill=\"#333\" opacity=\"0.6\"/><rect x=\"230\" y=\"180\" width=\"140\" height=\"320\" rx=\"30\" fill=\""+col+"\"/><rect x=\"245\" y=\"200\" width=\"110\" height=\"180\" rx=\"10\" fill=\"#fff\" opacity=\"0.15\"/><text x=\"300\" y=\"400\" text-anchor=\"middle\" font-family=\"-apple-system,sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\""+fg+"\" opacity=\"0.85\">"+lab+"</text></svg>"; } else if(t==="tube"){ svg="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 600\"><rect width=\"600\" height=\"600\" fill=\""+bg+"\"/><rect x=\"260\" y=\"120\" width=\"80\" height=\"40\" rx=\"6\" fill=\"#333\" opacity=\"0.7\"/><path d=\"M240 160 L360 160 L360 500 Q360 520 340 520 L260 520 Q240 520 240 500 Z\" fill=\""+col+"\"/><text x=\"300\" y=\"350\" text-anchor=\"middle\" font-family=\"-apple-system,sans-serif\" font-size=\"14\" font-weight=\"700\" fill=\""+fg+"\" opacity=\"0.85\">"+lab+"</text></svg>"; } else { svg="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 600\"><rect width=\"600\" height=\"600\" fill=\""+bg+"\"/><rect x=\"140\" y=\"140\" width=\"320\" height=\"320\" rx=\"24\" fill=\""+col+"\"/><text x=\"300\" y=\"310\" text-anchor=\"middle\" font-family=\"-apple-system,sans-serif\" font-size=\"20\" font-weight=\"700\" fill=\""+fg+"\" opacity=\"0.9\">"+lab+"</text></svg>"; } return "data:image/svg+xml;utf8,"+encodeURIComponent(svg); }, openDetail: function(p){ this.detailProduct=p; this.detailQty=1; this.detailImageIdx=0; this.detailOptions={}; this.detailVariantId=null; if(p.variants && p.variants.length){ var inStock=p.variants.filter(function(x){ return x.stock>0; }); var def=inStock[0] || p.variants[0]; if(def){ this.detailVariantId=def.id; if(def.combo){ var self=this; Object.keys(def.combo).forEach(function(k){ self.detailOptions[k]=def.combo[k]; }); } } } this.detailOpen=true; document.body.style.overflow="hidden"; }, selectOptionValue: function(optName, val){ this.detailOptions[optName]=val; var p=this.detailProduct; if(!p||!p.variants) return; var self=this; var match=p.variants.filter(function(v){ if(!v.combo) return false; return Object.keys(v.combo).every(function(k){ return v.combo[k]===self.detailOptions[k]; }); })[0]; if(match) this.detailVariantId=match.id; }, currentVariant: function(){ var p=this.detailProduct; if(!p||!p.variants) return null; var self=this; return p.variants.filter(function(v){ return v.id===self.detailVariantId; })[0] || null; }, closeDetail: function(){ this.detailOpen=false; this.detailProduct=null; document.body.style.overflow=""; }, setDetailVariant: function(vid){ this.detailVariantId=vid; }, setDetailQty: function(q){ this.detailQty=Math.max(1,Math.min(q,this.detailMaxQty())); }, detailMaxQty: function(){ if(!this.detailProduct) return 1; if(this.detailProduct.variants && this.detailProduct.variants.length){ var s=this.getVariantStock(this.detailProduct,this.detailVariantId); return s===Infinity?99:(s||1); } var s2=this.getStock(this.detailProduct); return s2===Infinity?99:(s2||1); }, detailInStock: function(){ if(!this.detailProduct) return false; if(this.detailProduct.variants && this.detailProduct.variants.length) return this.getVariantStock(this.detailProduct,this.detailVariantId)>0; return this.getStock(this.detailProduct)>0; }, detailTotal: function(){ if(!this.detailProduct) return 0; var v=null; if(this.detailProduct.variants && this.detailProduct.variants.length){ var self=this; v=this.detailProduct.variants.filter(function(x){ return x.id===self.detailVariantId; })[0]; } var base=this.detailProduct.price+((v && v.priceDelta) ? v.priceDelta : 0); return base*this.detailQty; }, productImages: function(p){ if(!p) return []; var a = Array.isArray(p.images) ? p.images.filter(Boolean) : []; if(a.length === 0 && p.image) a.push(p.image); return a; }, detailImages: function(){ return this.productImages(this.detailProduct); }, detailImageIdx: 0, detailSetImage: function(i){ this.detailImageIdx = i; }, detailImage: function(){ if(!this.detailProduct) return ""; var v=null; if(this.detailProduct.variants && this.detailProduct.variants.length){ var self=this; v=this.detailProduct.variants.filter(function(x){ return x.id===self.detailVariantId; })[0]; } return this.detailProduct.image || this.makeMock(this.detailProduct.mockType, v && v.color, this.detailProduct.name); }, detailAddToCart: function(){ if(!this.detailProduct) return; var v=null; if(this.detailProduct.variants && this.detailProduct.variants.length){ var self=this; v=this.detailProduct.variants.filter(function(x){ return x.id===self.detailVariantId; })[0]; } var cart=window.Alpine.store("cart"); for(var i=0;i<this.detailQty;i++) cart.add(this.detailProduct, v); this.closeDetail(); }, detailBuyNow: function(){ if(!this.detailProduct) return; var v=null; if(this.detailProduct.variants && this.detailProduct.variants.length){ var self=this; v=this.detailProduct.variants.filter(function(x){ return x.id===self.detailVariantId; })[0]; } var cart=window.Alpine.store("cart"); cart.items=[]; var stock=v?this.getVariantStock(this.detailProduct,v.id):this.getStock(this.detailProduct); cart.items.push({id:this.detailProduct.id,variantId:v?v.id:null,variantName:v?v.name:null,name:this.detailProduct.name,price:this.detailProduct.price+((v && v.priceDelta) ? v.priceDelta : 0),image:this.detailProduct.image,qty:this.detailQty,stock:stock}); if(!cart.orderRef) cart.orderRef=cart.genRef(); cart.step=1; cart.persist(); cart.open=true; this.closeDetail(); }, detailOpen:false, detailProduct:null, detailVariantId:null, detailQty:1, detailOptions:{},
+    shippingOptions: function(){ return (this.shipping && this.shipping.length) ? this.shipping : defShip; },
+    getStock: function(p){ if(!p) return 0; if(p.variants && p.variants.length){ return p.variants.reduce(function(s,v){ return s + (Number(v.stock)||0); },0); } var v = this.soldOffset(p, null); return p.stock == null ? Infinity : Math.max(0, Number(p.stock) - v); },
+    getVariantStock: function(p,vid){ if(!p) return 0; if(!p.variants||!p.variants.length) return p.stock==null?Infinity:Number(p.stock); var vv=p.variants.filter(function(x){return x.id===vid;})[0]; if(!vv) return 0; var s = this.soldOffset(p, vid); return Math.max(0, (Number(vv.stock)||0) - s); },
+    inStock: function(p){ return this.getStock(p) > 0; },
+    hasVariants: function(p){ return !!(p && p.variants && p.variants.length); },
+    pickVariant: function(p){ if(!this.hasVariants(p)) return null; var cart=window.Alpine.store("cart"); var sel=cart.selectedVariants[p.id]; var v=p.variants.filter(function(x){return x.id===sel;})[0]; if(v && v.stock>0) return v; return p.variants.filter(function(x){return x.stock>0;})[0] || p.variants[0]; },
+    visibleProducts: function(){ var f=window.Alpine.store("filter"); return (this.products||[]).filter(function(p){ if(f.category==="all") return true; return p.category===f.category; }); },
+    payLink: function(p){ if(!this.payment||!this.payment.provider) return "#"; var pv=this.payment.provider; if(pv==="payfast"){ var base=this.payment.sandbox?"https://sandbox.payfast.co.za/eng/process":"https://www.payfast.co.za/eng/process"; var q=new URLSearchParams({merchant_id:this.payment.merchantId,merchant_key:this.payment.merchantKey,amount:Number(p.price).toFixed(2),item_name:p.name,return_url:this.payment.returnUrl||location.href,cancel_url:this.payment.cancelUrl||location.href}); return base+"?"+q.toString(); } if(pv==="yoco"){ return "https://pay.yoco.com/"+this.payment.checkoutId+"?amount="+Math.round(Number(p.price)*100)+"&currency=ZAR&successUrl="+encodeURIComponent(this.payment.returnUrl||location.href); } if(pv==="ozow"){ var base2=this.payment.sandbox?"https://sandbox.ozow.com":"https://pay.ozow.com"; var q2=new URLSearchParams({SiteCode:this.payment.siteCode,CountryCode:"ZA",CurrencyCode:"ZAR",Amount:Number(p.price).toFixed(2),TransactionReference:p.name,SuccessUrl:this.payment.returnUrl||location.href,CancelUrl:this.payment.cancelUrl||location.href,ErrorUrl:this.payment.cancelUrl||location.href,IsTest:this.payment.sandbox?"true":"false"}); return base2+"/?"+q2.toString(); } return "#"; }
+  });
+  window.Alpine.store("config", store);
+  var r=document.documentElement;
+  ["primary","accent","ink","surface"].forEach(function(k){ if(cfg.theme && cfg.theme[k]) r.style.setProperty("--brand-"+k, cfg.theme[k]); });
+  document.title = ((cfg.brand&&cfg.brand.name)||"Store") + " - " + ((cfg.brand&&cfg.brand.tagline)||"");
+  window.Alpine.store("filter",{category:"all",set:function(c){this.category=c;}});
+  var savedView=null; try { savedView=localStorage.getItem("view." + (cfg.id || brand) + ".mode"); } catch(e){}
+  window.Alpine.store("view",{mode:savedView||"grid",set:function(m){this.mode=m; try{localStorage.setItem("view." + (cfg.id || brand) + ".mode",m);}catch(e){}}});
+  var savedItems=[], savedVar={};
+  try { savedItems=JSON.parse(localStorage.getItem("cart." + (cfg.id || brand) + ".items")||"[]")||[]; } catch(e){ savedItems=[]; }
+  try { savedVar=JSON.parse(localStorage.getItem("cart." + (cfg.id || brand) + ".variants")||"{}")||{}; } catch(e){ savedVar={}; }
+  window.Alpine.store("cart",{
+    items:savedItems, open:false, step:1, selectedVariants:savedVar,
+    shippingId: localStorage.getItem("cart." + (cfg.id || brand) + ".shipping") || "",
+    customerNote: localStorage.getItem("cart." + (cfg.id || brand) + ".note") || "",
+    orderRef: localStorage.getItem("cart." + (cfg.id || brand) + ".ref") || "",
+    buyerName: localStorage.getItem("cart." + (cfg.id || brand) + ".buyerName") || "",
+    buyerPhone: localStorage.getItem("cart." + (cfg.id || brand) + ".buyerPhone") || "",
+    buyerAddress: localStorage.getItem("cart." + (cfg.id || brand) + ".buyerAddress") || "",
+    sending: false, sent: false, error: "",
+    persist: function(){ try { localStorage.setItem("cart." + (cfg.id || brand) + ".items",JSON.stringify(this.items)); localStorage.setItem("cart." + (cfg.id || brand) + ".variants",JSON.stringify(this.selectedVariants)); localStorage.setItem("cart." + (cfg.id || brand) + ".shipping",this.shippingId||""); localStorage.setItem("cart." + (cfg.id || brand) + ".note",this.customerNote||""); localStorage.setItem("cart." + (cfg.id || brand) + ".ref",this.orderRef||""); localStorage.setItem("cart." + (cfg.id || brand) + ".buyerName",this.buyerName||""); localStorage.setItem("cart." + (cfg.id || brand) + ".buyerPhone",this.buyerPhone||""); localStorage.setItem("cart." + (cfg.id || brand) + ".buyerAddress",this.buyerAddress||""); } catch(e){} },
+    setVariant: function(pid,vid){ this.selectedVariants[pid]=vid; this.persist(); },
+    findItem: function(id,vid){ var k=id+"::"+(vid||"d"); return this.items.filter(function(i){ return (i.id+"::"+(i.variantId||"d"))===k; })[0]; },
+    genRef: function(){ var cfg=window.Alpine.store("config"); var ini=((cfg.brand&&cfg.brand.name)||"ORD").replace(/[^A-Za-z]/g,"").slice(0,2).toUpperCase(); var d=new Date(); var ymd=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"); var r=Math.random().toString(36).slice(2,6).toUpperCase(); return ini+"-"+ymd+"-"+r; },
+    add: function(p,variant){ var cfg=window.Alpine.store("config"); var vid=variant?variant.id:null; var vName=variant?variant.name:null; var stock=variant?cfg.getVariantStock(p,vid):cfg.getStock(p); var ex=this.findItem(p.id,vid); var cur=ex?ex.qty:0; if(stock!==Infinity && cur>=stock) return; if(ex){ ex.qty+=1; } else { this.items.push({id:p.id,variantId:vid,variantName:vName,name:p.name,price:p.price+((variant && variant.priceDelta) ? variant.priceDelta : 0),image:(p.image || (Array.isArray(p.images) && p.images[0]) || ""),qty:1,stock:stock}); } if(!this.orderRef) this.orderRef=this.genRef(); this.step=1; this.persist(); },
+    buyNow: function(p,variant){ this.items=[]; var cfg=window.Alpine.store("config"); var vid=variant?variant.id:null; var stock=variant?cfg.getVariantStock(p,vid):cfg.getStock(p); this.items.push({id:p.id,variantId:vid,variantName:variant?variant.name:null,name:p.name,price:p.price,image:(p.image || (Array.isArray(p.images) && p.images[0]) || ""),qty:1,stock:stock}); if(!this.orderRef) this.orderRef=this.genRef(); this.persist(); window.location.href="/checkout.html?brand="+cfg.id; },
+    remove: function(id,vid){ var k=id+"::"+(vid||"d"); this.items=this.items.filter(function(i){ return (i.id+"::"+(i.variantId||"d"))!==k; }); this.persist(); },
+    setQty: function(id,vid,q){ var it=this.findItem(id,vid); if(!it) return; var max=it.stock===Infinity?999:it.stock; it.qty=Math.max(1,Math.min(q,max)); this.persist(); },
+    clear: function(){ this.items=[]; this.shippingId=""; this.customerNote=""; this.orderRef=""; this.step=1; this.persist(); },
+    count: function(){ var n=0; for(var i=0;i<this.items.length;i++) n+=this.items[i].qty; return n; },
+    subtotal: function(){ var n=0; for(var i=0;i<this.items.length;i++) n+=this.items[i].price*this.items[i].qty; return n; },
+    selectedShipping: function(){ var o=window.Alpine.store("config").shippingOptions(); if(!this.shippingId && o.length) this.shippingId=o[0].id; for(var i=0;i<o.length;i++) if(o[i].id===this.shippingId) return o[i]; return o[0]||{id:"none",name:"No shipping",price:0}; },
+    grandTotal: function(){ return this.subtotal()+(this.selectedShipping().price||0); },
+    confirmPaid: function(){ if(!this.orderRef) this.orderRef=this.genRef(); this.step=2; this.persist(); },
+    markSent: function(){ var cfg = window.Alpine.store("config"); for(var i=0;i<this.items.length;i++){ var it=this.items[i]; cfg.addSold({id:it.id}, it.variantId, it.qty); } this.step=3; this.persist(); },
+    submitOrder: async function(){
+      var self = this;
+      var cfg = window.Alpine.store("config");
+      if (!this.buyerName || !this.buyerName.trim()) { this.error = "Please enter your name."; return; }
+      if (!this.buyerPhone || !this.buyerPhone.trim()) { this.error = "Please enter your WhatsApp number."; return; }
+      var ship = this.selectedShipping();
+      if (ship.id !== "collect" && (!this.buyerAddress || !this.buyerAddress.trim())) { this.error = "Please enter a delivery address."; return; }
+      if (!this.items.length) { this.error = "Your cart is empty."; return; }
+      this.error = "";
+      this.sending = true;
+      try {
+        var order = {
+          ref: this.orderRef,
+          createdAt: new Date().toISOString(),
+          buyer: { name: this.buyerName.trim(), phone: this.buyerPhone.trim(), address: (this.buyerAddress||"").trim() },
+          items: this.items,
+          subtotal: this.subtotal(),
+          shipping: { name: ship.name, price: ship.price },
+          total: this.grandTotal(),
+          status: "new"
+        };
+        var res = await fetch("https://outreach-save-api.gifttsima16.workers.dev/api/order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ brand: cfg.id, order: order })
+        });
+        var j = await res.json().catch(function(){ return {}; });
+        if (!res.ok || !j.ok) { this.error = "Order could not be saved. Please try again."; this.sending = false; return; }
+        var lines = ["Hi " + ((cfg.brand && cfg.brand.name) || "store") + "! Proof of payment attached.", ""];
+        lines.push("Ref: " + (this.orderRef || "N/A"));
+        lines.push("");
+        for (var i = 0; i < this.items.length; i++) {
+          var it = this.items[i];
+          lines.push(it.qty + "x " + it.name + (it.variantName ? " (" + it.variantName + ")" : "") + " - R" + (it.price * it.qty));
+        }
+        lines.push("");
+        lines.push("Subtotal: R" + this.subtotal());
+        lines.push("Shipping: " + ship.name + " - R" + ship.price);
+        lines.push("Total: R" + this.grandTotal());
+        if (this.buyerAddress) { lines.push(""); lines.push("Deliver to: " + this.buyerAddress); }
+        var digits = String(cfg.whatsapp || "").replace(/D/g, "");
+        window.open("https://wa.me/" + digits + "?text=" + encodeURIComponent(lines.join("\n")), "_blank");
+        this.items = [];
+        this.persist();
+        this.sent = true;
+      } catch (e) {
+        this.error = "Network error: " + e.message;
+      }
+      this.sending = false;
+    },
+    reset: function(){ this.clear(); this.open=false; },
+    popMessage: function(){ var cfg=window.Alpine.store("config"); var lines=["Hi "+((cfg.brand&&cfg.brand.name)||"store")+"! Proof of payment attached.",""]; lines.push("Ref: "+(this.orderRef||"N/A")); lines.push(""); for(var i=0;i<this.items.length;i++){ var it=this.items[i]; var v=it.variantName?" ("+it.variantName+")":""; lines.push(it.qty+"x "+it.name+v+" - R"+(it.price*it.qty)); } lines.push(""); lines.push("Subtotal: R"+this.subtotal()); var s=this.selectedShipping(); lines.push("Shipping: "+s.name+" - R"+s.price); lines.push("Total: R"+this.grandTotal()); if(this.customerNote){ lines.push(""); lines.push("Note: "+this.customerNote); } return lines.join("\n"); },
+    popWhatsApp: function(){ var cfg=window.Alpine.store("config"); var d=String(cfg.whatsapp||"").replace(/\D/g,""); return "https://wa.me/"+d+"?text="+encodeURIComponent(this.popMessage()); }
+  });
+  setTimeout(function(){ var c=window.Alpine.store("cart"); if(c && c.items.length>0 && !c.orderRef){ c.orderRef=c.genRef(); c.persist(); } }, 100);
+});
+window.downloadStory = async function(){ var mod=await import("html-to-image"); var node=document.querySelector("main"); if(!node) return; var d=await mod.toPng(node,{width:1080,height:1920,pixelRatio:1,cacheBust:true}); var a=document.createElement("a"); a.href=d; a.download="story.png"; a.click(); };
+document.addEventListener("click", function(e){ if (e.target.closest("button, a, input, select, textarea")) return; var img = e.target.closest("img"); if (!img) return; var card = img.closest("li, article"); if (!card) return; var src = img.getAttribute("src") || ""; var cfg = window.Alpine && window.Alpine.store("config"); if (!cfg || !cfg.products) { console.log("[detail] no config"); return; } var p = cfg.products.filter(function(x){ return x.image === src; })[0]; if (!p) { console.log("[detail] no product for", src); return; } cfg.openDetail(p); console.log("[detail] opened", p.name); });
