@@ -466,7 +466,7 @@ function app() {
     saveSettings() { this.store.about = this.store.about || {}; this.store.about.paragraphs = window.__parseAbout(this.aboutBody); this.commit('Settings saved'); },
 
     async commit(msg) {
-      try { await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ brand: this.brandId, data: this.store, message: msg }) }); }
+      try { await fetch('https://outreach-save-api.gifttsima16.workers.dev/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ brand: this.brandId, data: this.store, message: msg }) }); }
       catch(e) { console.log('[seller] save:', msg); }
       try { localStorage.setItem('orders.' + this.brandId, JSON.stringify(this.orders)); } catch(e) {}
     },
