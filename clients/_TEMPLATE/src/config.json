@@ -1,0 +1,43 @@
+{
+  "id": "new-client",
+  "layout": "grid",
+  "brand": {
+    "name": "Client Name",
+    "tagline": "Tagline here",
+    "whatsapp": "+27XXXXXXXXX",
+    "hero": {
+      "title": "Hero title",
+      "subtitle": "Hero subtitle"
+    },
+    "theme": {
+      "primary": "#0a0a0a",
+      "accent": "#c96442",
+      "ink": "#1a1a1a",
+      "surface": "#faf7f1"
+    }
+  },
+  "products": [],
+  "shipping": [
+    {
+      "id": "paxi",
+      "name": "Paxi (PEP to PEP)",
+      "price": 60
+    },
+    {
+      "id": "courier",
+      "name": "Courier door-to-door",
+      "price": 100
+    },
+    {
+      "id": "collect",
+      "name": "Collection by arrangement",
+      "price": 0
+    }
+  ],
+  "bank": {
+    "bankName": "Bank Name",
+    "accountName": "Account Name",
+    "accountNumber": "000000000",
+    "branchCode": "000000"
+  }
+}
