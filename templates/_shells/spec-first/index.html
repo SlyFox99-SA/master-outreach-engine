@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spec Shell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script src="/configs.js"></script>
+<style>
+:root{--f-body:'Space Grotesk',system-ui,sans-serif;--f-mono:'JetBrains Mono',monospace}
+body{font-family:var(--f-body)}
+.mono{font-family:var(--f-mono)}
+.spec-chip{font-family:var(--f-mono);font-size:10px;letter-spacing:0.05em}
+.p-card{transition:border-color .15s}
+.p-card:hover{border-color:rgba(255,255,255,0.3)}
+</style>
+</head>
+<body class="bg-[#0b0b0d] text-white antialiased" x-data x-cloak>
+<div class="bg-brand-primary text-white text-[10px] mono text-center py-2 tracking-wider">// FREE COURIER · 12 MONTH WARRANTY //</div>
+<header class="sticky top-0 z-30 bg-[#0b0b0d]/95 backdrop-blur border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-4 h-14 flex items-center gap-3">
+    <a href="/" class="font-bold text-base md:text-lg tracking-tight whitespace-nowrap" x-text="$store.config.brand?.name"></a>
+    <div class="flex-1"></div>
+    <button @click="$store.cart.open = true" class="flex items-center gap-2 text-xs uppercase tracking-wider border border-white/15 px-3 py-2 hover:border-white/40">
+      <svg viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current" stroke-width="2"><path d="M3 3h2l2 12h11l2-9H6"/></svg>
+      <span class="mono" x-text="$store.cart && $store.cart.count ? $store.cart.count() : 0"></span>
+    </button>
+  </div>
+</header>
+
+<!-- compact hero strip -->
+<section class="border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-4 py-6 md:py-8 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+    <div class="flex-1 min-w-0">
+      <p class="mono text-[10px] text-brand-primary mb-2" x-text="'// ' + ($store.config.brand?.tagline || 'CERTIFIED PRE-OWNED').toUpperCase()"></p>
+      <h1 class="text-2xl md:text-4xl font-bold leading-tight tracking-tight" x-text="$store.config.brand?.name"></h1>
+      <p class="mt-2 text-xs md:text-sm opacity-60 leading-relaxed max-w-lg" x-text="$store.config.brand?.blurb"></p>
+      <div class="mt-4 flex gap-2 flex-wrap">
+        <span class="spec-chip border border-white/15 px-2 py-1">✓ IMEI verified</span>
+        <span class="spec-chip border border-white/15 px-2 py-1">✓ Battery tested</span>
+        <span class="spec-chip border border-white/15 px-2 py-1">✓ Nationwide</span>
+      </div>
+    </div>
+    <div class="w-full md:w-64 aspect-[4/3] md:aspect-square bg-white/5 border border-white/10 overflow-hidden flex-shrink-0">
+      <img :src="$store.config.heroImage || ($store.config.brand && $store.config.brand.heroImage) || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&q=80'" class="w-full h-full object-cover" alt="">
+    </div>
+  </div>
+</section>
+
+<!-- product grid — immediately visible -->
+<section id="shop" class="max-w-6xl mx-auto px-4 py-6 md:py-10">
+  <div class="flex items-center justify-between mb-5">
+    <h2 class="text-base md:text-xl font-bold tracking-tight">Inventory <span class="mono text-xs opacity-50 ml-1" x-text="'[' + (($store.config.visibleProducts && $store.config.visibleProducts().length) || 0) + ']'"></span></h2>
+  </div>
+  <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+    <template x-for="p in $store.config.visibleProducts()" :key="p.id">
+      <li class="p-card bg-white/[0.03] border border-white/10 overflow-hidden flex flex-col">
+        <div class="relative aspect-square bg-black/40 cursor-pointer" @click="$store.config.openDetail(p)">
+          <img class="w-full h-full object-contain p-3" :src="p.image || (p.images && p.images[0])" :alt="p.name" @error="if(!$event.target.dataset.f){$event.target.dataset.f='1';$event.target.src='https://placehold.co/400x400/1e293b/ffffff?text='+encodeURIComponent(p.name)}">
+          <span x-show="!$store.config.inStock(p)" class="absolute top-2 left-2 bg-red-500 text-white text-[9px] mono px-1.5 py-0.5 tracking-wider">SOLD</span>
+        </div>
+        <div class="p-2.5 md:p-3 flex flex-col flex-1">
+          <h3 class="text-xs md:text-sm font-semibold leading-tight line-clamp-2" x-text="p.name"></h3>
+          <p class="spec-chip opacity-50 mt-1 line-clamp-1" x-text="p.blurb"></p>
+          <div class="mt-auto pt-2.5 flex items-center justify-between gap-2">
+            <p class="mono text-sm md:text-base font-semibold" x-text="$store.config.formatZAR(p.price)"></p>
+            <button @click.stop="$store.cart.add(p, $store.config.pickVariant(p))" :disabled="!$store.config.inStock(p)" class="bg-brand-primary text-white text-[10px] md:text-[11px] font-bold uppercase tracking-wider px-2.5 md:px-3 py-1.5 disabled:opacity-30">Add</button>
+          </div>
+        </div>
+      </li>
+    </template>
+  </ul>
+</section>
+
+<section class="border-t border-white/10 bg-white/[0.02]">
+  <div class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
+    <div><p class="mono text-brand-primary text-[10px] mb-2">01 / INSPECTION</p><p class="opacity-70 leading-relaxed">40-point check on every device. Battery, screen, camera, speakers, cellular, IMEI — logged on your invoice.</p></div>
+    <div><p class="mono text-brand-primary text-[10px] mb-2">02 / WARRANTY</p><p class="opacity-70 leading-relaxed">12 months on all pre-owned devices. Free repair or replace within that window if not physical damage.</p></div>
+    <div><p class="mono text-brand-primary text-[10px] mb-2">03 / DELIVERY</p><p class="opacity-70 leading-relaxed">The Courier Guy nationwide, 2-3 business days. Tracking sent same day.</p></div>
+  </div>
+</section>
+
+<footer class="max-w-6xl mx-auto px-4 py-8 mono text-[11px] opacity-60 flex flex-wrap justify-between gap-2">
+  <span x-text="'© ' + new Date().getFullYear() + ' ' + ($store.config.brand?.name || '')"></span>
+  <span x-text="$store.config.whatsapp ? 'wa.me/' + String($store.config.whatsapp).replace(/\D/g,'') : ''"></span>
+</footer>
+
+<!-- detail modal -->
+<div x-show="$store.config.detailOpen" x-cloak class="fixed inset-0 z-50 bg-black/85 p-0 md:p-8" @click.self="$store.config.closeDetail()">
+  <div class="mx-auto h-full max-w-5xl bg-[#0b0b0d] border border-white/10 md:flex overflow-hidden">
+    <div class="relative md:w-1/2 bg-black/40 aspect-square md:aspect-auto md:h-full">
+      <img :src="$store.config.detailImage()" class="w-full h-full object-contain p-6" alt="">
+      <div x-show="$store.config.detailImages().length > 1" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+        <template x-for="(url, i) in $store.config.detailImages()" :key="i">
+          <button @click.stop="$store.config.detailSetImage(i)" :class="$store.config.detailImageIdx === i ? 'border-brand-primary' : 'border-white/20'" class="w-12 h-12 border-2 bg-black/50 overflow-hidden"><img :src="url" class="w-full h-full object-cover"></button>
+        </template>
+      </div>
+      <button @click="$store.config.closeDetail()" class="absolute top-4 right-4 h-9 w-9 border border-white/20 grid place-items-center"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="md:w-1/2 p-6 md:p-10 overflow-y-auto">
+      <p class="mono text-brand-primary text-[10px]" x-text="'// ' + ($store.config.detailProduct?.category || '')"></p>
+      <h2 class="text-2xl md:text-3xl font-bold mt-2 tracking-tight" x-text="$store.config.detailProduct?.name"></h2>
+      <p class="mt-2 text-xs opacity-60" x-text="$store.config.detailProduct?.blurb"></p>
+      <p class="mono text-xl md:text-2xl font-bold mt-4" x-text="$store.config.formatZAR($store.config.detailTotal())"></p>
+      <template x-if="$store.config.detailProduct?.specs && $store.config.detailProduct.specs.length">
+        <div class="mt-6 border border-white/10">
+          <p class="mono text-[10px] uppercase tracking-wider p-3 border-b border-white/10 opacity-60">Specifications</p>
+          <template x-for="(s, i) in $store.config.detailProduct.specs" :key="i">
+            <div class="flex text-xs border-b border-white/5 last:border-0">
+              <span class="mono text-[9px] opacity-40 w-7 p-3" x-text="String(i+1).padStart(2,'0')"></span>
+              <span class="p-3" x-text="s"></span>
+            </div>
+          </template>
+        </div>
+      </template>
+      <div class="mt-6 flex gap-2">
+        <button @click="$store.config.detailAddToCart()" :disabled="!$store.config.detailInStock()" class="flex-1 bg-brand-primary text-white py-3.5 font-bold uppercase text-[11px] tracking-wider disabled:opacity-30">Add to cart</button>
+        <button @click="$store.config.detailBuyNow()" :disabled="!$store.config.detailInStock()" class="flex-1 border border-white/20 py-3.5 font-bold uppercase text-[11px] tracking-wider disabled:opacity-30">Buy now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- cart -->
+<div x-show="$store.cart.open" x-cloak @click="$store.cart.open = false" class="fixed inset-0 z-40 bg-black/70"></div>
+<aside x-show="$store.cart.open" x-cloak class="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-[#0b0b0d] border-l border-white/10 flex flex-col">
+  <div class="p-4 border-b border-white/10 flex justify-between items-center">
+    <p class="mono text-xs uppercase tracking-wider">// CART</p>
+    <button @click="$store.cart.open = false" class="text-xs opacity-60">✕</button>
+  </div>
+  <div class="flex-1 overflow-y-auto p-4 space-y-3">
+    <template x-for="i in ($store.cart?.items || [])" :key="i.id + ':' + (i.variantId || 'd')">
+      <div class="flex gap-3 border border-white/10 p-2.5">
+        <div class="w-14 h-14 bg-black/40 overflow-hidden flex-shrink-0"><img :src="i.image" class="w-full h-full object-contain p-1"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-semibold truncate" x-text="i.name"></p>
+          <p class="mono text-[10px] opacity-50 mt-0.5" x-text="(i.variantName ? i.variantName + ' · ' : '') + 'x' + i.qty"></p>
+          <p class="mono text-xs mt-1" x-text="$store.config.formatZAR(i.price * i.qty)"></p>
+        </div>
+        <button @click="$store.cart.remove(i.id, i.variantId)" class="text-xs opacity-40">✕</button>
+      </div>
+    </template>
+    <p x-show="!$store.cart?.items?.length" class="text-center py-12 mono text-[10px] opacity-40">// EMPTY</p>
+  </div>
+  <div class="p-4 border-t border-white/10" x-show="$store.cart?.items?.length">
+    <div class="flex justify-between mb-3 mono text-sm"><span class="opacity-60">SUBTOTAL</span><span x-text="$store.config.formatZAR(($store.cart && $store.cart.subtotal ? $store.cart.subtotal() : 0))"></span></div>
+    <a :href="'/checkout.html?brand=' + ($store.config.id || window.__BRAND__ || 'active')" class="block text-center bg-brand-primary text-white py-3.5 font-bold uppercase text-[11px] tracking-wider">Checkout</a>
+  </div>
+</aside>
+
+<script src="/main.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</body>
+</html>

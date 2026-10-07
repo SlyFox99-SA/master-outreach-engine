@@ -1,4 +1,4 @@
-﻿node_modules/
+node_modules/
 dist*/
 *.zip
 .DS_Store
@@ -10,3 +10,7 @@ dist*/
 worker/.dev.vars
 worker/node_modules
 .wrangler
+
+worker/seller-tokens.json
+data/orders-*.json
+*.pre-orders

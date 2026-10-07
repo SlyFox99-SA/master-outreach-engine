@@ -2,12 +2,13 @@
   "id": "zaheera",
   "layout": "gallery",
   "brand": {
-    "name": "Zaheera",
+    "name": "Fragrances",
     "tagline": "Signature Fragrances - Cape Town",
     "hero": {
       "title": "Smell unforgettable.",
       "subtitle": "Hand-blended attars and eau de parfum, delivered across South Africa."
-    }
+    },
+    "shell": "editorial"
   },
   "theme": {
     "primary": "64 33 12",
@@ -48,7 +49,7 @@
       "blurb": "Smoky rose, oud, amber",
       "price": 450,
       "stock": 8,
-      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=900&q=80",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=1000&q=80",
       "specs": [
         "50ml Eau de Parfum",
         "Smoky rose, oud, amber",
@@ -56,9 +57,11 @@
         "Unisex"
       ],
       "images": [
-        "https://images.unsplash.com/photo-1541643600914-78b084683601?w=900&q=80",
-        "https://res.cloudinary.com/e4kmlh67/image/upload/v1791336805/products/g0ve92cq7b6betqu6zny.jpg?q_auto,f_auto,w_1000"
-      ]
+        "https://images.unsplash.com/photo-1541643600914-78b084683601?w=1000&q=80",
+        "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=1000&q=80",
+        "https://images.unsplash.com/photo-1587017539504-67cfbddac569?w=1000&q=80"
+      ],
+      "story": "Oud Noir opens with a smoked rose — not sweet, not floral, but the flower after the fire. Behind it, the oud comes in slow, resinous and dry, and stays for hours. Wears best in the evening, or in winter when everything else feels too light. Hand-blended in Cape Town. Fifty millilitres."
     },
     {
       "id": "musk-white",

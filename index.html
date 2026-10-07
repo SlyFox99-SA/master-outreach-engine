@@ -104,7 +104,7 @@ function demoMode() {
 <div x-show="$store.config.detailOpen" @click.self="$store.config.closeDetail()" class="fixed inset-0 z-[70] bg-black/60 flex items-center justify-center p-4" style="display:none">
 <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[92vh] overflow-hidden flex flex-col md:flex-row shadow-2xl">
 <div class="md:w-1/2 aspect-square md:aspect-auto bg-black/5 flex-shrink-0 relative">
-<img :src="$store.config.detailProduct ? $store.config.detailProduct.image : ''" class="w-full h-full object-cover" />
+<img :src="$store.config.detailImage()" class="w-full h-full object-cover" /><div x-show="$store.config.detailImages().length > 1" x-cloak class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 bg-black/40 backdrop-blur-sm rounded-full p-1.5"><template x-for="(url, i) in $store.config.detailImages()" :key="i"><button @click.stop="$store.config.detailSetImage(i)" :class="$store.config.detailImageIdx === i ? 'ring-2 ring-white' : 'opacity-60 hover:opacity-100'" class="w-10 h-10 rounded-full overflow-hidden bg-white/20"><img :src="url" class="w-full h-full object-cover" /></button></template></div>
 <span x-show="$store.config.detailProduct && !$store.config.detailInStock()" class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-black text-white text-xs font-bold uppercase tracking-wider">Sold out</span>
 <button @click="$store.config.closeDetail()" class="absolute top-4 right-4 h-9 w-9 rounded-full bg-white/95 grid place-items-center"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
 </div>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Checkout · Zaheera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script>window.__BRAND__ = "zaheera";</script>
+<script src="/configs.js"></script>
+<style>
+  :root {
+    --f-display: 'Fraunces', Georgia, serif;
+    --f-body: 'Inter', system-ui, sans-serif;
+    --bone: #f5f1ea;
+    --paper: #fbf9f5;
+    --ink: #1a1a1a;
+    --faded: #6b6560;
+    --rule: rgba(26,26,26,0.10);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--f-body);
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px; line-height: 1.5;
+  }
+  .disp { font-family: var(--f-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1; }
+  .eyebrow { font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--faded); }
+  .frame { max-width: 640px; margin: 0 auto; padding: 0 22px; }
+  header { border-bottom: 1px solid var(--rule); padding: 20px 0; }
+  header .frame { display: flex; justify-content: space-between; align-items: center; }
+  header .brand { font-family: var(--f-display); font-size: 20px; letter-spacing: -0.02em; text-decoration: none; color: var(--ink); }
+  header .back { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--faded); text-decoration: none; }
+
+  .page-title { padding: 44px 0 22px; }
+  .page-title h1 { font-family: var(--f-display); font-size: clamp(30px, 5.4vw, 44px); margin: 14px 0 0; font-weight: 400; letter-spacing: -0.02em; }
+
+  section.card { background: var(--bone); border: 1px solid var(--rule); padding: 22px; margin-bottom: 14px; }
+  section.card h2 { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--faded); font-weight: 400; margin: 0 0 18px; }
+
+  .line { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--rule); align-items: center; }
+  .line:last-child { border-bottom: 0; }
+  .line-photo { width: 54px; height: 62px; background: rgba(0,0,0,0.05); flex-shrink: 0; overflow: hidden; }
+  .line-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .line-info { flex: 1; min-width: 0; }
+  .line-name { font-family: var(--f-display); font-size: 16px; margin: 0 0 2px; }
+  .line-meta { font-size: 11px; color: var(--faded); margin: 0; }
+  .line-price { font-size: 13px; font-variant-numeric: oldstyle-nums; white-space: nowrap; }
+
+  .total-row { display: flex; justify-content: space-between; padding-top: 14px; margin-top: 14px; border-top: 1px solid var(--rule); font-size: 15px; }
+  .total-row b { font-weight: 500; font-variant-numeric: oldstyle-nums; }
+
+  .ship-opt { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--rule); margin-bottom: 8px; cursor: pointer; transition: border-color .15s, background .15s; }
+  .ship-opt:hover { border-color: rgba(26,26,26,0.35); }
+  .ship-opt.on { border-color: var(--ink); background: rgba(26,26,26,0.03); }
+  .ship-opt input { display: none; }
+  .ship-radio { width: 14px; height: 14px; border: 1px solid var(--ink); border-radius: 100px; flex-shrink: 0; position: relative; }
+  .ship-opt.on .ship-radio::after { content: ''; position: absolute; inset: 3px; border-radius: 100px; background: var(--ink); }
+  .ship-name { flex: 1; font-size: 13px; }
+  .ship-price { font-size: 13px; font-variant-numeric: oldstyle-nums; }
+
+  label.fld { display: block; margin-bottom: 12px; }
+  label.fld span { font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--faded); display: block; margin-bottom: 6px; }
+  label.fld input, label.fld textarea {
+    width: 100%; border: 1px solid var(--rule); background: var(--paper); color: var(--ink);
+    padding: 12px 14px; font: inherit; font-size: 13px; outline: none;
+  }
+  label.fld input:focus, label.fld textarea:focus { border-color: var(--ink); }
+  label.fld textarea { resize: vertical; min-height: 70px; font-family: inherit; }
+
+  .bank { font-family: 'Inter', monospace; font-size: 12px; line-height: 1.8; color: var(--faded); }
+  .bank .row { display: flex; justify-content: space-between; gap: 16px; padding: 5px 0; }
+  .bank .row b { color: var(--ink); font-weight: 500; }
+
+  .upsell { border: 1px solid var(--rule); background: var(--paper); padding: 16px 18px; margin-bottom: 14px; }
+  .upsell p { font-size: 13px; margin: 0 0 8px; }
+  .upsell a { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+
+  .submit { width: 100%; background: var(--ink); color: var(--paper); border: none; padding: 18px; font: inherit; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; cursor: pointer; margin-top: 8px; }
+  .submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .thanks { padding: 60px 0; text-align: center; }
+  .thanks h2 { font-family: var(--f-display); font-size: 32px; margin: 0 0 12px; font-weight: 400; }
+  .thanks .ref { font-family: 'Inter', monospace; font-size: 16px; letter-spacing: 0.06em; margin: 16px 0 24px; }
+  .thanks a.track { display: inline-block; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 3px; }
+
+  [x-cloak] { display: none !important; }
+</style>
+</head>
+<body x-data>
+
+<header>
+  <div class="frame">
+    <a href="./" class="brand">Zaheera</a>
+    <a href="./" class="back">← Back to store</a>
+  </div>
+</header>
+
+<main class="frame" x-show="!$store.cart.sent" x-cloak>
+  <div class="page-title">
+    <p class="eyebrow">Order</p>
+    <h1>Checkout</h1>
+  </div>
+
+  <section class="card">
+    <h2>Your order</h2>
+    <template x-for="i in $store.cart.items" :key="i.id + ':' + (i.variantId || 'd')">
+      <div class="line">
+        <div class="line-photo"><img :src="i.image"></div>
+        <div class="line-info">
+          <p class="line-name" x-text="i.name"></p>
+          <p class="line-meta" x-text="(i.variantName ? i.variantName + ' · ' : '') + 'Qty ' + i.qty"></p>
+        </div>
+        <div class="line-price" x-text="$store.config.formatZAR(i.price * i.qty)"></div>
+      </div>
+    </template>
+    <div class="total-row"><span>Total</span><b x-text="$store.config.formatZAR($store.cart.grandTotal())"></b></div>
+  </section>
+
+  <section class="card">
+    <h2>Delivery</h2>
+    <template x-for="opt in $store.config.shippingOptions()" :key="opt.id">
+      <label class="ship-opt" :class="{ on: $store.cart.shippingId === opt.id }" @click="$store.cart.shippingId = opt.id; $store.cart.persist()">
+        <span class="ship-radio"></span>
+        <span class="ship-name" x-text="opt.name"></span>
+        <span class="ship-price" x-text="$store.config.formatZAR(opt.price)"></span>
+      </label>
+    </template>
+  </section>
+
+  <section class="card">
+    <h2>Your details</h2>
+    <label class="fld"><span>Name</span><input type="text" x-model="$store.cart.buyerName" placeholder="e.g. Thandi Mkhize"></label>
+    <label class="fld"><span>WhatsApp number</span><input type="tel" x-model="$store.cart.buyerPhone" placeholder="+27 82 123 4567"></label>
+    <label class="fld"><span>Delivery address</span><textarea x-model="$store.cart.buyerAddress" placeholder="Street, suburb, city, postal code"></textarea></label>
+  </section>
+
+  <section class="card">
+    <h2>Payment</h2>
+    <div class="upsell">
+      <p>Pay by card, Apple Pay, or instant EFT — available as an optional add-on.</p>
+      <a :href="'https://wa.me/' + String($store.config.whatsapp||'').replace(/\D/g,'') + '?text=' + encodeURIComponent('Hi! I would like to add online payments to my store.')" target="_blank">Ask about online payments →</a>
+    </div>
+    <p class="eyebrow" style="margin-bottom: 12px;">Bank transfer details</p>
+    <div class="bank">
+      <div class="row"><span>Bank</span><b x-text="$store.config.bank?.bankName || '—'"></b></div>
+      <div class="row"><span>Account name</span><b x-text="$store.config.bank?.accountName || '—'"></b></div>
+      <div class="row"><span>Account number</span><b x-text="$store.config.bank?.accountNumber || '—'"></b></div>
+      <div class="row"><span>Branch code</span><b x-text="$store.config.bank?.branchCode || '—'"></b></div>
+      <div class="row"><span>Reference</span><b x-text="$store.cart.orderRef || '—'"></b></div>
+    </div>
+  </section>
+
+  <button class="submit" :disabled="$store.cart.sending" @click="$store.cart.submitOrder()" x-text="$store.cart.sending ? 'Sending…' : 'Send proof of payment via WhatsApp'"></button>
+
+  <p x-show="$store.cart.error" x-text="$store.cart.error" style="font-size: 12px; color: #b00020; text-align: center; margin-top: 14px;"></p>
+</main>
+
+<main class="frame thanks" x-show="$store.cart.sent" x-cloak>
+  <h2>Thank you.</h2>
+  <p style="font-size: 13px; color: var(--faded); margin: 0;">Your order reference</p>
+  <div class="ref" x-text="$store.cart.orderRef"></div>
+  <a class="track" :href="'/track/?brand=zaheera&ref=' + encodeURIComponent($store.cart.orderRef)" target="_blank">Track this order →</a>
+</main>
+
+<script src="/main.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</body>
+</html>

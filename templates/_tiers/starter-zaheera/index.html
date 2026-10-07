@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zaheera · Signature Fragrances</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root { --f-display: 'Fraunces', Georgia, serif; --f-body: 'Inter', system-ui, sans-serif; --paper: #fbf9f5; --ink: #1a1a1a; --faded: #6b6560; --rule: rgba(26,26,26,0.10); }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font-family: var(--f-body); background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 22px; }
+.eyebrow { font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--faded); }
+header { padding: 40px 0 30px; }
+header h1 { font-family: var(--f-display); font-size: 42px; margin: 8px 0 0; font-weight: 400; }
+header p { font-size: 14px; color: var(--faded); max-width: 480px; margin: 14px 0 0; }
+.gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 30px 0; }
+@media (min-width: 700px) { .gallery { grid-template-columns: repeat(3, 1fr); } }
+.gallery img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; background: rgba(0,0,0,0.05); }
+.gallery p { font-size: 13px; margin: 10px 0 0; font-family: var(--f-display); }
+.gallery small { font-size: 11px; color: var(--faded); display: block; }
+.about { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 40px 0; margin: 30px 0; }
+.about p { font-family: var(--f-display); font-size: 20px; line-height: 1.35; margin: 0; }
+.cta { padding: 40px 0 60px; text-align: center; }
+.cta a { display: inline-block; padding: 18px 34px; background: var(--ink); color: var(--paper); text-decoration: none; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; }
+footer { padding: 30px 0; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; font-size: 11px; color: var(--faded); flex-wrap: wrap; gap: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<p class="eyebrow">Signature Fragrances · Cape Town</p>
+<h1>Zaheera</h1>
+<p>A small atelier of scent. Hand-blended, one bottle at a time — no range extensions, no seasonal drops.</p>
+</header>
+<section class="gallery">
+<div><img src="https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=80" alt=""><p>Oud Noir<small>R 450 · Smoky rose, oud, amber</small></p></div>
+<div><img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=800&q=80" alt=""><p>White Musk<small>R 320 · Cotton, vanilla, white musk</small></p></div>
+<div><img src="https://images.unsplash.com/photo-1587017539504-67cfbddac569?w=800&q=80" alt=""><p>Rose Taif<small>R 620 · Bulgarian rose, saffron</small></p></div>
+<div><img src="https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=800&q=80" alt=""><p>Amber Nights<small>R 480 · Amber, tonka, sandalwood</small></p></div>
+</section>
+<section class="about"><p>Every bottle is blended by hand. Small batches. No shortcuts. Made in Cape Town — shipped nationwide.</p></section>
+<section class="cta">
+<p class="eyebrow" style="margin-bottom: 20px;">To order</p>
+<a href="https://wa.me/27821234567?text=Hi%20Zaheera!%20I%20would%20like%20to%20order." target="_blank">Message on WhatsApp →</a>
+</section>
+<footer>
+<span>Zaheera</span>
+<span>WhatsApp +27 82 123 4567</span>
+<span>© 2025 Cape Town</span>
+</footer>
+</div>
+</body>
+</html>

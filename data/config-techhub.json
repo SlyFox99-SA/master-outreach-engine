@@ -1,1 +1,445 @@
-{"id":"techhub","layout":"list","brand":{"name":"TechHub","tagline":"Pre-loved iPhones - Sandton","hero":{"title":"Upgrade your tech.","subtitle":"Certified devices, 30-day warranty, free delivery in JHB."}},"theme":{"primary":"15 23 42","accent":"16 185 129","ink":"15 23 42","surface":"248 250 252"},"whatsapp":"+27831234567","bank":{"accountName":"TechHub (Pty) Ltd","bankName":"FNB","accountNumber":"6278 9876 543","branchCode":"250655","accountType":"Cheque"},"categories":["iPhones","Accessories"],"products":[{"id":"ip13","name":"iPhone 13","category":"iPhones","mockType":"phone","blurb":"Certified pre-owned","price":8999,"image":"https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=900&q=80","specs":["6.1 Super Retina XDR","A15 Bionic chip","30-day warranty","Free delivery in JHB"],"options":[{"name":"Storage","values":["128GB","256GB"]},{"name":"Colour","values":["Midnight","Blue"],"colors":["#1e293b","#2563eb"]}],"variants":[{"id":"128-mid","name":"128GB Â· Midnight","combo":{"Storage":"128GB","Colour":"Midnight"},"color":"#1e293b","stock":3,"priceDelta":0},{"id":"128-blue","name":"128GB Â· Blue","combo":{"Storage":"128GB","Colour":"Blue"},"color":"#2563eb","stock":2,"priceDelta":0},{"id":"256-mid","name":"256GB Â· Midnight","combo":{"Storage":"256GB","Colour":"Midnight"},"color":"#1e293b","stock":1,"priceDelta":1500},{"id":"256-blue","name":"256GB Â· Blue","combo":{"Storage":"256GB","Colour":"Blue"},"color":"#2563eb","stock":0,"priceDelta":1500}]},{"id":"ip14p","name":"iPhone 14 Pro","category":"iPhones","mockType":"phone","blurb":"Pro-grade, Dynamic Island","price":15499,"image":"https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=900&q=80","specs":["6.1 ProMotion OLED","A16 Bionic chip","Always-On display","30-day warranty"],"options":[{"name":"Storage","values":["128GB","256GB","512GB"]},{"name":"Colour","values":["Deep Purple","Gold"],"colors":["#6d28d9","#d4af37"]}],"variants":[{"id":"128-dp","name":"128GB Â· Deep Purple","combo":{"Storage":"128GB","Colour":"Deep Purple"},"color":"#6d28d9","stock":2,"priceDelta":0},{"id":"128-gold","name":"128GB Â· Gold","combo":{"Storage":"128GB","Colour":"Gold"},"color":"#d4af37","stock":0,"priceDelta":0},{"id":"256-dp","name":"256GB Â· Deep Purple","combo":{"Storage":"256GB","Colour":"Deep Purple"},"color":"#6d28d9","stock":1,"priceDelta":2200},{"id":"256-gold","name":"256GB Â· Gold","combo":{"Storage":"256GB","Colour":"Gold"},"color":"#d4af37","stock":0,"priceDelta":2200},{"id":"512-dp","name":"512GB Â· Deep Purple","combo":{"Storage":"512GB","Colour":"Deep Purple"},"color":"#6d28d9","stock":0,"priceDelta":4500},{"id":"512-gold","name":"512GB Â· Gold","combo":{"Storage":"512GB","Colour":"Gold"},"color":"#d4af37","stock":0,"priceDelta":4500}]},{"id":"ip12","name":"iPhone 12","category":"iPhones","mockType":"phone","blurb":"Compact classic","price":6299,"image":"https://images.unsplash.com/photo-1607936854279-55e8a4c64888?w=900&q=80","specs":["6.1 Super Retina XDR","A14 Bionic chip","Dual 12MP cameras","30-day warranty"],"options":[{"name":"Storage","values":["64GB","128GB"]},{"name":"Colour","values":["Blue","White","Rose Gold","orange "],"colors":["#2563eb","#e5e7eb","#e8b4b8","#f97316"]}],"variants":[{"id":"64gb-blue","name":"64GB ---- Blue","stock":0,"priceDelta":0,"color":"#2563eb","combo":{"Storage":"64GB","Colour":"Blue"}},{"id":"64gb-white","name":"64GB ---- White","stock":0,"priceDelta":0,"color":"#e5e7eb","combo":{"Storage":"64GB","Colour":"White"}},{"id":"64gb-rosegold","name":"64GB ---- Rose Gold","stock":0,"priceDelta":0,"color":"#e8b4b8","combo":{"Storage":"64GB","Colour":"Rose Gold"}},{"id":"64gb-orange","name":"64GB ---- orange ","stock":0,"priceDelta":0,"color":"#f97316","combo":{"Storage":"64GB","Colour":"orange "}},{"id":"128gb-blue","name":"128GB ---- Blue","stock":0,"priceDelta":0,"color":"#2563eb","combo":{"Storage":"128GB","Colour":"Blue"}},{"id":"128gb-white","name":"128GB ---- White","stock":0,"priceDelta":0,"color":"#e5e7eb","combo":{"Storage":"128GB","Colour":"White"}},{"id":"128gb-rosegold","name":"128GB ---- Rose Gold","stock":0,"priceDelta":0,"color":"#e8b4b8","combo":{"Storage":"128GB","Colour":"Rose Gold"}},{"id":"128gb-orange","name":"128GB ---- orange ","stock":0,"priceDelta":0,"color":"#f97316","combo":{"Storage":"128GB","Colour":"orange "}}],"stock":11},{"id":"ip15","name":"iPhone 15","category":"iPhones","mockType":"phone","blurb":"Latest, USB-C","price":17999,"image":"https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=900&q=80","specs":["6.1 Super Retina XDR","A16 Bionic chip","USB-C, Dynamic Island","30-day warranty"],"options":[{"name":"Storage","values":["128GB","256GB"]},{"name":"Colour","values":["Black","Green"],"colors":["#1a1a1a","#22c55e"]}],"variants":[{"id":"128-black","name":"128GB Â· Black","combo":{"Storage":"128GB","Colour":"Black"},"color":"#1a1a1a","stock":2,"priceDelta":0},{"id":"128-green","name":"128GB Â· Green","combo":{"Storage":"128GB","Colour":"Green"},"color":"#22c55e","stock":0,"priceDelta":0},{"id":"256-black","name":"256GB Â· Black","combo":{"Storage":"256GB","Colour":"Black"},"color":"#1a1a1a","stock":1,"priceDelta":1800},{"id":"256-green","name":"256GB Â· Green","combo":{"Storage":"256GB","Colour":"Green"},"color":"#22c55e","stock":0,"priceDelta":1800}]},{"id":"case","name":"Silicone Case","category":"Accessories","mockType":"box","blurb":"MagSafe compatible","price":350,"stock":25,"image":"https://images.unsplash.com/photo-1541877944-ac82a091518a?w=900&q=80","specs":["Soft silicone","MagSafe compatible","Fits iPhone 15","Assorted colors"]}]}
+{
+  "id": "techhub",
+  "layout": "list",
+  "brand": {
+    "name": "Phones & Tech",
+    "tagline": "Pre-loved iPhones - Sandton",
+    "hero": {
+      "title": "Upgrade your tech.",
+      "subtitle": "Certified devices, 30-day warranty, free delivery in JHB."
+    },
+    "shell": "spec-first"
+  },
+  "theme": {
+    "primary": "15 23 42",
+    "accent": "16 185 129",
+    "ink": "15 23 42",
+    "surface": "248 250 252"
+  },
+  "whatsapp": "+27831234567",
+  "bank": {
+    "accountName": "TechHub (Pty) Ltd",
+    "bankName": "FNB",
+    "accountNumber": "6278 9876 543",
+    "branchCode": "250655",
+    "accountType": "Cheque"
+  },
+  "categories": [
+    "iPhones",
+    "Accessories"
+  ],
+  "products": [
+    {
+      "id": "ip13",
+      "name": "iPhone 13",
+      "category": "iPhones",
+      "mockType": "phone",
+      "blurb": "Certified pre-owned",
+      "price": 8999,
+      "image": "https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=900&q=80",
+      "specs": [
+        "6.1 Super Retina XDR",
+        "A15 Bionic chip",
+        "30-day warranty",
+        "Free delivery in JHB"
+      ],
+      "options": [
+        {
+          "name": "Storage",
+          "values": [
+            "128GB",
+            "256GB"
+          ]
+        },
+        {
+          "name": "Colour",
+          "values": [
+            "Midnight",
+            "Blue"
+          ],
+          "colors": [
+            "#1e293b",
+            "#2563eb"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "128-mid",
+          "name": "128GB Â· Midnight",
+          "combo": {
+            "Storage": "128GB",
+            "Colour": "Midnight"
+          },
+          "color": "#1e293b",
+          "stock": 3,
+          "priceDelta": 0
+        },
+        {
+          "id": "128-blue",
+          "name": "128GB Â· Blue",
+          "combo": {
+            "Storage": "128GB",
+            "Colour": "Blue"
+          },
+          "color": "#2563eb",
+          "stock": 2,
+          "priceDelta": 0
+        },
+        {
+          "id": "256-mid",
+          "name": "256GB Â· Midnight",
+          "combo": {
+            "Storage": "256GB",
+            "Colour": "Midnight"
+          },
+          "color": "#1e293b",
+          "stock": 1,
+          "priceDelta": 1500
+        },
+        {
+          "id": "256-blue",
+          "name": "256GB Â· Blue",
+          "combo": {
+            "Storage": "256GB",
+            "Colour": "Blue"
+          },
+          "color": "#2563eb",
+          "stock": 0,
+          "priceDelta": 1500
+        }
+      ]
+    },
+    {
+      "id": "ip14p",
+      "name": "iPhone 14 Pro",
+      "category": "iPhones",
+      "mockType": "phone",
+      "blurb": "Pro-grade, Dynamic Island",
+      "price": 15499,
+      "image": "https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=900&q=80",
+      "specs": [
+        "6.1 ProMotion OLED",
+        "A16 Bionic chip",
+        "Always-On display",
+        "30-day warranty"
+      ],
+      "options": [
+        {
+          "name": "Storage",
+          "values": [
+            "128GB",
+            "256GB",
+            "512GB"
+          ]
+        },
+        {
+          "name": "Colour",
+          "values": [
+            "Deep Purple",
+            "Gold"
+          ],
+          "colors": [
+            "#6d28d9",
+            "#d4af37"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "128-dp",
+          "name": "128GB Â· Deep Purple",
+          "combo": {
+            "Storage": "128GB",
+            "Colour": "Deep Purple"
+          },
+          "color": "#6d28d9",
+          "stock": 2,
+          "priceDelta": 0
+        },
+        {
+          "id": "128-gold",
+          "name": "128GB Â· Gold",
+          "combo": {
+            "Storage": "128GB",
+            "Colour": "Gold"
+          },
+          "color": "#d4af37",
+          "stock": 0,
+          "priceDelta": 0
+        },
+        {
+          "id": "256-dp",
+          "name": "256GB Â· Deep Purple",
+          "combo": {
+            "Storage": "256GB",
+            "Colour": "Deep Purple"
+          },
+          "color": "#6d28d9",
+          "stock": 1,
+          "priceDelta": 2200
+        },
+        {
+          "id": "256-gold",
+          "name": "256GB Â· Gold",
+          "combo": {
+            "Storage": "256GB",
+            "Colour": "Gold"
+          },
+          "color": "#d4af37",
+          "stock": 0,
+          "priceDelta": 2200
+        },
+        {
+          "id": "512-dp",
+          "name": "512GB Â· Deep Purple",
+          "combo": {
+            "Storage": "512GB",
+            "Colour": "Deep Purple"
+          },
+          "color": "#6d28d9",
+          "stock": 0,
+          "priceDelta": 4500
+        },
+        {
+          "id": "512-gold",
+          "name": "512GB Â· Gold",
+          "combo": {
+            "Storage": "512GB",
+            "Colour": "Gold"
+          },
+          "color": "#d4af37",
+          "stock": 0,
+          "priceDelta": 4500
+        }
+      ]
+    },
+    {
+      "id": "ip12",
+      "name": "iPhone 12",
+      "category": "iPhones",
+      "mockType": "phone",
+      "blurb": "Compact classic",
+      "price": 6299,
+      "image": "https://images.unsplash.com/photo-1607936854279-55e8a4c64888?w=900&q=80",
+      "specs": [
+        "6.1 Super Retina XDR",
+        "A14 Bionic chip",
+        "Dual 12MP cameras",
+        "30-day warranty"
+      ],
+      "options": [
+        {
+          "name": "Storage",
+          "values": [
+            "64GB",
+            "128GB"
+          ]
+        },
+        {
+          "name": "Colour",
+          "values": [
+            "Blue",
+            "White",
+            "Rose Gold",
+            "orange "
+          ],
+          "colors": [
+            "#2563eb",
+            "#e5e7eb",
+            "#e8b4b8",
+            "#f97316"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "64gb-blue",
+          "name": "64GB ---- Blue",
+          "stock": 0,
+          "priceDelta": 0,
+          "color": "#2563eb",
+          "combo": {
+            "Storage": "64GB",
+            "Colour": "Blue"
+          }
+        },
+        {
+          "id": "64gb-white",
+          "name": "64GB ---- White",
+          "stock": 0,
+          "priceDelta": 0,
+          "color": "#e5e7eb",
+          "combo": {
+            "Storage": "64GB",
+            "Colour": "White"
+          }
+        },
+        {
+          "id": "64gb-rosegold",
+          "name": "64GB ---- Rose Gold",
+          "stock": 0,
+          "priceDelta": 0,
+          "color": "#e8b4b8",
+          "combo": {
+            "Storage": "64GB",
+            "Colour": "Rose Gold"
+          }
+        },
+        {
+          "id": "64gb-orange",
+          "name": "64GB ---- orange ",
+          "stock": 0,
+          "priceDelta": 0,
+          "color": "#f97316",
+          "combo": {
+            "Storage": "64GB",
+            "Colour": "orange "
+          }
+        },
+        {
+          "id": "128gb-blue",
+          "name": "128GB ---- Blue",
+          "stock": 0,
+          "priceDelta": 0,
+          "color": "#2563eb",
+          "combo": {
+            "Storage": "128GB",
+            "Colour": "Blue"
+          }
+        },
+        {
+          "id": "128gb-white",
+          "name": "128GB ---- White",
+          "stock": 0,
+          "priceDelta": 0,
+          "color": "#e5e7eb",
+          "combo": {
+            "Storage": "128GB",
+            "Colour": "White"
+          }
+        },
+        {
+          "id": "128gb-rosegold",
+          "name": "128GB ---- Rose Gold",
+          "stock": 0,
+          "priceDelta": 0,
+          "color": "#e8b4b8",
+          "combo": {
+            "Storage": "128GB",
+            "Colour": "Rose Gold"
+          }
+        },
+        {
+          "id": "128gb-orange",
+          "name": "128GB ---- orange ",
+          "stock": 0,
+          "priceDelta": 0,
+          "color": "#f97316",
+          "combo": {
+            "Storage": "128GB",
+            "Colour": "orange "
+          }
+        }
+      ],
+      "stock": 11
+    },
+    {
+      "id": "ip15",
+      "name": "iPhone 15",
+      "category": "iPhones",
+      "mockType": "phone",
+      "blurb": "Latest, USB-C",
+      "price": 17999,
+      "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=900&q=80",
+      "specs": [
+        "6.1 Super Retina XDR",
+        "A16 Bionic chip",
+        "USB-C, Dynamic Island",
+        "30-day warranty"
+      ],
+      "options": [
+        {
+          "name": "Storage",
+          "values": [
+            "128GB",
+            "256GB"
+          ]
+        },
+        {
+          "name": "Colour",
+          "values": [
+            "Black",
+            "Green"
+          ],
+          "colors": [
+            "#1a1a1a",
+            "#22c55e"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "128-black",
+          "name": "128GB Â· Black",
+          "combo": {
+            "Storage": "128GB",
+            "Colour": "Black"
+          },
+          "color": "#1a1a1a",
+          "stock": 2,
+          "priceDelta": 0
+        },
+        {
+          "id": "128-green",
+          "name": "128GB Â· Green",
+          "combo": {
+            "Storage": "128GB",
+            "Colour": "Green"
+          },
+          "color": "#22c55e",
+          "stock": 0,
+          "priceDelta": 0
+        },
+        {
+          "id": "256-black",
+          "name": "256GB Â· Black",
+          "combo": {
+            "Storage": "256GB",
+            "Colour": "Black"
+          },
+          "color": "#1a1a1a",
+          "stock": 1,
+          "priceDelta": 1800
+        },
+        {
+          "id": "256-green",
+          "name": "256GB Â· Green",
+          "combo": {
+            "Storage": "256GB",
+            "Colour": "Green"
+          },
+          "color": "#22c55e",
+          "stock": 0,
+          "priceDelta": 1800
+        }
+      ]
+    },
+    {
+      "id": "case",
+      "name": "Silicone Case",
+      "category": "Accessories",
+      "mockType": "box",
+      "blurb": "MagSafe compatible",
+      "price": 350,
+      "stock": 25,
+      "image": "https://images.unsplash.com/photo-1541877944-ac82a091518a?w=900&q=80",
+      "specs": [
+        "Soft silicone",
+        "MagSafe compatible",
+        "Fits iPhone 15",
+        "Assorted colors"
+      ]
+    }
+  ]
+}

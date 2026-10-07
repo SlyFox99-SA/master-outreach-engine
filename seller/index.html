@@ -35,8 +35,9 @@
   .card { background-color: #fff; border-radius: var(--radius); }
   .chip { background-color: rgb(var(--brand-primary) / 0.08); color: rgb(var(--brand-primary)); border-radius: 999px; }
 </style>
+<script>window.__SELLER_TOKEN=(function(){var t=new URLSearchParams(location.search).get("t");if(t){localStorage.setItem("seller.token",t);return t;}return localStorage.getItem("seller.token")||"";})();</script>
 </head>
-<body x-data="app()" x-init="init()" x-cloak>
+<body x-data="app()" x-init="init()" x-cloak><div x-show="saveToast" x-cloak class="fixed top-4 right-4 z-[100] px-4 py-3 rounded-xl shadow-lg text-sm font-semibold" :class="saveToast && saveToast.type === 'error' ? 'bg-red-600 text-white' : (saveToast && saveToast.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-gray-900 text-white')" x-text="saveToast && saveToast.text"></div>
 
 <div x-show="loading" class="fixed inset-0 flex items-center justify-center bg-brand-surface z-50">
   <div class="w-10 h-10 border-4 border-black/10 rounded-full animate-spin" style="border-top-color: rgb(var(--brand-primary));"></div>
@@ -258,9 +259,25 @@
             <input type="text" x-model="editing[f.name]" class="w-full px-4 py-3 border border-black/10 bg-white focus:outline-none" style="border-radius: var(--radius);">
           </template>
           <template x-if="f.type === 'image'">
-            <div class="flex gap-2">
-              <input type="text" x-model="editing[f.name]" class="flex-1 px-4 py-3 border border-black/10 bg-white focus:outline-none text-sm" style="border-radius: var(--radius);">
-              <button @click="uploadTo('editing.' + f.name)" class="px-4 py-3 btn-primary text-xs font-semibold whitespace-nowrap">Upload</button>
+            <div data-multi-image>
+              <div class="grid grid-cols-3 gap-2 mb-2">
+                <template x-for="(url, idx) in (Array.isArray(editing[f.name]) ? editing[f.name] : (editing[f.name] ? [editing[f.name]] : []))" :key="idx">
+                  <div class="relative aspect-square rounded-lg overflow-hidden bg-black/5 ring-1 ring-black/5">
+                    <img :src="url" class="w-full h-full object-cover" alt="">
+                    <button type="button" @click="removeImage(f.name, idx)" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 hover:bg-black/80 text-white text-sm leading-none">&times;</button>
+                    <span x-show="idx === 0" class="absolute bottom-1 left-1 text-[10px] font-semibold bg-black/70 text-white px-1.5 py-0.5 rounded">Primary</span>
+                  </div>
+                </template>
+                <button type="button" @click="addImages(f.name)" x-show="(Array.isArray(editing[f.name]) ? editing[f.name].length : (editing[f.name] ? 1 : 0)) < 6" class="aspect-square rounded-lg border-2 border-dashed border-black/15 hover:border-black/30 hover:bg-black/5 flex flex-col items-center justify-center gap-1 text-xs opacity-70">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                  <span>Add photos</span>
+                </button>
+              </div>
+              <p x-show="imgBusy" class="text-xs opacity-60 mb-1" x-text="imgStatus"></p>
+              <details class="text-xs">
+                <summary class="cursor-pointer opacity-50 hover:opacity-80">Advanced: paste image URL</summary>
+                <input type="text" placeholder="https://..." @change="if($event.target.value.trim()){ addImageUrl(f.name, $event.target.value.trim()); $event.target.value=''; }" class="w-full mt-2 px-3 py-2 border border-black/10 bg-white focus:outline-none text-xs" style="border-radius: var(--radius);">
+              </details>
             </div>
           </template>
         </div>
@@ -311,7 +328,7 @@ function applyTheme(theme, vertical) {
 
 function app() {
   return {
-    loading: true,
+    loading: true, saveToast: null,
     session: null, loginEmail: '', loginCode: '', loginStep: 'email',
     activeTab: 'services',
     brandId: 'techhub',
@@ -430,6 +447,7 @@ function app() {
       this.activeTab = this.tabs[0];
       this.aboutBody = (this.store.about && this.store.about.paragraphs) ? this.store.about.paragraphs.join('\n\n') : '';
       try { this.orders = JSON.parse(localStorage.getItem('orders.' + this.brandId) || '[]'); } catch(e) { this.orders = []; }
+      try { var oRes = await fetch('https://outreach-save-api.gifttsima16.workers.dev/api/orders?brand=' + encodeURIComponent(this.brandId), { headers: { Authorization: 'Bearer ' + (window.__SELLER_TOKEN || '') } }); var oData = await oRes.json(); if (oData.ok && Array.isArray(oData.orders) && oData.orders.length > 0) { this.orders = oData.orders; try { localStorage.setItem('orders.' + this.brandId, JSON.stringify(this.orders)); } catch(e) {} } } catch(e) { console.log('[orders] worker fetch failed:', e); }
       if (this.orders.length === 0 && (this.vertical === 'store' || this.vertical === 'restaurant')) this.seedDemoOrders();
       this.loading = false;
     },
@@ -440,7 +458,7 @@ function app() {
     logout() { this.session = null; localStorage.removeItem('session.' + this.brandId); this.loginStep = 'email'; this.loginCode = ''; },
 
     openNew(listKey) { this.editList = listKey; this.editIndex = null; this.editing = {}; var s = this.schema(listKey); s.fields.forEach(f => this.editing[f.name] = f.type === 'number' ? 0 : ''); if (listKey === 'products') this.editing.id = 'item-' + Date.now(); this.modalOpen = true; },
-    openEdit(listKey, index) { this.editList = listKey; this.editIndex = index; var item = (this.store[listKey] || [])[index] || {}; this.editing = JSON.parse(JSON.stringify(item)); if (typeof this.editing === 'string') this.editing = { url: this.editing, name: this.editing }; this.modalOpen = true; },
+    openEdit(listKey, index) { this.editList = listKey; this.editIndex = index; var item = (this.store[listKey] || [])[index] || {}; this.editing = JSON.parse(JSON.stringify(item)); if (typeof this.editing === 'string') this.editing = { url: this.editing, name: this.editing }; var self = this; this.schema(listKey).fields.forEach(function(f) { if (f.type === 'image' && !Array.isArray(self.editing[f.name])) { self.editing[f.name] = self.editing[f.name] ? [self.editing[f.name]] : []; } }); this.modalOpen = true; },
     closeModal() { this.modalOpen = false; this.editing = {}; this.editIndex = null; },
 
     saveItem() {
@@ -448,7 +466,7 @@ function app() {
       var item;
       if (s.isArrayOfStrings) item = this.editing.name || this.editing.url || '';
       else if (s.isArrayOfImages) item = this.editing.url || '';
-      else item = this.editing;
+      else { item = this.editing; var self2 = this; s.fields.forEach(function(f) { if (f.type === 'image') { var arr = Array.isArray(item[f.name]) ? item[f.name].filter(Boolean) : (item[f.name] ? [item[f.name]] : []); item.images = arr; item.image = arr[0] || ''; } }); }
       if (!this.store[this.editList]) this.store[this.editList] = [];
       if (this.editIndex === null) this.store[this.editList].push(item);
       else this.store[this.editList][this.editIndex] = item;
@@ -466,9 +484,99 @@ function app() {
     saveSettings() { this.store.about = this.store.about || {}; this.store.about.paragraphs = window.__parseAbout(this.aboutBody); this.commit('Settings saved'); },
 
     async commit(msg) {
-      try { await fetch('https://outreach-save-api.gifttsima16.workers.dev/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ brand: this.brandId, data: this.store, message: msg }) }); }
-      catch(e) { console.log('[seller] save:', msg); }
+      this.saveToast = { text: 'Saving...', type: 'info' };
+      try {
+        var res = await fetch('https://outreach-save-api.gifttsima16.workers.dev/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (window.__SELLER_TOKEN || '') }, body: JSON.stringify({ brand: this.brandId, data: this.store, message: msg }) });
+        var j = await res.json().catch(function() { return {}; });
+        if (!res.ok || !j.ok) {
+          this.saveToast = { text: 'Save FAILED: ' + (j.error || res.status), type: 'error' };
+          console.error('[save] failed', { status: res.status, body: j, token: window.__SELLER_TOKEN ? 'set' : 'MISSING' });
+        } else {
+          this.saveToast = { text: '✓ ' + msg, type: 'success' };
+          var self3 = this; setTimeout(function() { if (self3.saveToast && self3.saveToast.type === 'success') self3.saveToast = null; }, 2500);
+        }
+      } catch(e) {
+        this.saveToast = { text: 'Network error: ' + e.message, type: 'error' };
+        console.error('[save] network', e);
+      }
       try { localStorage.setItem('orders.' + this.brandId, JSON.stringify(this.orders)); } catch(e) {}
+    },
+
+    imgBusy: false,
+    imgStatus: '',
+
+    compress(file, maxDim, q) {
+      return new Promise(function(resolve) {
+        if (!file || !file.type || file.type.indexOf('image/') !== 0) return resolve(file);
+        if (file.size < 400 * 1024) return resolve(file);
+        var img = new Image();
+        var url = URL.createObjectURL(file);
+        img.onload = function() {
+          var w = img.naturalWidth, h = img.naturalHeight;
+          if (w > maxDim || h > maxDim) { var r = Math.min(maxDim / w, maxDim / h); w = Math.round(w * r); h = Math.round(h * r); }
+          var c = document.createElement('canvas'); c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0, w, h);
+          c.toBlob(function(blob) { URL.revokeObjectURL(url); resolve(blob || file); }, 'image/jpeg', q);
+        };
+        img.onerror = function() { URL.revokeObjectURL(url); resolve(file); };
+        img.src = url;
+      });
+    },
+
+    ensureImageArray(fieldName) {
+      if (!Array.isArray(this.editing[fieldName])) {
+        this.editing[fieldName] = this.editing[fieldName] ? [this.editing[fieldName]] : [];
+      }
+      return this.editing[fieldName];
+    },
+
+    addImageUrl(fieldName, url) {
+      var arr = this.ensureImageArray(fieldName);
+      if (arr.length < 6 && url) arr.push(url);
+    },
+
+    removeImage(fieldName, idx) {
+      var arr = this.ensureImageArray(fieldName);
+      arr.splice(idx, 1);
+    },
+
+    addImages(fieldName) {
+      var self = this;
+      var input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.multiple = true;
+      input.onchange = async function() {
+        var files = Array.prototype.slice.call(input.files || []);
+        if (!files.length) return;
+        var arr = self.ensureImageArray(fieldName);
+        var room = 6 - arr.length;
+        files = files.slice(0, room);
+        self.imgBusy = true;
+        try {
+          for (var i = 0; i < files.length; i++) {
+            self.imgStatus = 'Compressing ' + (i + 1) + '/' + files.length + '...';
+            var blob = await self.compress(files[i], 1600, 0.85);
+            self.imgStatus = 'Uploading ' + (i + 1) + '/' + files.length + '...';
+            var form = new FormData();
+            form.append('file', blob, 'photo-' + Date.now() + '-' + i + '.jpg');
+            form.append('upload_preset', 'outreach_unsigned');
+            form.append('folder', 'products');
+            var r = await fetch('https://api.cloudinary.com/v1_1/e4kmlh67/image/upload', { method: 'POST', body: form });
+            var d = await r.json();
+            if (d.secure_url) arr.push(d.secure_url + '?q_auto,f_auto,w_1000');
+            else self.imgStatus = 'Upload failed: ' + ((d.error && d.error.message) || 'unknown');
+          }
+          self.imgStatus = 'Added ' + files.length + ' photo(s)';
+        } catch (e) {
+          console.error(e);
+          self.imgStatus = 'Upload error: ' + e.message;
+        } finally {
+          self.imgBusy = false;
+          setTimeout(function() { if (!self.imgBusy) self.imgStatus = ''; }, 2500);
+        }
+      };
+      input.click();
     },
 
     uploadTo(path) {

@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { writeFileSync, existsSync } from 'node:fs';
 
 function saveEndpoint() {
   return {
@@ -14,7 +14,7 @@ function saveEndpoint() {
           try {
             const { brand, data } = JSON.parse(body);
             if (!brand || !data) { res.statusCode = 400; return res.end('Missing brand or data'); }
-            const safeBrand = String(brand).replace(/[^a-z0-9-]/gi, '');
+            const safeBrand = String(brand).replace(/[^a-z0-9-]/gi,'');
             const target = resolve(__dirname, 'data', 'config-' + safeBrand + '.json');
             if (!existsSync(target)) { res.statusCode = 404; return res.end('Config not found: ' + safeBrand); }
             writeFileSync(target, JSON.stringify(data), 'utf8');
@@ -44,13 +44,17 @@ export default defineConfig({
         checkout: resolve(__dirname, 'checkout.html'),
         admin: resolve(__dirname, 'admin/index.html'),
         seller: resolve(__dirname, 'seller/index.html'),
+        track: resolve(__dirname, 'track/index.html'),
+        'brand-zaheera': resolve(__dirname, 'templates/brands/zaheera/index.html'),
+        'brand-techhub': resolve(__dirname, 'templates/brands/techhub/index.html'),
+        'brand-monetech': resolve(__dirname, 'templates/brands/monetech/index.html'),
+        'brand-lumo': resolve(__dirname, 'templates/brands/lumo/index.html'),
         salon: resolve(__dirname, 'templates/salon/index.html'),
         services: resolve(__dirname, 'templates/services/index.html'),
         studio: resolve(__dirname, 'templates/studio/index.html'),
         restaurant: resolve(__dirname, 'templates/restaurant/index.html'),
         personal: resolve(__dirname, 'templates/personal/index.html'),
-        starter: resolve(__dirname, 'templates/starter/index.html'),
-        track: resolve(__dirname, 'track/index.html'), track: resolve(__dirname, 'track.html')
+        starter: resolve(__dirname, 'templates/starter/index.html')
       }
     }
   }

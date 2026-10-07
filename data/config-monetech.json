@@ -1,1 +1,194 @@
-{"id":"monetech","layout":"showcase","brand":{"name":"MoneTech","tagline":"Pre-loved iPhones - Sandton","hero":{"title":"iPhone, sorted.","subtitle":"Certified pre-owned. 30-day warranty."}},"theme":{"primary":"15 23 42","accent":"59 130 246","ink":"15 23 42","surface":"248 250 252"},"whatsapp":"+27839876543","payment":{"provider":"payfast","merchantId":"10000100","merchantKey":"46f0cd694581a","sandbox":true,"returnUrl":"https://monetech-outreach.netlify.app/thank-you","cancelUrl":"https://monetech-outreach.netlify.app/"},"bank":{"accountName":"MoneTech Trading","bankName":"Standard Bank","accountNumber":"0123 456 789","branchCode":"051001","accountType":"Current"},"categories":["iPhones","Accessories"],"products":[{"id":"ip15","name":"iPhone 15","category":"iPhones","mockType":"phone","blurb":"Latest generation","price":17999,"image":"https://images.unsplash.com/photo-1580910051074-3eb694886505?w=900&q=80","specs":["6.1 Super Retina XDR","A16 Bionic","USB-C, Dynamic Island","30-day warranty"],"variants":[{"id":"128-black","name":"128GB Black","stock":2,"priceDelta":0,"color":"#1a1a1a"},{"id":"256-black","name":"256GB Black","stock":1,"priceDelta":1800,"color":"#1a1a1a"},{"id":"512-black","name":"512GB Black","stock":0,"priceDelta":4000,"color":"#1a1a1a"}]},{"id":"ip14p","name":"iPhone 14 Pro","category":"iPhones","mockType":"phone","blurb":"ProMotion, Pro camera","price":15499,"image":"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=900&q=80","specs":["6.1 ProMotion OLED","A16 Bionic","Always-On display","30-day warranty"],"variants":[{"id":"128-purple","name":"128GB Deep Purple","stock":3,"priceDelta":0,"color":"#6d28d9"},{"id":"256-purple","name":"256GB Deep Purple","stock":1,"priceDelta":2200,"color":"#6d28d9"},{"id":"512-gold","name":"512GB Gold","stock":0,"priceDelta":4500,"color":"#d4af37"}]},{"id":"ip13","name":"iPhone 13","category":"iPhones","mockType":"phone","blurb":"Reliable and fast","price":8999,"image":"https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=900&q=80","specs":["6.1 Super Retina XDR","A15 Bionic","Dual 12MP cameras","30-day warranty"],"variants":[{"id":"128-mid","name":"128GB Midnight","stock":4,"priceDelta":0,"color":"#1e293b"},{"id":"256-blue","name":"256GB Blue","stock":2,"priceDelta":1500,"color":"#2563eb"}]},{"id":"ip12","name":"iPhone 12","category":"iPhones","mockType":"phone","blurb":"Compact and capable","price":6299,"image":"https://images.unsplash.com/photo-1607936854279-55e8a4c64888?w=900&q=80","specs":["6.1 Super Retina XDR","A14 Bionic","Dual cameras","30-day warranty"],"variants":[{"id":"64-blue","name":"64GB Blue","stock":0,"priceDelta":0,"color":"#2563eb"},{"id":"128-white","name":"128GB White","stock":0,"priceDelta":800,"color":"#e5e7eb"}]},{"id":"charger","name":"20W USB-C Charger","category":"Accessories","mockType":"box","blurb":"Fast charge","price":450,"stock":18,"image":"https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=900&q=80","specs":["20W output","USB-C connector","1m cable included"]}]}
+{
+  "id": "monetech",
+  "layout": "showcase",
+  "brand": {
+    "name": "Sneakers & Shoes",
+    "tagline": "Pre-loved iPhones - Sandton",
+    "hero": {
+      "title": "iPhone, sorted.",
+      "subtitle": "Certified pre-owned. 30-day warranty."
+    },
+    "shell": "spec-first"
+  },
+  "theme": {
+    "primary": "15 23 42",
+    "accent": "59 130 246",
+    "ink": "15 23 42",
+    "surface": "248 250 252"
+  },
+  "whatsapp": "+27839876543",
+  "payment": {
+    "provider": "payfast",
+    "merchantId": "10000100",
+    "merchantKey": "46f0cd694581a",
+    "sandbox": true,
+    "returnUrl": "https://monetech-outreach.netlify.app/thank-you",
+    "cancelUrl": "https://monetech-outreach.netlify.app/"
+  },
+  "bank": {
+    "accountName": "MoneTech Trading",
+    "bankName": "Standard Bank",
+    "accountNumber": "0123 456 789",
+    "branchCode": "051001",
+    "accountType": "Current"
+  },
+  "categories": [
+    "iPhones",
+    "Accessories"
+  ],
+  "products": [
+    {
+      "id": "ip15",
+      "name": "iPhone 15",
+      "category": "iPhones",
+      "mockType": "phone",
+      "blurb": "Latest generation",
+      "price": 17999,
+      "image": "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=900&q=80",
+      "specs": [
+        "6.1 Super Retina XDR",
+        "A16 Bionic",
+        "USB-C, Dynamic Island",
+        "30-day warranty"
+      ],
+      "variants": [
+        {
+          "id": "128-black",
+          "name": "128GB Black",
+          "stock": 2,
+          "priceDelta": 0,
+          "color": "#1a1a1a"
+        },
+        {
+          "id": "256-black",
+          "name": "256GB Black",
+          "stock": 1,
+          "priceDelta": 1800,
+          "color": "#1a1a1a"
+        },
+        {
+          "id": "512-black",
+          "name": "512GB Black",
+          "stock": 0,
+          "priceDelta": 4000,
+          "color": "#1a1a1a"
+        }
+      ]
+    },
+    {
+      "id": "ip14p",
+      "name": "iPhone 14 Pro",
+      "category": "iPhones",
+      "mockType": "phone",
+      "blurb": "ProMotion, Pro camera",
+      "price": 15499,
+      "image": "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=900&q=80",
+      "specs": [
+        "6.1 ProMotion OLED",
+        "A16 Bionic",
+        "Always-On display",
+        "30-day warranty"
+      ],
+      "variants": [
+        {
+          "id": "128-purple",
+          "name": "128GB Deep Purple",
+          "stock": 3,
+          "priceDelta": 0,
+          "color": "#6d28d9"
+        },
+        {
+          "id": "256-purple",
+          "name": "256GB Deep Purple",
+          "stock": 1,
+          "priceDelta": 2200,
+          "color": "#6d28d9"
+        },
+        {
+          "id": "512-gold",
+          "name": "512GB Gold",
+          "stock": 0,
+          "priceDelta": 4500,
+          "color": "#d4af37"
+        }
+      ]
+    },
+    {
+      "id": "ip13",
+      "name": "iPhone 13",
+      "category": "iPhones",
+      "mockType": "phone",
+      "blurb": "Reliable and fast",
+      "price": 8999,
+      "image": "https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=900&q=80",
+      "specs": [
+        "6.1 Super Retina XDR",
+        "A15 Bionic",
+        "Dual 12MP cameras",
+        "30-day warranty"
+      ],
+      "variants": [
+        {
+          "id": "128-mid",
+          "name": "128GB Midnight",
+          "stock": 4,
+          "priceDelta": 0,
+          "color": "#1e293b"
+        },
+        {
+          "id": "256-blue",
+          "name": "256GB Blue",
+          "stock": 2,
+          "priceDelta": 1500,
+          "color": "#2563eb"
+        }
+      ]
+    },
+    {
+      "id": "ip12",
+      "name": "iPhone 12",
+      "category": "iPhones",
+      "mockType": "phone",
+      "blurb": "Compact and capable",
+      "price": 6299,
+      "image": "https://images.unsplash.com/photo-1607936854279-55e8a4c64888?w=900&q=80",
+      "specs": [
+        "6.1 Super Retina XDR",
+        "A14 Bionic",
+        "Dual cameras",
+        "30-day warranty"
+      ],
+      "variants": [
+        {
+          "id": "64-blue",
+          "name": "64GB Blue",
+          "stock": 0,
+          "priceDelta": 0,
+          "color": "#2563eb"
+        },
+        {
+          "id": "128-white",
+          "name": "128GB White",
+          "stock": 0,
+          "priceDelta": 800,
+          "color": "#e5e7eb"
+        }
+      ]
+    },
+    {
+      "id": "charger",
+      "name": "20W USB-C Charger",
+      "category": "Accessories",
+      "mockType": "box",
+      "blurb": "Fast charge",
+      "price": 450,
+      "stock": 18,
+      "image": "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=900&q=80",
+      "specs": [
+        "20W output",
+        "USB-C connector",
+        "1m cable included"
+      ]
+    }
+  ]
+}

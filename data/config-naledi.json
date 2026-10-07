@@ -1,1 +1,70 @@
-{"id":"naledi","vertical":"personal","brand":{"name":"Naledi Kgosi","tagline":"Career Coach · Johannesburg","location":"Johannesburg","instagram":"@naledi.coach"},"hero":{"title":"Get clear. Get moving. Get hired.","subtitle":"I help mid-career professionals in South Africa find work that actually fits them — not just the next paycheck."},"whatsapp":"+27821234567","email":"hello@naledi.co.za","about":{"title":"A little about me.","image":"https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&q=80","paragraphs":["I spent 12 years in HR at two of SA's biggest banks. I watched brilliant people burn out because they were in the wrong role — not because they weren't good enough.","Now I work one-on-one with professionals to help them figure out what they actually want, then go get it. No fluff. No 'find your why' retreats. Just clear thinking and real steps."],"tags":["12 yrs HR experience","ICF-certified coach","500+ clients coached","Guest lecturer at Wits Business School"]},"services":[{"id":"1-1","name":"1:1 Coaching Session","duration":"90 min","description":"Deep dive into your career, what's blocking you, and what to do next. Includes a written action plan."},{"id":"package","name":"6-Session Program","duration":"3 months","description":"Full reset. CV, LinkedIn, interviews, salary negotiation, and ongoing accountability. Real transformation."},{"id":"cv","name":"CV & LinkedIn Rewrite","duration":"2 weeks","description":"I rewrite your CV and LinkedIn from scratch. Yours stays yours — I just make it impossible to ignore."},{"id":"mock","name":"Interview Prep","duration":"2 hours","description":"Practice the questions you're actually going to get. With real feedback and follow-up notes."}],"testimonials":[{"quote":"I got 3 interviews in the first 2 weeks after the CV rewrite. Landed a role at 40% more than I was earning.","name":"Thabo · Marketing Manager"},{"quote":"Naledi helped me see that the job wasn't the problem — I was. Six months later I've never been happier.","name":"Refilwe · Attorney"},{"quote":"Practical, direct, no bs. Exactly what I needed after 6 months of being stuck.","name":"Ahmed · Software Engineer"}]}
+{
+  "id": "naledi",
+  "vertical": "personal",
+  "brand": {
+    "name": "Career Coach",
+    "tagline": "Career Coach · Johannesburg",
+    "location": "Johannesburg",
+    "instagram": "@naledi.coach"
+  },
+  "hero": {
+    "title": "Get clear. Get moving. Get hired.",
+    "subtitle": "I help mid-career professionals in South Africa find work that actually fits them — not just the next paycheck."
+  },
+  "whatsapp": "+27821234567",
+  "email": "hello@naledi.co.za",
+  "about": {
+    "title": "A little about me.",
+    "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&q=80",
+    "paragraphs": [
+      "I spent 12 years in HR at two of SA's biggest banks. I watched brilliant people burn out because they were in the wrong role — not because they weren't good enough.",
+      "Now I work one-on-one with professionals to help them figure out what they actually want, then go get it. No fluff. No 'find your why' retreats. Just clear thinking and real steps."
+    ],
+    "tags": [
+      "12 yrs HR experience",
+      "ICF-certified coach",
+      "500+ clients coached",
+      "Guest lecturer at Wits Business School"
+    ]
+  },
+  "services": [
+    {
+      "id": "1-1",
+      "name": "1:1 Coaching Session",
+      "duration": "90 min",
+      "description": "Deep dive into your career, what's blocking you, and what to do next. Includes a written action plan."
+    },
+    {
+      "id": "package",
+      "name": "6-Session Program",
+      "duration": "3 months",
+      "description": "Full reset. CV, LinkedIn, interviews, salary negotiation, and ongoing accountability. Real transformation."
+    },
+    {
+      "id": "cv",
+      "name": "CV & LinkedIn Rewrite",
+      "duration": "2 weeks",
+      "description": "I rewrite your CV and LinkedIn from scratch. Yours stays yours — I just make it impossible to ignore."
+    },
+    {
+      "id": "mock",
+      "name": "Interview Prep",
+      "duration": "2 hours",
+      "description": "Practice the questions you're actually going to get. With real feedback and follow-up notes."
+    }
+  ],
+  "testimonials": [
+    {
+      "quote": "I got 3 interviews in the first 2 weeks after the CV rewrite. Landed a role at 40% more than I was earning.",
+      "name": "Thabo · Marketing Manager"
+    },
+    {
+      "quote": "Naledi helped me see that the job wasn't the problem — I was. Six months later I've never been happier.",
+      "name": "Refilwe · Attorney"
+    },
+    {
+      "quote": "Practical, direct, no bs. Exactly what I needed after 6 months of being stuck.",
+      "name": "Ahmed · Software Engineer"
+    }
+  ]
+}

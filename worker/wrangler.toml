@@ -8,3 +8,7 @@ GITHUB_OWNER = "SlyFox99-SA"
 GITHUB_REPO = "master-outreach-engine"
 GITHUB_BRANCH = "main"
 ALLOWED_ORIGINS = "http://localhost:5173,https://fragrance-seller-mockup.pages.dev,https://techseller-mockup.pages.dev,https://lumo-mockup.pages.dev,https://monetech-outreach.pages.dev"
+[[d1_databases]]
+binding = "DB"
+database_name = "webforge-orders"
+database_id = "e49ccc48-6d20-4813-bace-483c2a7a68e5"

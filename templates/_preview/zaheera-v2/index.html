@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zaheera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script src="/configs.js"></script>
+<style>
+  :root {
+    --f-display: 'Fraunces', Georgia, serif;
+    --f-body: 'Inter', system-ui, sans-serif;
+    --bone: #f5f1ea;
+    --paper: #fbf9f5;
+    --ink: #1a1a1a;
+    --faded: #6b6560;
+    --rule: rgba(26,26,26,0.10);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--f-body);
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .disp {
+    font-family: var(--f-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 0.98;
+  }
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--faded);
+  }
+  .breather { max-width: 1160px; margin: 0 auto; padding: 0 22px; }
+  @media (min-width: 900px) { .breather { padding: 0 48px; } }
+  .p-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px 14px;
+  }
+  @media (min-width: 700px) { .p-grid { grid-template-columns: repeat(3, 1fr); gap: 44px 22px; } }
+  @media (min-width: 1100px) { .p-grid { grid-template-columns: repeat(4, 1fr); gap: 44px 22px; } }
+  .p-tile { display: flex; flex-direction: column; }
+  .p-photo {
+    aspect-ratio: 1 / 1;
+    background: var(--bone);
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+  }
+  .p-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 1s cubic-bezier(.2,.8,.2,1);
+  }
+  .p-tile:hover .p-photo img { transform: scale(1.03); }
+  .p-sold {
+    position: absolute; top: 12px; left: 12px;
+    font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase;
+    background: var(--ink); color: var(--paper); padding: 5px 9px;
+  }
+  .p-name { font-family: var(--f-display); font-size: 17px; letter-spacing: -0.01em; margin: 14px 0 3px; }
+  .p-blurb { font-size: 11px; color: var(--faded); margin: 0; }
+  .p-foot { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 10px; }
+  .p-price { font-size: 13px; font-variant-numeric: oldstyle-nums; }
+  .p-add {
+    font: inherit; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    background: transparent; color: var(--ink); border: 1px solid var(--ink);
+    padding: 7px 13px; cursor: pointer; transition: background .2s, color .2s;
+  }
+  .p-add:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+  .p-add:disabled { opacity: 0.3; cursor: not-allowed; }
+  .cart-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    background: none; border: none; cursor: pointer; color: var(--ink);
+    padding: 6px 0;
+  }
+  .cart-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.3; }
+  .cart-btn .n { font-variant-numeric: tabular-nums; min-width: 10px; text-align: right; }
+
+  /* modal */
+  .modal {
+    position: fixed; inset: 0; z-index: 60;
+    background: rgba(0,0,0,0.55);
+    display: flex; align-items: stretch; justify-content: center;
+  }
+  @media (min-width: 900px) { .modal { padding: 40px; align-items: center; } }
+  .modal-inner {
+    background: var(--paper); width: 100%; height: 100%;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  @media (min-width: 900px) { .modal-inner { max-width: 1100px; height: auto; max-height: 90vh; flex-direction: row; } }
+  .modal-left { position: relative; background: var(--bone); aspect-ratio: 1/1; flex-shrink: 0; }
+  @media (min-width: 900px) { .modal-left { width: 52%; aspect-ratio: auto; } }
+  .modal-left img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .modal-thumbs {
+    position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px);
+    padding: 6px; border-radius: 100px;
+  }
+  .modal-thumbs button {
+    width: 34px; height: 34px; border-radius: 100px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.4); padding: 0; cursor: pointer;
+    background: none; opacity: 0.6; transition: opacity .15s;
+  }
+  .modal-thumbs button.on { opacity: 1; border-color: #fff; }
+  .modal-thumbs img { width: 100%; height: 100%; object-fit: cover; }
+  .modal-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 36px; height: 36px; border-radius: 100px; background: rgba(255,255,255,0.96);
+    border: none; cursor: pointer; display: grid; place-items: center;
+  }
+  .modal-close svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+  .modal-right {
+    flex: 1; overflow-y: auto; padding: 32px 22px 40px;
+  }
+  @media (min-width: 900px) { .modal-right { padding: 52px 56px; } }
+  .modal-story { font-size: 14px; line-height: 1.7; color: var(--ink); margin: 18px 0 0; }
+  .specs { list-style: none; padding: 0; margin: 32px 0 0; }
+  .specs li {
+    font-size: 12px; color: var(--faded); padding: 9px 0;
+    border-top: 1px solid var(--rule); display: flex; gap: 14px;
+  }
+  .specs li span:first-child { width: 20px; font-variant-numeric: tabular-nums; }
+  .modal-actions { margin-top: 36px; display: flex; flex-direction: column; gap: 10px; }
+  .btn-primary {
+    background: var(--ink); color: var(--paper); border: none;
+    padding: 17px 20px; font: inherit; font-size: 11px; letter-spacing: 0.24em;
+    text-transform: uppercase; cursor: pointer;
+  }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
+  .btn-ghost {
+    background: none; color: var(--ink); border: 1px solid var(--ink);
+    padding: 17px 20px; font: inherit; font-size: 11px; letter-spacing: 0.24em;
+    text-transform: uppercase; cursor: pointer;
+  }
+  .btn-ghost:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* cart */
+  .cart-scrim { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,0.35); }
+  .cart-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 60;
+    width: 100%; max-width: 400px; background: var(--paper);
+    display: flex; flex-direction: column;
+  }
+  .cart-head { padding: 20px 22px; border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  .cart-body { flex: 1; overflow-y: auto; padding: 22px; }
+  .cart-line { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  .cart-line:first-child { padding-top: 0; }
+  .cart-line-photo { width: 62px; height: 74px; background: var(--bone); flex-shrink: 0; overflow: hidden; }
+  .cart-line-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .cart-line-info { flex: 1; min-width: 0; }
+  .cart-line-name { font-family: var(--f-display); font-size: 15px; margin: 0; }
+  .cart-line-meta { font-size: 11px; color: var(--faded); margin: 4px 0 6px; }
+  .cart-line-price { font-size: 13px; font-variant-numeric: oldstyle-nums; }
+  .cart-remove { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faded); background: none; border: none; cursor: pointer; padding: 0; align-self: flex-start; }
+  .cart-empty { text-align: center; padding: 50px 0; font-size: 13px; color: var(--faded); }
+  .cart-foot { padding: 20px 22px; border-top: 1px solid var(--rule); }
+  .cart-sub { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 13px; }
+  .cart-sub b { font-weight: 500; }
+  .checkout-link { display: block; text-align: center; background: var(--ink); color: var(--paper); padding: 18px; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; text-decoration: none; }
+
+  [x-cloak] { display: none !important; }
+</style>
+</head>
+<body x-data>
+
+<!-- announcement -->
+<div style="background: var(--ink); color: var(--paper); font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; text-align: center; padding: 10px 16px;">
+  Hand-poured in Cape Town · Delivery nationwide
+</div>
+
+<!-- header -->
+<header style="position: sticky; top: 0; z-index: 40; background: rgba(251,249,245,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule);">
+  <div class="breather" style="height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+    <a href="./" class="disp" style="font-size: 22px; text-decoration: none; color: var(--ink); letter-spacing: -0.02em;" x-text="$store.config.brand?.name || 'Zaheera'"></a>
+    <nav style="display: none; gap: 34px; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;" class="md-nav">
+      <a href="#shop" style="text-decoration: none; color: var(--faded);">Shop</a>
+      <a href="#atelier" style="text-decoration: none; color: var(--faded);">Atelier</a>
+      <a href="#contact" style="text-decoration: none; color: var(--faded);">Contact</a>
+    </nav>
+    <button class="cart-btn" @click="$store.cart.open = true">
+      <svg viewBox="0 0 24 24"><path d="M6 7h12l-1 12H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      <span>Cart</span>
+      <span class="n" x-text="$store.cart && $store.cart.count ? $store.cart.count() : 0"></span>
+    </button>
+  </div>
+</header>
+
+<!-- intro block — small, type-led, no hero banner -->
+<section class="breather" style="padding-top: 34px; padding-bottom: 30px;">
+  <p class="eyebrow" x-text="$store.config.brand?.tagline || 'Signature fragrances · Cape Town'"></p>
+  <p class="disp" style="font-size: clamp(30px, 6.4vw, 62px); margin: 14px 0 0; max-width: 620px; color: var(--ink);">
+    A small atelier of scent.
+  </p>
+  <p style="font-size: 13px; color: var(--faded); max-width: 480px; margin: 16px 0 0; line-height: 1.6;">
+    Hand-blended, one bottle at a time. Six fragrances — no range extensions, no seasonal drops. Just what earns a place on the shelf.
+  </p>
+</section>
+
+<!-- product grid — starts immediately -->
+<section id="shop" class="breather" style="padding-bottom: 70px;">
+  <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px; border-top: 1px solid var(--rule); padding-top: 22px;">
+    <p class="eyebrow">The collection</p>
+    <p style="font-size: 11px; color: var(--faded); font-variant-numeric: oldstyle-nums;" x-text="(($store.config.visibleProducts && $store.config.visibleProducts().length) || 0) + ' fragrances'"></p>
+  </div>
+  <div class="p-grid">
+    <template x-for="p in $store.config.visibleProducts()" :key="p.id">
+      <article class="p-tile" @click="$store.config.openDetail(p)" style="cursor:pointer;">
+        <div class="p-photo">
+          <img :src="p.image || (p.images && p.images[0])" :alt="p.name" @error="if(!$event.target.dataset.f){$event.target.dataset.f='1';$event.target.src='https://placehold.co/800x800/f5f1ea/6b6560?text='+encodeURIComponent(p.name)}">
+          <span x-show="!$store.config.inStock(p)" class="p-sold">Enquire</span>
+        </div>
+        <h3 class="p-name" x-text="p.name"></h3>
+        <p class="p-blurb" x-text="p.blurb"></p>
+        <div class="p-foot">
+          <span class="p-price" x-text="$store.config.formatZAR(p.price)"></span>
+          <button class="p-add" @click.stop="$store.cart.add(p, $store.config.pickVariant(p))" :disabled="!$store.config.inStock(p)">Add</button>
+        </div>
+      </article>
+    </template>
+  </div>
+</section>
+
+<!-- atelier / story -->
+<section id="atelier" style="background: var(--bone); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 80px 0;">
+  <div class="breather" style="max-width: 720px;">
+    <p class="eyebrow" style="text-align: center;">The atelier</p>
+    <p class="disp" style="font-size: clamp(22px, 3.2vw, 34px); text-align: center; margin: 22px 0 0; color: var(--ink); line-height: 1.25;" x-text="($store.config.about && $store.config.about.paragraphs && $store.config.about.paragraphs[0]) || 'Every bottle is blended by hand. Small batches. No shortcuts.'"></p>
+  </div>
+</section>
+
+<!-- footer -->
+<footer id="contact" class="breather" style="padding-top: 44px; padding-bottom: 44px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 11px; color: var(--faded);">
+  <span class="disp" style="font-size: 16px; color: var(--ink);" x-text="$store.config.brand?.name || 'Zaheera'"></span>
+  <span x-text="$store.config.whatsapp ? 'WhatsApp ' + $store.config.whatsapp : ''"></span>
+  <span>© <span x-text="new Date().getFullYear()"></span> · Cape Town, South Africa</span>
+</footer>
+
+<!-- detail modal — magazine spread -->
+<div x-show="$store.config.detailOpen" x-cloak class="modal" @click.self="$store.config.closeDetail()">
+  <div class="modal-inner" @click.stop>
+    <div class="modal-left">
+      <img :src="$store.config.detailImage()" :alt="$store.config.detailProduct?.name">
+      <div class="modal-thumbs" x-show="$store.config.detailImages().length > 1">
+        <template x-for="(url, i) in $store.config.detailImages()" :key="i">
+          <button :class="{ on: $store.config.detailImageIdx === i }" @click.stop="$store.config.detailSetImage(i)">
+            <img :src="url">
+          </button>
+        </template>
+      </div>
+      <button class="modal-close" @click="$store.config.closeDetail()">
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-right">
+      <p class="eyebrow" x-text="$store.config.detailProduct?.category"></p>
+      <h2 class="disp" style="font-size: 36px; margin: 12px 0 0;" x-text="$store.config.detailProduct?.name"></h2>
+      <p class="modal-story" x-text="$store.config.detailProduct?.story || $store.config.detailProduct?.blurb"></p>
+
+      <template x-if="$store.config.detailProduct?.specs && $store.config.detailProduct.specs.length">
+        <ul class="specs">
+          <template x-for="(s, i) in $store.config.detailProduct.specs" :key="i">
+            <li>
+              <span x-text="String(i + 1).padStart(2, '0')"></span>
+              <span x-text="s"></span>
+            </li>
+          </template>
+        </ul>
+      </template>
+
+      <p class="disp" style="font-size: 26px; margin: 32px 0 0; font-variant-numeric: oldstyle-nums;" x-text="$store.config.formatZAR($store.config.detailTotal())"></p>
+
+      <div class="modal-actions">
+        <button class="btn-primary" @click="$store.config.detailAddToCart()" :disabled="!$store.config.detailInStock()">Add to cart</button>
+        <button class="btn-ghost" @click="$store.config.detailBuyNow()" :disabled="!$store.config.detailInStock()">Buy now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- cart drawer -->
+<div x-show="$store.cart.open" x-cloak @click="$store.cart.open = false" class="cart-scrim"></div>
+<aside x-show="$store.cart.open" x-cloak @click.stop class="cart-drawer">
+  <div class="cart-head">
+    <p class="eyebrow">Your cart</p>
+    <button class="cart-remove" @click="$store.cart.open = false">Close</button>
+  </div>
+  <div class="cart-body">
+    <template x-for="i in ($store.cart?.items || [])" :key="i.id + ':' + (i.variantId || 'd')">
+      <div class="cart-line">
+        <div class="cart-line-photo"><img :src="i.image"></div>
+        <div class="cart-line-info">
+          <p class="cart-line-name" x-text="i.name"></p>
+          <p class="cart-line-meta" x-text="(i.variantName ? i.variantName + ' · ' : '') + 'Qty ' + i.qty"></p>
+          <p class="cart-line-price" x-text="$store.config.formatZAR(i.price * i.qty)"></p>
+        </div>
+        <button class="cart-remove" @click="$store.cart.remove(i.id, i.variantId)">Remove</button>
+      </div>
+    </template>
+    <p class="cart-empty" x-show="!$store.cart?.items?.length">Your cart is empty.</p>
+  </div>
+  <div class="cart-foot" x-show="$store.cart?.items?.length">
+    <div class="cart-sub">
+      <span>Subtotal</span>
+      <b x-text="$store.config.formatZAR($store.cart && $store.cart.subtotal ? $store.cart.subtotal() : 0)"></b>
+    </div>
+    <a href="./checkout.html" class="checkout-link">Proceed to checkout</a>
+  </div>
+</aside>
+
+<style>@media (min-width: 700px) { .md-nav { display: flex !important; } }</style>
+
+<script>window.__BRAND__="zaheera";</script>
+<script src="/main.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</body>
+</html>
