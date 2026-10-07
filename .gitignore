@@ -14,3 +14,9 @@ worker/node_modules
 worker/seller-tokens.json
 data/orders-*.json
 *.pre-orders
+/worker/
+
+templates/engine/worker/.dev.vars
+templates/engine/worker/seller-tokens.json
+**/.dev.vars
+**/seller-tokens.json
