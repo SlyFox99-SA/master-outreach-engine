@@ -1,0 +1,115 @@
+{
+  "id": "zaheera",
+  "layout": "gallery",
+  "brand": {
+    "name": "Fragrances",
+    "tagline": "Signature Fragrances - Cape Town",
+    "hero": {
+      "title": "Smell unforgettable.",
+      "subtitle": "Hand-blended attars and eau de parfum, delivered across South Africa."
+    },
+    "shell": "editorial"
+  },
+  "theme": {
+    "primary": "64 33 12",
+    "accent": "201 149 62",
+    "ink": "28 20 12",
+    "surface": "253 248 240"
+  },
+  "whatsapp": "+27821234567",
+  "payment": {
+    "provider": "yoco",
+    "checkoutId": "your-yoco-checkout-id",
+    "sandbox": false,
+    "returnUrl": "https://fragrance-seller-mockup.netlify.app/thank-you",
+    "cancelUrl": "https://fragrance-seller-mockup.netlify.app/"
+  },
+  "bank": {
+    "accountName": "Zaheera Fragrances",
+    "bankName": "FNB",
+    "accountNumber": "6270 1234 567",
+    "branchCode": "250655",
+    "accountType": "Cheque"
+  },
+  "sale": {
+    "label": "Weekend Sale",
+    "endsAt": "2026-10-09T04:35:59+02:00",
+    "discountPct": 10
+  },
+  "categories": [
+    "Fragrances",
+    "Gift Sets"
+  ],
+  "products": [
+    {
+      "id": "oud-noir",
+      "name": "Oud Noir",
+      "category": "Fragrances",
+      "mockType": "bottle",
+      "blurb": "Smoky rose, oud, amber",
+      "price": 450,
+      "stock": 8,
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=1000&q=80",
+      "specs": [
+        "50ml Eau de Parfum",
+        "Smoky rose, oud, amber",
+        "Lasts 8-12 hours",
+        "Unisex"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1541643600914-78b084683601?w=1000&q=80",
+        "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=1000&q=80",
+        "https://images.unsplash.com/photo-1587017539504-67cfbddac569?w=1000&q=80"
+      ],
+      "story": "Oud Noir opens with a smoked rose — not sweet, not floral, but the flower after the fire. Behind it, the oud comes in slow, resinous and dry, and stays for hours. Wears best in the evening, or in winter when everything else feels too light. Hand-blended in Cape Town. Fifty millilitres."
+    },
+    {
+      "id": "musk-white",
+      "name": "White Musk",
+      "category": "Fragrances",
+      "mockType": "bottle",
+      "blurb": "Cotton, vanilla, white musk",
+      "price": 320,
+      "stock": 12,
+      "image": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=900&q=80",
+      "specs": [
+        "50ml Eau de Parfum",
+        "Cotton, vanilla, musk",
+        "Subtle everyday wear",
+        "Unisex"
+      ]
+    },
+    {
+      "id": "rose-taif",
+      "name": "Rose Taif",
+      "category": "Fragrances",
+      "mockType": "bottle",
+      "blurb": "Bulgarian rose, saffron",
+      "price": 620,
+      "stock": 0,
+      "image": "https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=900&q=80",
+      "specs": [
+        "50ml Eau de Parfum",
+        "Bulgarian rose, saffron",
+        "Evening wear",
+        "Unisex"
+      ]
+    },
+    {
+      "id": "amber-nights",
+      "name": "Amber Nights",
+      "category": "Fragrances",
+      "mockType": "bottle",
+      "blurb": "Amber, tonka, sandalwood",
+      "price": 395,
+      "stock": 5,
+      "image": "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=900&q=80",
+      "specs": [
+        "50ml Eau de Parfum",
+        "Amber, tonka, sandalwood",
+        "Warm and rich",
+        "Unisex"
+      ]
+    }
+  ]
+}

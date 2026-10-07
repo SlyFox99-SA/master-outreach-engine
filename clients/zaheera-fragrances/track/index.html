@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Track your order</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<style>body{-webkit-tap-highlight-color:transparent;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}[x-cloak]{display:none!important}</style>
+</head>
+<body class="bg-gray-50 min-h-screen" x-data="trackApp()" x-init="init()" x-cloak>
+<div x-show="loading" class="fixed inset-0 flex items-center justify-center bg-white z-50"><div class="w-10 h-10 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin"></div></div>
+
+<div x-show="!loading" class="max-w-md mx-auto p-5">
+
+<div x-show="!order" class="py-20 text-center">
+<div class="w-16 h-16 rounded-full bg-gray-100 grid place-items-center mx-auto mb-6"><svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+<h1 class="text-xl font-semibold mb-2">Order not found</h1>
+<p class="text-sm text-gray-500 mb-6">We couldn't find an order with that reference.</p>
+<a href="/" class="text-sm font-medium text-gray-900 underline">Back to store</a>
+</div>
+
+<div x-show="order">
+<div class="bg-white rounded-3xl shadow-sm p-6 mb-4">
+<p class="text-xs uppercase tracking-widest text-gray-500 mb-2" x-text="cfg.brand?.name"></p>
+<p class="text-xs text-gray-400 font-mono mb-6" x-text="order?.ref"></p>
+<h1 class="text-2xl font-semibold mb-6" x-text="order?.buyer.name"></h1>
+
+<div class="space-y-4">
+
+<div class="flex gap-3">
+<div class="w-6 h-6 rounded-full grid place-items-center flex-shrink-0 bg-emerald-500 text-white"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+<div class="flex-1 min-w-0"><p class="font-medium text-sm">Order received</p><p class="text-xs text-gray-500" x-text="fmt(order?.createdAt)"></p></div>
+</div>
+
+<div class="flex gap-3">
+<div class="w-6 h-6 rounded-full grid place-items-center flex-shrink-0" :class="order?.paidAt ? 'bg-emerald-500 text-white' : 'bg-gray-200 text-gray-400'"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+<div class="flex-1 min-w-0"><p class="font-medium text-sm" :class="!order?.paidAt ? 'text-gray-400' : ''">Payment confirmed</p><p class="text-xs text-gray-500" x-text="order?.paidAt ? fmt(order.paidAt) : 'Waiting'"></p></div>
+</div>
+
+<div class="flex gap-3">
+<div class="w-6 h-6 rounded-full grid place-items-center flex-shrink-0" :class="order?.shippedAt ? 'bg-emerald-500 text-white' : 'bg-gray-200 text-gray-400'"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+<div class="flex-1 min-w-0"><p class="font-medium text-sm" :class="!order?.shippedAt ? 'text-gray-400' : ''">Shipped</p><p class="text-xs text-gray-500" x-text="order?.shippedAt ? fmt(order.shippedAt) : 'Not yet'"></p><p x-show="order?.tracking" class="text-xs text-gray-700 mt-1 font-mono" x-text="(order?.carrier || '') + ' - ' + order?.tracking"></p></div>
+</div>
+
+<div class="flex gap-3">
+<div class="w-6 h-6 rounded-full grid place-items-center flex-shrink-0" :class="order?.deliveredAt ? 'bg-emerald-500 text-white' : 'bg-gray-200 text-gray-400'"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+<div class="flex-1 min-w-0"><p class="font-medium text-sm" :class="!order?.deliveredAt ? 'text-gray-400' : ''">Delivered</p><p class="text-xs text-gray-500" x-text="order?.deliveredAt ? fmt(order.deliveredAt) : 'Pending'"></p></div>
+</div>
+
+</div>
+</div>
+
+<div class="bg-white rounded-3xl shadow-sm p-6 mb-4">
+<p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Your order</p>
+<div class="space-y-2">
+<template x-for="item in (order?.items || [])" :key="item.id"><div class="flex justify-between items-baseline text-sm"><span><span x-text="item.qty + 'x ' + item.name"></span><span x-show="item.variantName" class="text-gray-500 text-xs ml-1" x-text="'(' + item.variantName + ')'"></span></span><span class="font-medium">R<span x-text="item.qty * item.price"></span></span></div></template>
+</div>
+<div class="mt-4 pt-4 border-t border-gray-100 space-y-2">
+<div class="flex justify-between items-baseline text-sm"><span class="text-gray-500">Shipping</span><span x-text="order?.shipping?.name"></span></div>
+<div class="flex justify-between items-baseline"><span class="font-semibold">Total</span><span class="font-semibold text-lg">R<span x-text="order?.total"></span></span></div>
+</div>
+</div>
+
+<a :href="waLink()" target="_blank" class="block w-full text-center py-4 rounded-2xl bg-gray-900 text-white font-semibold">Message seller on WhatsApp</a>
+
+</div>
+</div>
+
+<script>
+function trackApp() {
+return {
+loading: true, order: null, cfg: {},
+async init() {
+  var p = new URLSearchParams(location.search);
+  var ref = p.get('ref');
+  var brand = p.get('brand') || 'techhub';
+  try { var r = await fetch('/data/config-' + brand + '.json?_=' + Date.now()); this.cfg = await r.json(); } catch(e) {}
+  try {
+    var all = JSON.parse(localStorage.getItem('orders.' + brand) || '[]');
+    this.order = all.filter(function(o){ return o.ref === ref; })[0] || null;
+  } catch(e) {}
+  try { var r2 = await fetch('https://outreach-save-api.gifttsima16.workers.dev/api/orders?brand=' + encodeURIComponent(brand)); var d2 = await r2.json(); if (d2.ok && Array.isArray(d2.orders)) { var found = d2.orders.filter(function(o){ return o.ref === ref; })[0] || null; if (found) this.order = found; } } catch(e) { console.log('[track] worker fetch failed:', e); }
+  this.loading = false;
+},
+fmt(iso) { if (!iso) return ''; return new Date(iso).toLocaleString('en-ZA', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); },
+waLink() { var d = String(this.cfg.whatsapp || '').replace(/\D/g, '' ); var m = 'Hi! About order ' + (this.order?.ref || ''); return 'https://wa.me/' + d + '?text=' + encodeURIComponent(m); }
+};
+}
+</script>
+</body>
+</html>
