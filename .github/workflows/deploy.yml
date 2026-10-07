@@ -10,56 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 2 }
       - uses: actions/setup-node@v4
         with: { node-version: '22', cache: 'npm' }
       - run: npm install
 
-      - name: Ensure Cloudflare Pages projects exist
-        continue-on-error: true
-        shell: pwsh
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          Write-Host "Wrangler version:"
-          npx wrangler --version
-          Write-Host ""
-          $projects = @(
-            'fragrance-seller-mockup',
-            'monetech-outreach',
-            'lumo-mockup',
-            'techseller-mockup',
-            'sfox-salon',
-            'sfox-services',
-            'sfox-restaurant',
-            'sfox-studio',
-            'sfox-personal',
-            'sfox-starter',
-            'sfox-pitch'
-          )
-          foreach ($name in $projects) {
-            Write-Host ""
-            Write-Host "=== $name ==="
-            $out = npx wrangler pages project create $name --production-branch=main 2>&1 | Out-String
-            Write-Host $out
-            if ($out -match 'already exists' -or $out -match 'A project with this name' -or $out -match 'Successfully created') {
-              Write-Host "OK: $name"
-            } else {
-              Write-Host "WARN: $name - see output above"
-            }
-          }
-          Write-Host ""
-          Write-Host "Provisioning pass complete."
-
-      - name: Build all
+      - name: Build all clients
         shell: pwsh
         run: |
-          foreach ($b in @('zaheera','monetech','lumo','techhub')) {
-            & ./scripts/Build-Brand.ps1 -Brand $b
-          }
-          foreach ($v in @('salon','services','restaurant','studio','personal','starter','pitch')) {
-            & ./scripts/Build-Vertical.ps1 -Vertical $v
+          foreach ($c in @('zaheera-fragrances','techhub-phones','monetech-sneakers','lumo-skincare')) {
+            & ./scripts/Build-Client.ps1 -Client $c
           }
 
       - name: Deploy zaheera
@@ -67,74 +26,32 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-zaheera --project-name=fragrance-seller-mockup --branch=main
-
-      - name: Deploy monetech
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-monetech --project-name=monetech-outreach --branch=main
-
-      - name: Deploy lumo
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-lumo --project-name=lumo-mockup --branch=main
+          command: pages deploy ./dist-zaheera-fragrances --project-name=fragrance-seller-mockup --branch=main
 
       - name: Deploy techhub
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-techhub --project-name=techseller-mockup --branch=main
+          command: pages deploy ./dist-techhub-phones --project-name=techseller-mockup --branch=main
 
-      - name: Deploy salon
+      - name: Deploy monetech
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-salon --project-name=sfox-salon --branch=main
+          command: pages deploy ./dist-monetech-sneakers --project-name=monetech-outreach --branch=main
 
-      - name: Deploy services
+      - name: Deploy lumo
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-services --project-name=sfox-services --branch=main
-
-      - name: Deploy restaurant
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-restaurant --project-name=sfox-restaurant --branch=main
-
-      - name: Deploy studio
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-studio --project-name=sfox-studio --branch=main
-
-      - name: Deploy personal
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-personal --project-name=sfox-personal --branch=main
-
-      - name: Deploy starter
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-starter --project-name=sfox-starter --branch=main
+          command: pages deploy ./dist-lumo-skincare --project-name=lumo-mockup --branch=main
 
       - name: Deploy pitch
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist-pitch --project-name=sfox-pitch --branch=main
+          command: pages deploy ./pitch --project-name=sfox-pitch --branch=main
