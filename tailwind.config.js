@@ -1,22 +1,23 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './main.js', './checkout.html', './templates/**/*.html'],
+  content: [
+    './index.html',
+    './clients/**/*.html',
+    './templates/**/*.html',
+    './seller/**/*.html',
+    './track/**/*.html',
+    './pitch/**/*.html'
+  ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         brand: {
-          primary: 'rgb(var(--brand-primary) / <alpha-value>)',
-          accent:  'rgb(var(--brand-accent)  / <alpha-value>)',
-          ink:     'rgb(var(--brand-ink)     / <alpha-value>)',
-          surface: 'rgb(var(--brand-surface) / <alpha-value>)'
+          primary: 'var(--brand-primary, #0a0a0a)',
+          accent: 'var(--brand-accent, #c96442)',
+          ink: 'var(--brand-ink, #1a1a1a)',
+          surface: 'var(--brand-surface, #faf7f1)'
         }
-      },
-      fontFamily: {
-        display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
-        body:    ['Inter', 'system-ui', 'sans-serif']
-      },
-      boxShadow: {
-        frame: '0 25px 60px -12px rgb(0 0 0 / 0.55)'
       }
     }
   },

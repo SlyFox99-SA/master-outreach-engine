@@ -322,6 +322,7 @@
           <div class="p-price" x-text="$store.config.formatZAR(p.price)"></div>
           <div class="p-actions">
             <button class="p-add" @click.stop="$store.cart.add(p, $store.config.pickVariant(p))" :disabled="!$store.config.inStock(p)" x-text="$store.config.inStock(p) ? 'ADD TO CART' : 'SOLD OUT'"></button>
+            <button class="p-add" style="background:#0a0a0a;color:#d4ff00;margin-top:6px;" @click.stop="$store.cart.buyNow(p, $store.config.pickVariant(p))" :disabled="!$store.config.inStock(p)">BUY NOW</button>
           </div>
         </div>
       </article>
@@ -402,7 +403,12 @@
         <div class="cart-line-photo"><img :src="i.image"></div>
         <div class="cart-line-info">
           <p class="cart-line-name" x-text="i.name"></p>
-          <p class="cart-line-meta" x-text="(i.variantName ? i.variantName + ' · ' : '') + 'QTY ' + i.qty"></p>
+          <p class="cart-line-meta" x-show="i.variantName" x-text="i.variantName"></p>
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0;">
+        <button @click="$store.cart.setQty(i.id, i.variantId, i.qty - 1)" style="width:24px;height:24px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:inherit;cursor:pointer;font-size:14px;line-height:1;">−</button>
+        <span style="font-family:var(--f-mono);font-size:12px;min-width:18px;text-align:center;" x-text="i.qty"></span>
+        <button @click="$store.cart.setQty(i.id, i.variantId, i.qty + 1)" :disabled="i.stock !== Infinity && i.qty >= i.stock" style="width:24px;height:24px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:inherit;cursor:pointer;font-size:14px;line-height:1;opacity:0.85;">+</button>
+      </div>
           <p class="cart-line-price" x-text="$store.config.formatZAR(i.price * i.qty)"></p>
         </div>
         <button class="cart-remove" @click="$store.cart.remove(i.id, i.variantId)">REMOVE</button>
@@ -415,11 +421,11 @@
       <span>SUBTOTAL</span>
       <b x-text="$store.config.formatZAR($store.cart && $store.cart.subtotal ? $store.cart.subtotal() : 0)"></b>
     </div>
-    <a href="./checkout.html" class="checkout-link">CHECKOUT →</a>
+    <a href="./checkout.html?brand=monetech" class="checkout-link">CHECKOUT →</a>
   </div>
 </aside>
 
-<script src="/main.js"></script>
+<script src="main.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 </body>
 </html>

@@ -6,7 +6,7 @@
 <title>Store</title>
 <link rel="stylesheet" href="/style.css" />
 <script src="/configs.js"></script>
-<script src="/main.js"></script>
+<script src="main.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 <script data-brand-default="techhub">if(!new URLSearchParams(location.search).get("brand")){var u=new URL(location.href);u.searchParams.set("brand","techhub");history.replaceState(null,"",u);}</script>
 </head>
@@ -45,7 +45,7 @@
 <div class="space-y-2"><template x-for="opt in $store.config.shippingOptions()" :key="opt.id"><label class="flex items-center gap-3 p-3 rounded-xl border border-black/10 cursor-pointer"><input type="radio" name="shipping" :value="opt.id" x-model="$store.cart.shippingId" @change="$store.cart.persist()" /><span class="flex-1 text-sm" x-text="opt.name"></span><span class="text-sm font-semibold" x-text="$store.config.formatZAR(opt.price)"></span></label></template></div>
 <textarea x-model="$store.cart.customerNote" @change="$store.cart.persist()" rows="2" placeholder="Delivery address (optional)" class="w-full rounded-xl border border-black/10 px-4 py-3 text-sm"></textarea>
 <div class="rounded-2xl bg-black/[0.03] p-4 space-y-2 text-sm"><div class="flex justify-between"><span class="opacity-60">Subtotal</span><span x-text="$store.config.formatZAR($store.cart.subtotal())"></span></div><div class="flex justify-between"><span class="opacity-60">Shipping</span><span x-text="$store.config.formatZAR($store.cart.selectedShipping().price)"></span></div><div class="flex justify-between pt-2 border-t border-black/5"><span class="font-semibold">Total</span><span class="font-display text-xl font-semibold" x-text="$store.config.formatZAR($store.cart.grandTotal())"></span></div></div>
-<div x-show="$store.cart.step === 1"><a :href="'/checkout.html?brand=' + $store.config.id" class="block w-full text-center rounded-2xl bg-brand-primary text-white px-6 py-4 font-semibold hover:opacity-90">Checkout &#8594;</a><p class="text-[11px] opacity-60 text-center mt-2">You will see how to pay next.</p></div>
+<div x-show="$store.cart.step === 1"><a :href="'./checkout.html?brand=' + $store.config.id" class="block w-full text-center rounded-2xl bg-brand-primary text-white px-6 py-4 font-semibold hover:opacity-90">Checkout &#8594;</a><p class="text-[11px] opacity-60 text-center mt-2">You will see how to pay next.</p></div>
 <div x-show="$store.cart.step === 2" class="space-y-3" style="display:none">
 <p class="text-xs uppercase tracking-widest opacity-60 text-center">Complete your payment</p>
 <div class="rounded-2xl border border-black/10 p-4 space-y-1.5"><p class="text-xs uppercase tracking-widest opacity-60 mb-3">Pay by EFT</p><div class="font-mono text-xs space-y-1.5"><div class="flex justify-between"><span class="opacity-50">Bank</span><span x-text="$store.config.bank?.bankName"></span></div><div class="flex justify-between"><span class="opacity-50">Account</span><span x-text="$store.config.bank?.accountName"></span></div><div class="flex justify-between"><span class="opacity-50">Number</span><span x-text="$store.config.bank?.accountNumber"></span></div><div class="flex justify-between"><span class="opacity-50">Branch</span><span x-text="$store.config.bank?.branchCode"></span></div><div class="flex justify-between"><span class="opacity-50">Ref</span><span class="font-semibold" x-text="$store.cart.orderRef"></span></div></div></div>
