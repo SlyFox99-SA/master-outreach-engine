@@ -17,37 +17,76 @@ body{font-family:var(--f-body)}
 .p-card .p-img{transition:transform .8s cubic-bezier(.2,.8,.2,1)}
 .p-card:hover .p-img{transform:scale(1.04)}
 .serif-num{font-variant-numeric:oldstyle-nums}
+
+/* zaheera-grid-rules */
+@media (min-width: 768px) { .p-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 40px 20px !important; } }
+
+/* zaheera-rule */
+.section-rule { height:1px; background: rgba(107,24,36,0.15); margin: 0 0 4px; }
+
+/* zaheera-earth */
+:root {
+  --brand-surface: 222 208 186;
+  --brand-ink:     42 24 20;
+  --brand-primary: 107 24 36;
+  --brand-accent:  176 98 70;
+}
+html, body {
+  background-color: rgb(222 208 186) !important;
+  color: rgb(42 24 20) !important;
+}
+body {
+  background-image:
+    radial-gradient(1200px 600px at 20% -10%, rgba(176,98,70,0.10), transparent 60%),
+    radial-gradient(900px 500px at 100% 20%, rgba(107,24,36,0.06), transparent 60%);
+  background-attachment: fixed;
+}
+header {
+  background-color: rgb(232 220 200) !important;
+  border-bottom-color: rgba(42,24,20,0.10) !important;
+}
+footer {
+  background-color: rgb(60 36 30);
+  color: rgb(226 212 190);
+}
+footer a, footer span { color: rgb(226 212 190) !important; }
+section.card, .p-card, aside {
+  background-color: rgb(241 233 218);
+}
+
 </style>
 <script data-brand-default="zaheera">if(!new URLSearchParams(location.search).get("brand")){var u=new URL(location.href);u.searchParams.set("brand","zaheera");history.replaceState(null,"",u);}</script>
 </head>
-<body class="bg-brand-surface text-brand-ink antialiased" x-data x-cloak>
-<div class="bg-brand-ink text-brand-surface text-[10px] tracking-[0.25em] uppercase text-center py-2.5">Free delivery over R800 Â· South Africa</div>
+<body class="bg-brand-surface text-brand-ink antialiased" style="background-color:#DED0BA;color:#2A1814;">
+<div class="bg-brand-primary text-white text-[10px] tracking-[0.28em] uppercase text-center py-2.5" style="background-color: rgb(107 24 36); color: #f7f3ed;">Complimentary delivery over R800 · South Africa</div>
 <header class="sticky top-0 z-30 bg-brand-surface/95 backdrop-blur border-b border-black/5">
-  <div class="max-w-6xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between">
-    <a href="./" class="disp text-xl md:text-2xl" x-text="$store.config.brand?.name"></a>
-    <nav class="hidden md:flex gap-8 text-[11px] tight uppercase opacity-70">
+  <div class="max-w-6xl mx-auto px-5 grid grid-cols-3 items-center" style="height:64px;">
+    <nav class="hidden md:flex items-center gap-7 text-[10px] tight uppercase opacity-70">
       <a href="#shop" class="hover:opacity-100">Shop</a>
       <a href="#story" class="hover:opacity-100">Atelier</a>
-      <a href="#contact" class="hover:opacity-100">Contact</a>
     </nav>
-    <button @click="$store.cart.open = true" class="relative flex items-center gap-2 text-[11px] tight uppercase">
-      <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="1.4"><path d="M6 7h12l-1 12H7L6 7zM9 7a3 3 0 0 1 6 0"/></svg>
-      <span x-text="$store.cart && $store.cart.count ? $store.cart.count() : 0"></span>
-    </button>
+    <div class="text-center">
+      <a href="/" class="disp text-2xl md:text-3xl" x-text="$store.config.brand?.name"></a>
+    </div>
+    <div class="flex items-center justify-end gap-5">
+      <a href="#contact" class="hidden md:inline text-[10px] tight uppercase opacity-70 hover:opacity-100">Contact</a>
+      <button @click="$store.cart.open = true" class="relative flex items-center gap-1.5 text-[10px] tight uppercase">
+        <svg viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current" stroke-width="1.4"><path d="M6 7h12l-1 12H7L6 7zM9 7a3 3 0 0 1 6 0"/></svg>
+        <span x-text="$store.cart && $store.cart.count ? $store.cart.count() : 0"></span>
+      </button>
+    </div>
   </div>
 </header>
 
-<!-- compact hero strip -->
+<!-- magazine intro (tight) -->
 <section class="border-b border-black/5">
-  <div class="max-w-6xl mx-auto px-4 py-6 md:py-8 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
-    <div class="flex-1 min-w-0">
-      <p class="tight text-[10px] uppercase opacity-50 mb-2" x-text="$store.config.brand?.tagline"></p>
-      <h1 class="disp text-3xl md:text-5xl" x-text="$store.config.brand?.name"></h1>
-      <p class="mt-2 text-xs md:text-sm opacity-60 leading-relaxed max-w-md" x-text="$store.config.brand?.blurb"></p>
-      <a href="#shop" class="mt-4 inline-flex items-center gap-2 text-[11px] tight uppercase border-b border-current pb-0.5 hover:opacity-70">Explore collection</a>
-    </div>
-    <div class="w-full md:w-56 aspect-[4/3] md:aspect-square bg-black/5 overflow-hidden flex-shrink-0">
-      <img :src="$store.config.heroImage || ($store.config.brand && $store.config.brand.heroImage) || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=80'" class="w-full h-full object-cover" alt="">
+  <div class="max-w-6xl mx-auto px-5 py-6 md:py-9">
+    <div class="flex flex-col md:flex-row md:items-baseline md:justify-between gap-3 md:gap-8">
+      <div>
+        <p class="tight text-[10px] uppercase opacity-50 mb-2" x-text="$store.config.brand?.tagline"></p>
+        <h1 class="disp text-[2rem] md:text-[3.4rem] leading-[1]" x-text="$store.config.brand?.name"></h1>
+      </div>
+      <p class="text-xs md:text-sm opacity-60 max-w-xs md:text-right md:pb-1" x-text="$store.config.brand?.blurb"></p>
     </div>
   </div>
 </section>
@@ -56,24 +95,24 @@ body{font-family:var(--f-body)}
   <div class="flex items-end justify-between mb-6">
     <div>
       <p class="tight text-[10px] uppercase opacity-50 mb-2">The collection</p>
-      <h2 class="disp text-2xl md:text-3xl">Every piece, considered.</h2>
+      <h2 class="disp text-[1.8rem] md:text-[2.6rem]" style="color: rgb(42 20 24);">Every piece, considered.</h2>
     </div>
     <p class="hidden md:block text-[11px] opacity-50 serif-num" x-text="(($store.config.visibleProducts && $store.config.visibleProducts().length) || 0) + ' pieces'"></p>
   </div>
   <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-5 md:gap-y-10">
     <template x-for="p in $store.config.visibleProducts()" :key="p.id">
       <li class="p-card flex flex-col">
-        <div class="relative aspect-square overflow-hidden bg-black/5 cursor-pointer" @click="$store.config.openDetail(p)">
-          <img class="p-img w-full h-full object-cover" :src="p.image || (p.images && p.images[0])" :alt="p.name" @error="if(!$event.target.dataset.f){$event.target.dataset.f='1';$event.target.src='https://placehold.co/600x600/f5f5f5/666?text='+encodeURIComponent(p.name)}">
+        <div class="relative" style="aspect-ratio:4/5;overflow:hidden;background:rgba(0,0,0,0.05);">
+          <img class="p-img w-full h-full object-cover" :src="p.image || (p.images && p.images[0])" @click.stop="$store.config.openDetail(p)" style="cursor:pointer;" :alt="p.name" @error="if(!$event.target.dataset.f){$event.target.dataset.f='1';$event.target.src='https://placehold.co/600x600/f5f5f5/666?text='+encodeURIComponent(p.name)}">
           <span x-show="!$store.config.inStock(p)" class="absolute inset-x-0 bottom-0 bg-black/85 text-white text-[9px] tight uppercase text-center py-1">Enquire</span>
         </div>
         <div class="mt-3 flex-1 flex flex-col">
-          <h3 class="disp text-base md:text-lg leading-tight truncate" x-text="p.name"></h3>
+          <h3 class="disp text-[1rem] md:text-[1.15rem]" style="color: rgb(42 20 24);" x-text="p.name"></h3>
           <p class="text-[11px] opacity-55 truncate mt-0.5" x-text="p.blurb"></p>
           <div class="mt-auto pt-2.5 flex items-center justify-between gap-2">
-            <p class="text-sm serif-num" x-text="$store.config.formatZAR(p.price)"></p>
+            <p class="text-sm serif-num" style="color: rgb(107 24 36); font-weight: 500;" x-text="$store.config.formatZAR(p.price)"></p>
             <div class="flex items-center gap-1.5 shrink-0">
-              <button @click.stop="$store.cart.add(p, $store.config.pickVariant(p))" :disabled="!$store.config.inStock(p)" class="text-[10px] tight uppercase border border-current px-3 py-1.5 hover:bg-brand-ink hover:text-brand-surface transition disabled:opacity-30">Add</button>
+              <button @click.stop="$store.cart.add(p, $store.config.pickVariant(p))" :disabled="!$store.config.inStock(p)" class="text-[10px] tight uppercase bg-brand-primary text-white px-3 py-1.5 hover:opacity-90 transition disabled:opacity-30">Add</button>
               <button @click.stop="$store.cart.buyNow(p, $store.config.pickVariant(p))" :disabled="!$store.config.inStock(p)" class="text-[10px] tight uppercase bg-brand-ink text-brand-surface px-2.5 py-1.5 hover:opacity-90 transition disabled:opacity-30">Buy</button>
             </div>
           </div>
@@ -96,8 +135,8 @@ body{font-family:var(--f-body)}
 </footer>
 
 <!-- detail modal -->
-<div x-show="$store.config.detailOpen" x-cloak class="fixed inset-0 z-50 bg-black/70 p-0 md:p-8" @click.self="$store.config.closeDetail()">
-  <div class="mx-auto h-full max-w-4xl bg-brand-surface flex flex-col md:flex-row overflow-hidden md:rounded-2xl">
+<div x-show="$store.config.detailOpen && $store.config.detailProduct" x-cloak class="fixed inset-0 z-50 bg-black/70 p-0 md:p-8 overflow-hidden" @click.self="$store.config.closeDetail()">
+  <div class="mx-auto h-full md:h-auto md:max-h-[90vh] max-w-4xl bg-brand-surface flex flex-col md:flex-row overflow-hidden md:rounded-2xl">
     <div class="relative md:w-1/2 aspect-square md:aspect-auto md:h-full bg-black/5">
       <img :src="$store.config.detailImage()" class="w-full h-full object-cover" alt="">
       <div x-show="$store.config.detailImages().length > 1" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-black/40 backdrop-blur rounded-full p-1.5">

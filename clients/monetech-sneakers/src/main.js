@@ -90,7 +90,7 @@ document.addEventListener("alpine:init", function() {
         lines.push("Shipping: " + ship.name + " - R" + ship.price);
         lines.push("Total: R" + this.grandTotal());
         if (this.buyerAddress) { lines.push(""); lines.push("Deliver to: " + this.buyerAddress); }
-        var digits = String(cfg.whatsapp || "").replace(/D/g, "");
+        var digits = String(cfg.whatsapp || "").replace(/\D/g, "");
         this.lastWhatsAppUrl = "https://wa.me/" + digits + "?text=" + encodeURIComponent(lines.join("\n"));
         this.items = [];
         this.persist();
@@ -107,4 +107,3 @@ document.addEventListener("alpine:init", function() {
   setTimeout(function(){ var c=window.Alpine.store("cart"); if(c && c.items.length>0 && !c.orderRef){ c.orderRef=c.genRef(); c.persist(); } }, 100);
 });
 window.downloadStory = async function(){ var mod=await import("html-to-image"); var node=document.querySelector("main"); if(!node) return; var d=await mod.toPng(node,{width:1080,height:1920,pixelRatio:1,cacheBust:true}); var a=document.createElement("a"); a.href=d; a.download="story.png"; a.click(); };
-document.addEventListener("click", function(e){ if (e.target.closest("button, a, input, select, textarea")) return; var img = e.target.closest("img"); if (!img) return; var card = img.closest("li, article"); if (!card) return; var src = img.getAttribute("src") || ""; var cfg = window.Alpine && window.Alpine.store("config"); if (!cfg || !cfg.products) { console.log("[detail] no config"); return; } var p = cfg.products.filter(function(x){ return x.image === src; })[0]; if (!p) { console.log("[detail] no product for", src); return; } cfg.openDetail(p); console.log("[detail] opened", p.name); });

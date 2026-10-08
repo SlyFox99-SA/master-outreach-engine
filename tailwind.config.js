@@ -13,10 +13,10 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: 'var(--brand-primary, #0a0a0a)',
-          accent: 'var(--brand-accent, #c96442)',
-          ink: 'var(--brand-ink, #1a1a1a)',
-          surface: 'var(--brand-surface, #faf7f1)'
+          primary: 'rgb(var(--brand-primary, 10 10 10) / <alpha-value>)',
+          accent:  'rgb(var(--brand-accent, 201 100 66) / <alpha-value>)',
+          ink:     'rgb(var(--brand-ink, 26 26 26) / <alpha-value>)',
+          surface: 'rgb(var(--brand-surface, 250 247 241) / <alpha-value>)'
         }
       }
     }

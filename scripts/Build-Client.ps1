@@ -11,6 +11,7 @@ New-Item -ItemType Directory -Force -Path $o | Out-Null
 if (Test-Path ".\dist\assets") { Copy-Item ".\dist\assets" "$o\assets" -Recurse -Force }
 Copy-Item ".\dist\clients\$Client\src\index.html" "$o\index.html" -Force
 Copy-Item "$c\src\checkout.html" "$o\checkout.html" -Force
+  if (Test-Path "$c\src\product.html") { Copy-Item "$c\src\product.html" "$o\product.html" -Force }
 Copy-Item "$c\src\main.js" "$o\main.js" -Force
 Copy-Item "$c\src\style.css" "$o\style.css" -Force
 if (Test-Path "$c\seller") { Copy-Item "$c\seller" "$o\seller" -Recurse -Force }
