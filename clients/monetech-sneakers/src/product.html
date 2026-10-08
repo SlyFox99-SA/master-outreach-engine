@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Product</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="/configs.js"></script>
+<script>window.__BRAND__="monetech";</script>
+<style>
+  :root { --ink:#f5f1e9; --paper:#131316; --surface:#0b0b0d; --muted:#6b6b6b; --rule:rgba(10,10,10,0.10); --accent:#d4ff00; --display:"Space Grotesk",system-ui,sans-serif; --mono:"JetBrains Mono",monospace; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; padding:0; }
+  body { font-family:var(--display); background:#0b0b0d; color:var(--ink); font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1180px; margin:0 auto; padding:0 22px; }
+  header { position:sticky; top:0; z-index:40; background:var(--paper); border-bottom:1px solid var(--rule); padding:10px 0; }
+  header .wrap { display:flex; justify-content:space-between; align-items:center; }
+  header .brand { font-size:20px; font-weight:700; letter-spacing:-0.02em; text-decoration:none; color:var(--ink); }
+  header .back { font-size:13px; color:var(--muted); text-decoration:none; }
+  header .back:hover { color:var(--ink); }
+  .crumbs { position:sticky; top:56px; z-index:30; background:var(--paper); padding:12px 0 10px; font-size:12px; color:var(--muted); border-bottom:1px solid var(--rule); }
+  .crumbs a { color:var(--muted); text-decoration:none; }
+  .crumbs a:hover { color:var(--ink); }
+  .crumbs .sep { margin:0 8px; opacity:0.5; }
+  .layout { display:grid; grid-template-columns:1fr; gap:20px; padding-top:24px; padding-bottom:36px; }
+  @media (min-width:900px){ .layout{ grid-template-columns:1fr 1fr; gap:36px; align-items:start; } }
+  .gallery .main { aspect-ratio:4/3; max-height:420px; background:var(--surface); border-radius:12px; overflow:hidden; }
+  .gallery .main img { width:100%; height:100%; object-fit:cover; display:block; }
+  .thumbs { display:flex; gap:8px; margin-top:12px; }
+  .thumbs button { width:68px; height:68px; background:var(--surface); border-radius:8px; overflow:hidden; border:1px solid var(--rule); padding:0; cursor:pointer; transition:border-color .15s; }
+  .thumbs button.on { border-color:var(--ink); }
+  .thumbs button img { width:100%; height:100%; object-fit:cover; }
+  .info h1 { font-size:clamp(24px,2.6vw,32px); margin:0 0 6px; font-weight:700; letter-spacing:-0.03em; line-height:1.1; }
+  .info .cat { font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin:0 0 6px; }
+  .info .blurb { color:var(--muted); font-size:14px; margin:0 0 16px; }
+  .info .price { font-size:26px; font-weight:700; letter-spacing:-0.03em; margin:0 0 12px; }
+  .stock { display:inline-flex; align-items:center; gap:8px; font-size:11px; font-family:var(--mono); padding:4px 10px; border-radius:100px; background:#e8f5ec; color:#1a8b5f; margin-bottom:16px; text-transform:uppercase; letter-spacing:0.08em; }
+  .stock.sold { background:#fee2e2; color:#b91c1c; }
+  .stock::before { content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .specs { border-top:1px solid var(--rule); padding-top:14px; margin-top:14px; }
+  .specs h3 { font-size:11px; font-family:var(--mono); text-transform:uppercase; letter-spacing:0.16em; color:var(--muted); margin:0 0 8px; font-weight:500; }
+  .specs ul { list-style:none; padding:0; margin:0; }
+  .specs li { padding:5px 0; border-bottom:1px solid var(--rule); font-size:13px; display:flex; gap:12px; align-items:baseline; }
+  .specs li:last-child { border-bottom:0; }
+  .specs li::before { content:"\2192"; color:var(--muted); flex-shrink:0; }
+  .qty { display:flex; align-items:center; gap:12px; margin:14px 0 10px; }
+  .qty label { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; font-family:var(--mono); }
+  .qty .controls { display:flex; align-items:center; border:1px solid var(--rule); border-radius:10px; overflow:hidden; }
+  .qty button { width:36px; height:36px; background:transparent; border:0; font-size:18px; cursor:pointer; color:var(--ink); font-family:inherit; }
+  .qty button:hover { background:var(--surface); }
+  .qty span { min-width:48px; text-align:center; font-weight:600; font-family:var(--mono); font-size:15px; }
+  .actions { display:flex; flex-direction:column; gap:10px; }
+  .actions button { padding:13px 20px; font:inherit; font-size:14px; font-weight:700; cursor:pointer; border-radius:8px; border:0; transition:opacity .15s; }
+  .actions .add { background:var(--accent); color:white; }
+  .actions .add:hover:not(:disabled) { opacity:0.92; }
+  .actions .buy { background:transparent; color:var(--ink); border:1px solid var(--rule); }
+  .actions .buy:hover:not(:disabled) { border-color:var(--ink); }
+  .actions button:disabled { opacity:0.4; cursor:not-allowed; }
+  .similar { padding:36px 0 40px; border-top:1px solid var(--rule); }
+  .similar h2 { font-size:22px; margin:0 0 24px; font-weight:700; letter-spacing:-0.02em; }
+  .similar .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  @media (min-width:768px){ .similar .grid{ grid-template-columns:repeat(4,1fr); gap:22px; } }
+  .tile { text-decoration:none; color:inherit; display:flex; flex-direction:column; }
+  .tile .photo { aspect-ratio:1/1; background:var(--surface); border-radius:10px; overflow:hidden; }
+  .tile .photo img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+  .tile:hover .photo img { transform:scale(1.05); }
+  .tile .name { font-size:14px; font-weight:600; margin:12px 0 3px; }
+  .tile .blurb { font-size:12px; color:var(--muted); margin:0; }
+  .tile .p { font-size:14px; font-weight:700; margin:8px 0 0; }
+  .missing { padding:100px 22px; text-align:center; color:var(--muted); }
+  .missing h2 { font-size:24px; color:var(--ink); margin:0 0 12px; font-weight:700; }
+  .missing a { color:var(--ink); }
+
+/* ==== mobile-first overrides ==== */
+.layout { padding-top:16px; }
+@media (max-width:899px){
+  .gallery .main { aspect-ratio:1/1; max-height:none; }
+  .thumbs button { width:56px; height:56px; }
+  .info h1 { font-size:26px; }
+  .info .price { font-size:24px; margin-bottom:10px; }
+  .specs { padding-top:12px; margin-top:12px; }
+  .specs li { padding:6px 0; font-size:13px; }
+  .qty { margin:14px 0 8px; }
+  .actions { margin-top:0; }
+  .actions button { padding:15px 20px; font-size:15px; }
+  .similar { padding-top:32px; }
+  .similar h2 { font-size:19px; margin-bottom:18px; }
+  .similar .grid { gap:12px; }
+  .tile .name { font-size:13px; margin-top:10px; }
+  .crumbs { font-size:11px; padding:10px 0 8px; }
+}
+/* Make CTA sticky on mobile so it's always reachable */
+@media (max-width:899px){
+  .actions .add { position:sticky; bottom:12px; box-shadow:0 8px 24px -8px rgba(0,0,0,0.25); z-index:20; }
+}
+
+
+.gallery { position:relative; }
+.gallery-nav { position:absolute; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,0.95); border:1px solid var(--rule); cursor:pointer; display:grid; place-items:center; z-index:10; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:opacity .15s; }
+.gallery-nav:hover { opacity:0.85; }
+.gallery-nav.prev { left:12px; }
+.gallery-nav.next { right:12px; }
+.gallery-nav svg { width:18px; height:18px; fill:none; stroke:var(--ink); stroke-width:2; }
+.gallery-dots { display:flex; gap:6px; justify-content:center; margin-top:12px; }
+.gallery-dots button { width:8px; height:8px; border-radius:50%; background:var(--rule); border:0; padding:0; cursor:pointer; transition:background .15s; }
+.gallery-dots button.on { background:var(--ink); }
+
+</style>
+</head>
+<body x-data="productPage()">
+
+<header>
+  <div class="wrap">
+    <a :href="backUrl()" class="brand" x-text="$store.config.brand?.name || 'Store'"></a>
+    <a :href="backUrl()" class="back">&larr; Back to store</a>
+  </div>
+</header>
+
+<template x-if="!product">
+  <div class="missing">
+    <h2>Product not found</h2>
+    <p><a :href="backUrl()">Browse all products</a></p>
+  </div>
+</template>
+
+<main class="wrap" x-show="product" x-cloak>
+  <div class="crumbs">
+    <a :href="backUrl()">Shop</a>
+    <span class="sep">/</span>
+    <span x-text="product?.category"></span>
+    <span class="sep">/</span>
+    <span x-text="product?.name"></span>
+  </div>
+
+  <div class="layout">
+    <div class="gallery">
+      <div class="main">
+        <img :src="currentImage()" :alt="product?.name">
+        <template x-if="images().length > 1">
+          <div>
+            <button class="gallery-nav prev" @click="prev()" aria-label="Previous image">
+              <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="gallery-nav next" @click="next()" aria-label="Next image">
+              <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </template>
+      </div>
+      <div class="gallery-dots" x-show="images().length > 1"><template x-for="(url, i) in images()" :key="'d'+i"><button :class="{ on: imageIdx === i }" @click="imageIdx = i" :aria-label="'Image '+(i+1)"></button></template></div>
+      <div class="thumbs" x-show="images().length > 1">
+        <template x-for="(url, i) in images()" :key="i">
+          <button :class="{ on: imageIdx === i }" @click="imageIdx = i"><img :src="url"></button>
+        </template>
+      </div>
+    </div>
+    <div class="info">
+      <p class="cat" x-text="product?.category"></p>
+      <h1 x-text="product?.name"></h1>
+      <p class="blurb" x-text="product?.blurb"></p>
+      <p class="price" x-text="$store.config.formatZAR(product?.price)"></p>
+      <div class="stock" :class="{ sold: !inStock() }" x-text="inStock() ? 'In stock' : 'Sold out'"></div>
+      <template x-if="product?.specs && product.specs.length">
+        <div class="specs">
+          <h3>Specifications</h3>
+          <ul>
+            <template x-for="s in product.specs" :key="s"><li x-text="s"></li></template>
+          </ul>
+        </div>
+      </template>
+      <div class="qty">
+        <label>Qty</label>
+        <div class="controls">
+          <button type="button" @click="qty = Math.max(1, qty - 1)">&minus;</button>
+          <span x-text="qty"></span>
+          <button type="button" @click="qty = qty + 1">+</button>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="add" :disabled="!inStock()" @click="addToCart()">Add to Cart</button>
+        <button class="buy" :disabled="!inStock()" @click="buyNow()">Buy Now</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="similar" x-show="similar.length">
+    <h2>Frequently bought together</h2>
+    <div class="grid">
+      <template x-for="p in similar" :key="p.id">
+        <a class="tile" :href="productUrl(p.id)">
+          <div class="photo"><img :src="p.image || (p.images && p.images[0])" :alt="p.name"></div>
+          <p class="name" x-text="p.name"></p>
+          <p class="blurb" x-text="p.blurb"></p>
+          <p class="p" x-text="$store.config.formatZAR(p.price)"></p>
+        </a>
+      </template>
+    </div>
+  </section>
+</main>
+
+<script>
+function productPage() {
+  return {
+    product: null,
+    qty: 1,
+    imageIdx: 0,
+    similar: [],
+    init() {
+      const params = new URLSearchParams(location.search);
+      const id = params.get("id");
+      const cfg = this.$store.config;
+      const all = cfg.products || [];
+      this.product = all.find(p => p.id === id) || null;
+      if (!this.product) { console.warn("[product] no match for id:", id, "| ids:", all.map(p => p.id)); return; }
+      const sameCat = all.filter(p => p.id !== id && p.category === this.product.category);
+      const others  = all.filter(p => p.id !== id && p.category !== this.product.category);
+      this.similar = sameCat.concat(others).slice(0, 4);
+    },
+    backUrl() { return "./index.html?brand=" + (this.$store.config.id || "techhub"); },
+    productUrl(id) { return "./product.html?brand=" + (this.$store.config.id || "techhub") + "&id=" + id; },
+    images() { const p = this.product; if (!p) return []; const arr = Array.isArray(p.images) ? p.images.filter(Boolean) : []; if (!arr.length && p.image) arr.push(p.image); return arr; },
+    currentImage() { const arr = this.images(); return arr[this.imageIdx] || ""; },
+    next() { const n = this.images().length; if (n > 0) this.imageIdx = (this.imageIdx + 1) % n; },
+    prev() { const n = this.images().length; if (n > 0) this.imageIdx = (this.imageIdx - 1 + n) % n; },
+    inStock() { return this.$store.config.inStock(this.product); },
+    addToCart() { const cart = this.$store.cart; for (let i = 0; i < this.qty; i++) cart.add(this.product, this.$store.config.pickVariant(this.product)); },
+    buyNow() { this.$store.cart.buyNow(this.product, this.$store.config.pickVariant(this.product)); }
+  };
+}
+</script>
+<script src="main.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</body>
+</html>
