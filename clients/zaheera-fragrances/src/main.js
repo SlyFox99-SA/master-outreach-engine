@@ -1,4 +1,4 @@
-﻿document.addEventListener("alpine:init", function() {
+document.addEventListener("alpine:init", function() {
   var params = new URLSearchParams(location.search);
   var brand = params.get("brand") || window.__BRAND__ || localStorage.getItem("brand") || "active";
   var all = window.__CONFIGS || {};
@@ -56,7 +56,7 @@
       if (!this.buyerName || !this.buyerName.trim()) { this.error = "Please enter your name."; return; }
       if (!this.buyerPhone || !this.buyerPhone.trim()) { this.error = "Please enter your WhatsApp number."; return; }
       var ship = this.selectedShipping();
-      if (ship.id !== "collect" && (!this.buyerAddress || !this.buyerAddress.trim())) { this.error = "Please enter a delivery address."; return; }
+      if (ship.id !== "collect" && (!this.buyerAddress || !this.buyerAddress.trim())) { this.error = ship.id === "paxi" ? "Please tell us which PEP store" : "Please enter a delivery address."; return; }
       if (!this.items.length) { this.error = "Your cart is empty."; return; }
       this.error = "";
       this.sending = true;
@@ -91,7 +91,7 @@
         lines.push("Total: R" + this.grandTotal());
         if (this.buyerAddress) { lines.push(""); lines.push("Deliver to: " + this.buyerAddress); }
         var digits = String(cfg.whatsapp || "").replace(/D/g, "");
-        window.open("https://wa.me/" + digits + "?text=" + encodeURIComponent(lines.join("\n")), "_blank");
+        this.lastWhatsAppUrl = "https://wa.me/" + digits + "?text=" + encodeURIComponent(lines.join("\n"));
         this.items = [];
         this.persist();
         this.sent = true;
@@ -100,7 +100,7 @@
       }
       this.sending = false;
     },
-    reset: function(){ this.clear(); this.open=false; },
+    resendWhatsApp: function(){ if (this.lastWhatsAppUrl) window.open(this.lastWhatsAppUrl, "_blank"); }, reset: function(){ this.clear(); this.open=false; },
     popMessage: function(){ var cfg=window.Alpine.store("config"); var lines=["Hi "+((cfg.brand&&cfg.brand.name)||"store")+"! Proof of payment attached.",""]; lines.push("Ref: "+(this.orderRef||"N/A")); lines.push(""); for(var i=0;i<this.items.length;i++){ var it=this.items[i]; var v=it.variantName?" ("+it.variantName+")":""; lines.push(it.qty+"x "+it.name+v+" - R"+(it.price*it.qty)); } lines.push(""); lines.push("Subtotal: R"+this.subtotal()); var s=this.selectedShipping(); lines.push("Shipping: "+s.name+" - R"+s.price); lines.push("Total: R"+this.grandTotal()); if(this.customerNote){ lines.push(""); lines.push("Note: "+this.customerNote); } return lines.join("\n"); },
     popWhatsApp: function(){ var cfg=window.Alpine.store("config"); var d=String(cfg.whatsapp||"").replace(/\D/g,""); return "https://wa.me/"+d+"?text="+encodeURIComponent(this.popMessage()); }
   });
